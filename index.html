@@ -30,19 +30,22 @@
         .addon-row { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #DDD; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; }
         .remarks-input { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #CCC; border-radius: 6px; margin-top: 8px; font-size: 13px; height: 34px; }
         .add-btn { background-color: #2E7D32; color: white; border: none; width: 100%; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 12px; }
-        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(51, 51, 51, 0.95); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* 底部购物车 */
+        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(51, 51, 51, 0.95); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .submit-btn { background: #FF9800; color: #fff; border: none; padding: 12px 25px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
 
-        /* 🖨️ 小票打印样式 */
-        #print-area { display: none; width: 58mm; font-family: 'Courier New', Courier, monospace; font-size: 13px; color: black; line-height: 1.3; }
-        @media print {
-            body * { display: none !important; }
-            #print-area { display: block !important; margin: 0; padding: 0; }
-            .print-header { text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 5px; }
-            .print-divider { border-top: 1px dashed black; margin: 6px 0; }
-            .print-item { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
-            .print-sub { font-size: 12px; padding-left: 10px; font-weight: normal; }
-        }
+        /* 🧾 顾客看到的订单明细弹窗样式 */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; }
+        .modal-box { background: white; width: 85%; max-width: 400px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; }
+        .modal-title { font-size: 18px; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .modal-item { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; font-weight: bold;}
+        .modal-sub { font-size: 12px; color: #777; padding-left: 10px; margin-bottom: 8px; margin-top: -5px;}
+        .modal-total { font-size: 18px; font-weight: 800; color: var(--accent-color); display: flex; justify-content: space-between; border-top: 1px dashed #ddd; padding-top: 10px; margin-top: 10px; }
+        .modal-footer { margin-top: 20px; display: flex; gap: 10px; }
+        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-cancel { background: #ddd; color: #333; }
+        .btn-confirm { background: #2E7D32; color: white; }
     </style>
 </head>
 <body>
@@ -53,11 +56,26 @@
     <div class="main-container">
         <div id="menu-container"></div>
     </div>
+    
     <div class="cart-bar">
         <div style="font-size: 14px;">Items: <span id="cart-count">0</span> | Total: <b>RM <span id="cart-total">0.00</span></b></div>
-        <button class="submit-btn" onclick="sendOrder()">Place Order</button>
+        <button class="submit-btn" onclick="showOrderSummary()">Place Order</button>
     </div>
-    <div id="print-area"></div>
+
+    <div class="modal-overlay" id="order-modal">
+        <div class="modal-box">
+            <div class="modal-title">Order Summary 🧾</div>
+            <div id="modal-content"></div>
+            <div class="modal-total">
+                <span>Total Amount:</span>
+                <span>RM <span id="modal-total-price">0.00</span></span>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn btn-cancel" onclick="closeModal()">Back</button>
+                <button class="modal-btn btn-confirm" onclick="confirmOrder()">Confirm</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         const menuData = [
@@ -68,7 +86,9 @@
                 { name: "kopi c", hot: 2.2, cold: 2.4 }, { name: "cham o", hot: 1.8, cold: 2.0 },
                 { name: "cham", hot: 2.0, cold: 2.2 }, { name: "cham c", hot: 2.2, cold: 2.4 },
                 { name: "susu", hot: 2.0, cold: 2.2 }, { name: "milo o", hot: 2.8, cold: 3.0 },
-                { name: "milo", hot: 3.0, cold: 3.2 }, { name: "nescafe o", hot: 2.8, cold: 2.0 },
+                { name: "milo", hot: 3.0, cold: 3.2 }, 
+                // 💡 这里已经帮你把 Nescafe O 的冰饮价格改成了 3.00
+                { name: "nescafe o", hot: 2.8, cold: 3.0 },
                 { name: "nescafe", hot: 3.0, cold: 3.2 }, { name: "nescafe c", hot: 3.2, cold: 3.4 },
                 { name: "neslo", hot: 3.8, cold: 4.0 }, { name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true },
                 { name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true }, { name: "nestum", hot: 2.8, cold: 3.0 },
@@ -179,7 +199,7 @@
         function updatePriceWithEgg(id, base) {
             const itemDiv = document.getElementById(`item-${id}`);
             const isIced = itemDiv.querySelector('[data-type="temp"] .active')?.innerText === 'Iced';
-            let price = isIced ? base + 0.2 : base; // 假设冷饮贵0.2
+            let price = isIced ? base + 0.2 : base; 
             if (document.getElementById(`egg-${id}`).checked) price += 1.40;
             document.getElementById(`price-${id}`).innerText = `RM ${price.toFixed(2)}`;
         }
@@ -197,27 +217,55 @@
             document.getElementById('cart-count').innerText = cart.length;
             document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
             alert(`Added: ${name.toUpperCase()}`);
+            itemDiv.querySelector('.remarks-input').value = '';
         }
 
-        function sendOrder() {
-            if (cart.length === 0) { alert("Cart is empty!"); return; }
-            let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
-            let now = new Date().toLocaleString('en-GB', { hour12: true });
+        /* 🧾 核心修改：展示订单明细，不调用打印 */
+        function showOrderSummary() {
+            if (cart.length === 0) { alert("Your cart is empty!"); return; }
             
-            let printHTML = `<div class="print-header">SIN CHOOI HONG</div><div style="text-align:center;font-size:11px;">${now}</div><div class="print-divider"></div>`;
+            let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+            let contentHTML = '';
+            
             cart.forEach(item => {
-                printHTML += `<div class="print-item"><span>${item.name.toUpperCase()}</span><span>${item.price.toFixed(2)}</span></div>`;
-                if (item.temp !== 'N/A') printHTML += `<div class="print-sub">- ${item.temp} / ${item.sugar}</div>`;
-                if (item.spread !== 'N/A') printHTML += `<div class="print-sub">- Flavour: ${item.spread}</div>`;
-                if (item.egg) printHTML += `<div class="print-sub">- + Add 1 egg</div>`;
-                if (item.remarks.trim()) printHTML += `<div class="print-sub">- Note: ${item.remarks}</div>`;
+                contentHTML += `
+                    <div class="modal-item">
+                        <span>${item.name.toUpperCase()}</span>
+                        <span>RM ${item.price.toFixed(2)}</span>
+                    </div>
+                `;
+                let details = [];
+                if (item.temp !== 'N/A') details.push(`${item.temp} / ${item.sugar}`);
+                if (item.spread !== 'N/A') details.push(`Flavour: ${item.spread}`);
+                if (item.egg) details.push(`+ Add 1 egg`);
+                if (item.remarks.trim()) details.push(`Note: ${item.remarks}`);
+                
+                if (details.length > 0) {
+                    contentHTML += `<div class="modal-sub">- ${details.join(' | ')}</div>`;
+                }
             });
-            printHTML += `<div class="print-divider"></div><div class="print-item" style="font-size:16px;"><span>TOTAL</span><span>RM ${total}</span></div><div style="text-align:center;margin-top:15px;font-size:12px;">- Kitchen Copy -</div>`;
 
-            document.getElementById('print-area').innerHTML = printHTML;
-            window.print();
-            cart = []; document.getElementById('cart-count').innerText = '0'; document.getElementById('cart-total').innerText = '0.00';
+            document.getElementById('modal-content').innerHTML = contentHTML;
+            document.getElementById('modal-total-price').innerText = total;
+            document.getElementById('order-modal').style.display = 'flex';
         }
+
+        function closeModal() {
+            document.getElementById('order-modal').style.display = 'none';
+        }
+
+        function confirmOrder() {
+            closeModal();
+            
+            // 给顾客的温馨提示
+            alert("Order Confirmed! 🎉\n请前往柜台出示此页面并付款。");
+            
+            // 清空购物车
+            cart = [];
+            document.getElementById('cart-count').innerText = '0';
+            document.getElementById('cart-total').innerText = '0.00';
+        }
+
         window.onload = () => renderMenu();
     </script>
 </body>
