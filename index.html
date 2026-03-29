@@ -207,4 +207,71 @@
         function updatePriceWithEgg(id, base) {
             const itemDiv = document.getElementById(`item-${id}`);
             const isIced = itemDiv.querySelector('[data-type="temp"] .active')?.innerText === 'Iced';
-            let price = isIced ? base + 0
+            let price = isIced ? base + 0.2 : base; 
+            if (document.getElementById(`egg-${id}`).checked) price += 1.40;
+            document.getElementById(`price-${id}`).innerText = `RM ${price.toFixed(2)}`;
+        }
+
+        function addToCart(name, id, isFood, isWater) {
+            const itemDiv = document.getElementById(`item-${id}`);
+            const price = parseFloat(itemDiv.querySelector('.price-tag').innerText.replace('RM ', ''));
+            const temp = (!isFood && !isWater) ? itemDiv.querySelector('[data-type="temp"] .active').innerText : 'N/A';
+            const sugar = itemDiv.querySelector('[data-type="sugar"] .active')?.innerText || 'N/A';
+            const prep = itemDiv.querySelector('[data-type="prep"] .active')?.innerText || 'N/A';
+            const spread = itemDiv.querySelector('[data-type="spread"] .active')?.innerText || 'N/A';
+            const egg = document.getElementById(`egg-${id}`)?.checked || false;
+            const remarks = itemDiv.querySelector('.remarks-input').value;
+
+            cart.push({ name, price, temp, sugar, prep, spread, egg, remarks });
+            document.getElementById('cart-count').innerText = cart.length;
+            document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+            alert(`Added: ${name.toUpperCase()}`);
+            itemDiv.querySelector('.remarks-input').value = '';
+        }
+
+        function showOrderSummary() {
+            if (cart.length === 0) { alert("Your cart is empty!"); return; }
+            
+            let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+            let contentHTML = '';
+            
+            cart.forEach(item => {
+                contentHTML += `
+                    <div class="modal-item">
+                        <span>${item.name.toUpperCase()}</span>
+                        <span>RM ${item.price.toFixed(2)}</span>
+                    </div>
+                `;
+                let details = [];
+                if (item.temp !== 'N/A') details.push(`${item.temp} / ${item.sugar}`);
+                if (item.prep !== 'N/A') details.push(`Type: ${item.prep}`);
+                if (item.spread !== 'N/A') details.push(`Flavour: ${item.spread}`);
+                if (item.egg) details.push(`+ Add 1 egg`);
+                if (item.remarks.trim()) details.push(`Note: ${item.remarks}`);
+                
+                if (details.length > 0) {
+                    contentHTML += `<div class="modal-sub">- ${details.join(' | ')}</div>`;
+                }
+            });
+
+            document.getElementById('modal-content').innerHTML = contentHTML;
+            document.getElementById('modal-total-price').innerText = total;
+            document.getElementById('order-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('order-modal').style.display = 'none';
+        }
+
+        function confirmOrder() {
+            closeModal();
+            alert("Order Confirmed! 🎉\n请前往柜台出示此页面并付款。");
+            cart = [];
+            document.getElementById('cart-count').innerText = '0';
+            document.getElementById('cart-total').innerText = '0.00';
+        }
+
+        window.onload = () => renderMenu();
+    </script>
+</body>
+</html>
