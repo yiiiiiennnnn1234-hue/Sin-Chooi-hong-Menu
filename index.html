@@ -10,6 +10,10 @@
         header { background-color: var(--card-bg); padding: 25px 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
         header h1 { margin: 0; font-size: 24px; text-transform: uppercase; color: var(--primary-color); letter-spacing: 1.5px; font-weight: 800; }
         header .subtitle { margin: 6px 0 0; font-size: 13px; color: #795548; font-style: italic; }
+        
+        /* 💡 新增：顶部桌号显示条 */
+        .table-banner { background-color: #EFEBE9; text-align: center; padding: 10px; font-weight: bold; font-size: 16px; color: var(--primary-color); border-bottom: 1px solid #D7CCC8; }
+
         .main-container { padding: 15px; }
         .category-container { margin-bottom: 15px; border-radius: 12px; overflow: hidden; background-color: var(--card-bg); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .category-header { background: var(--primary-color); color: white; padding: 15px 18px; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; justify-content: space-between; }
@@ -31,11 +35,9 @@
         .remarks-input { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #CCC; border-radius: 6px; margin-top: 8px; font-size: 13px; height: 34px; }
         .add-btn { background-color: #2E7D32; color: white; border: none; width: 100%; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 12px; }
         
-        /* 底部购物车 */
         .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(51, 51, 51, 0.95); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .submit-btn { background: #FF9800; color: #fff; border: none; padding: 12px 25px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
 
-        /* 🧾 顾客看到的订单明细弹窗样式 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; }
         .modal-box { background: white; width: 85%; max-width: 400px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; }
         .modal-title { font-size: 18px; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
@@ -53,6 +55,9 @@
         <h1>Sin Chooi Hong Kopitiam</h1>
         <div class="subtitle">Since 1971</div>
     </header>
+
+    <div class="table-banner" id="table-display">Table: Not Specified</div>
+
     <div class="main-container">
         <div id="menu-container"></div>
     </div>
@@ -113,6 +118,18 @@
 
         let cart = [];
         let itemCounter = 0;
+        let currentTable = "Not Specified";
+
+        // 💡 核心逻辑：从网址里抓取桌号
+        function checkTable() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const table = urlParams.get('table');
+            if (table) {
+                currentTable = table;
+                document.getElementById('table-display').innerText = `Table: ${table}`;
+                document.getElementById('table-display').style.backgroundColor = '#C8E6C9'; // 识别成功变成浅绿色
+            }
+        }
 
         function renderMenu() {
             const container = document.getElementById('menu-container');
@@ -190,18 +207,14 @@
             });
         }
 
-        // 💡 传统的单选逻辑
         function selectTag(element) {
             const tags = element.parentElement.getElementsByClassName('tag');
             for (let t of tags) t.classList.remove('active');
             element.classList.add('active');
         }
 
-        // 💡 重点：支持多选，最多选2个
         function selectMultiTag(element) {
             const tags = element.parentElement.getElementsByClassName('tag');
-            
-            // 如果点击的是已经激活的，就取消激活（但必须保留至少一个）
             if (element.classList.contains('active')) {
                 let activeCount = 0;
                 for (let t of tags) { if (t.classList.contains('active')) activeCount++; }
@@ -210,16 +223,11 @@
                     return;
                 }
             }
-            
             element.classList.add('active');
-            
-            // 检查当前点亮了几个
             let activeTags = [];
             for (let t of tags) {
                 if (t.classList.contains('active')) activeTags.push(t);
             }
-            
-            // 如果超过 2 个，把最早点亮（数组里第 0 个）的取消掉
             if (activeTags.length > 2) {
                 activeTags[0].classList.remove('active');
             }
@@ -246,8 +254,6 @@
             const temp = (!isFood && !isWater) ? itemDiv.querySelector('[data-type="temp"] .active').innerText : 'N/A';
             const sugar = itemDiv.querySelector('[data-type="sugar"] .active')?.innerText || 'N/A';
             const prep = itemDiv.querySelector('[data-type="prep"] .active')?.innerText || 'N/A';
-            
-            // 💡 抓取所有被选中的酱料
             const activeSpreads = itemDiv.querySelectorAll('[data-type="spread"] .active');
             let spreadList = [];
             activeSpreads.forEach(s => spreadList.push(s.innerText));
@@ -267,7 +273,9 @@
             if (cart.length === 0) { alert("Your cart is empty!"); return; }
             
             let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
-            let contentHTML = '';
+            
+            // 💡 重点：在弹窗里置顶显示桌号
+            let contentHTML = `<div style="text-align:center; font-weight:800; color:#bf360c; font-size:16px; margin-bottom:15px; background:#fbe9e7; padding:5px; border-radius:5px;">📍 TABLE: ${currentTable}</div>`;
             
             cart.forEach(item => {
                 contentHTML += `
@@ -299,13 +307,17 @@
 
         function confirmOrder() {
             closeModal();
-            alert("Order Confirmed! 🎉\n\n订单已确认！饮料送达时请付款。\nPlease make payment when your drinks arrive.");
+            alert("Order Confirmed! 🎉\n\n订单已确认！饮料/食物送达时请付款。\nPlease make payment when your drinks/food arrive.");
             cart = [];
             document.getElementById('cart-count').innerText = '0';
             document.getElementById('cart-total').innerText = '0.00';
         }
 
-        window.onload = () => renderMenu();
+        // 💡 页面加载时，先检查桌号，再渲染菜单
+        window.onload = () => {
+            checkTable();
+            renderMenu();
+        };
     </script>
 </body>
 </html>
