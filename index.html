@@ -33,7 +33,6 @@
         .tag.active { background: var(--primary-color); color: white; border-color: var(--primary-color); font-weight: bold;}
         .addon-row { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #DDD; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; }
         
-        /* 💡 新增：数量选择器样式 */
         .qty-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #EEE; }
         .qty-label { font-size: 14px; font-weight: bold; color: var(--primary-color); }
         .qty-controls { display: flex; align-items: center; gap: 12px; }
@@ -91,37 +90,56 @@
     </div>
 
     <script>
-        // 💡 基础菜单数据（已调整冰水价格为 0.50）
+        // 💡 基础菜单数据（完全按照 PDF 原稿核对调整）
         const menuData = [
             { id: "cat1", name: "☕ Classic Kopi & Teh", items: [
-                { name: "barli", hot: 2.0, cold: 2.0, noBigHot: true }, { name: "teh o", hot: 1.8, cold: 2.0 },
-                { name: "teh", hot: 2.0, cold: 2.2 }, { name: "teh c", hot: 2.2, cold: 2.4 },
-                { name: "kopi o", hot: 1.8, cold: 2.0 }, { name: "kopi", hot: 2.0, cold: 2.2 },
-                { name: "kopi c", hot: 2.2, cold: 2.4 }, { name: "cham o", hot: 1.8, cold: 2.0 },
-                { name: "cham", hot: 2.0, cold: 2.2 }, { name: "cham c", hot: 2.2, cold: 2.4 },
-                { name: "susu", hot: 2.0, cold: 2.2 }, { name: "milo o", hot: 2.8, cold: 3.0 },
-                { name: "milo", hot: 3.0, cold: 3.2 }, { name: "nescafe o", hot: 2.8, cold: 3.0 },
-                { name: "nescafe", hot: 3.0, cold: 3.2 }, { name: "nescafe c", hot: 3.2, cold: 3.4 },
-                { name: "neslo", hot: 3.8, cold: 4.0 }, { name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true },
-                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true }, { name: "nestum", hot: 2.8, cold: 3.0 },
-                { name: "limau", hot: 1.6, cold: 1.6, noBigHot: true }, { name: "sirap", hot: 1.4, cold: 1.4, noBigHot: true },
-                { name: "sirap bandung", hot: 2.0, cold: 2.2, noBigHot: true }, { name: "oren bancuh", hot: 2.0, cold: 2.0 },
-                { name: "papo (八宝)", hot: 1.8, cold: 1.8, noBigHot: true }, { name: "asam", hot: 1.8, cold: 1.8 },
-                { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8, noBigHot: true }, { name: "jus cinta (932)", hot: 2.0, cold: 2.0, noBigHot: true },
-                { name: "oren asam", hot: 2.0, cold: 2.0, noBigHot: true }, // 顾客指定排除大杯
+                { name: "barli", hot: 2.0, cold: 2.0 }, 
+                { name: "teh o", hot: 1.8, cold: 2.0, bigHot: 2.2 },
+                { name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4 }, 
+                { name: "teh c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
+                { name: "kopi o", hot: 1.8, cold: 2.0, bigHot: 2.2 }, 
+                { name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4 },
+                { name: "kopi c", hot: 2.2, cold: 2.4, bigHot: 2.6 }, 
+                { name: "cham o", hot: 1.8, cold: 2.0, bigHot: 2.2 },
+                { name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4 }, 
+                { name: "cham c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
+                { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.2 }, 
+                { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 4.0 },
+                { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
+                { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.0 }, // PDF 标明冷饮是 2.0 
+                { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
+                { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0 },
+                { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0 }, 
+                { name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true },
+                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true }, 
+                { name: "nestum", hot: 2.8, cold: 3.0 },
+                { name: "limau", hot: 1.6, cold: 1.6 }, 
+                { name: "sirap", hot: 1.4, cold: 1.4 },
+                { name: "sirap bandung", hot: 2.0, cold: 2.2 }, 
+                { name: "oren bancuh", hot: 2.0, cold: 2.0 },
+                { name: "papo (八宝)", hot: 1.8, cold: 1.8 }, 
+                { name: "asam", hot: 1.8, cold: 1.8 },
+                { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8 }, 
+                { name: "jus cinta (932)", hot: 2.0, cold: 2.0 },
+                { name: "oren asam", hot: 2.0, cold: 2.0 },
                 { name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true }, 
-                { name: "air ais (冰水)", hot: 0.5, cold: 0.5, isWater: true } // 💡 冰水价格已改成 RM 0.50
+                { name: "air ais (冰水)", hot: 0.5, cold: 0.5, isWater: true }
             ]},
             { id: "cat2", name: "🌟 Specialties & Packaged", items: [
-                { name: "white coffee", hot: 2.8, cold: 3.0, noSugar: true }, { name: "cappocino", hot: 2.8, cold: 3.0, noSugar: true },
-                { name: "larat", hot: 2.8, cold: 3.0, noSugar: true }, { name: "radix", hot: 2.8, cold: 3.0, noSugar: true },
-                { name: "tongkat ali", hot: 2.8, cold: 3.0, noSugar: true }, { name: "tutu (milo kopi nestum)", hot: 4.5, cold: 4.5 },
-                { name: "3 rasa (milo kopi nescafe)", hot: 4.5, cold: 4.5 }, { name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true },
-                { name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true }, { name: "thai green teh", hot: 4.0, cold: 4.0 },
+                { name: "white coffee", hot: 3.0, cold: 3.0, noSugar: true }, // 修正为 3.0
+                { name: "cappocino", hot: 3.0, cold: 3.0, noSugar: true }, 
+                { name: "larat", hot: 3.0, cold: 3.0, noSugar: true }, 
+                { name: "radix", hot: 3.0, cold: 3.0, noSugar: true }, 
+                { name: "tongkat ali", hot: 3.0, cold: 3.0, noSugar: true }, 
+                { name: "tutu (milo kopi nestum)", hot: 4.5, cold: 4.5 },
+                { name: "3 rasa (milo kopi nescafe)", hot: 4.5, cold: 4.5 }, 
+                { name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true },
+                { name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true }, 
+                { name: "thai green teh", hot: 4.0, cold: 4.0 },
                 { name: "miko (ho ka sai)", hot: 4.0, cold: 4.0 }
             ]},
             { id: "cat3", name: "🍞 Toast & Eggs", items: [
-                { name: "Roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true, remarksPlaceholder: "Kaya Ori, Pandan, Choose two flavors?" },
+                { name: "roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true },
                 { name: "half boiled egg (2 biji)", hot: 2.8, cold: 2.8, isFood: true, hasEggAddon: true },
                 { name: "roti goyang", hot: 4.8, cold: 4.8, isFood: true }
             ]}
@@ -174,6 +192,9 @@
                     const isFood = item.isFood || false;
                     const isWater = item.isWater || false;
 
+                    // 计算大杯加多少
+                    const bigAddon = item.bigHot ? (item.bigHot - item.hot) : 0;
+
                     itemDiv.innerHTML = `
                         <div class="item-header">
                             <span class="item-name">${item.name}</span>
@@ -183,15 +204,15 @@
                             ${(!isFood && !isWater) ? `
                             <div class="option-row"><span class="option-label">Temp:</span>
                                 <div class="tags" data-type="temp">
-                                    <div class="tag active" onclick="selectTempTag(this, ${itemCounter}, ${item.hot}, ${item.cold}, ${item.noBigHot || false})">Hot</div>
-                                    <div class="tag" onclick="selectTempTag(this, ${itemCounter}, ${item.hot}, ${item.cold}, ${item.noBigHot || false})">Iced</div>
+                                    <div class="tag active" onclick="selectTempTag(this, ${itemCounter}, ${item.hot}, ${item.cold})">Hot</div>
+                                    <div class="tag" onclick="selectTempTag(this, ${itemCounter}, ${item.hot}, ${item.cold})">Iced</div>
                                 </div>
                             </div>` : ''}
 
                             <div class="option-row" id="size-row-${itemCounter}" style="display: none;"><span class="option-label">Size:</span>
                                 <div class="tags" data-type="size">
-                                    <div class="tag active" onclick="selectSizeTag(this, ${itemCounter}, ${item.hot})">Normal</div>
-                                    <div class="tag" onclick="selectSizeTag(this, ${itemCounter}, ${item.hot})">Big (+RM0.60)</div>
+                                    <div class="tag active" onclick="selectSizeTag(this, ${itemCounter}, ${item.hot}, ${bigAddon})">Normal</div>
+                                    <div class="tag" onclick="selectSizeTag(this, ${itemCounter}, ${item.hot}, ${bigAddon})">Big (+RM ${bigAddon.toFixed(2)})</div>
                                 </div>
                             </div>
                             
@@ -204,9 +225,10 @@
                             </div>` : ''}
 
                             ${item.hasRotiSpread ? `
-                            <div class="option-row"><span class="option-label">Flavour:</span>
+                            <div class="option-row"><span class="option-label">Spread (1-2):</span>
                                 <div class="tags" data-type="spread">
-                                    <div class="tag active" onclick="selectMultiTag(this)">Kaya</div>
+                                    <div class="tag active" onclick="selectMultiTag(this)">Kaya Ori</div>
+                                    <div class="tag" onclick="selectMultiTag(this)">Kaya Pandan</div>
                                     <div class="tag" onclick="selectMultiTag(this)">Butter</div>
                                     <div class="tag" onclick="selectMultiTag(this)">Peanut</div>
                                 </div>
@@ -232,13 +254,13 @@
                             </div>
                         </div>
 
-                        <textarea class="remarks-input" placeholder="${item.remarksPlaceholder || 'Remarks (e.g., Kaw)'}"></textarea>
+                        <textarea class="remarks-input" placeholder="Remarks (e.g., Kaw)"></textarea>
                         <button class="add-btn" onclick="addToCart('${item.name}', ${itemCounter}, ${isFood}, ${isWater})">Add to Order</button>
                     `;
                     grid.appendChild(itemDiv);
                     
-                    // 页面初始化时，如果是热饮且没有被排除，显示大杯选项
-                    if (!isFood && !isWater && !item.noBigHot) {
+                    // 初始化大杯状态
+                    if (item.bigHot) {
                         document.getElementById(`size-row-${itemCounter}`).style.display = 'flex';
                     }
                 });
@@ -267,25 +289,24 @@
             if (activeTags.length > 2) { activeTags[0].classList.remove('active'); }
         }
 
-        // 💡 专门处理温度切换，控制大杯选项的隐藏与显示
-        function selectTempTag(element, id, hot, cold, noBigHot) {
+        function selectTempTag(element, id, hot, cold) {
             selectTag(element);
             const isHot = element.innerText === 'Hot';
             const sizeRow = document.getElementById(`size-row-${id}`);
             
-            if (sizeRow && !noBigHot) {
+            // 只有原稿有 bigHot 的热饮，在选 Hot 时才显示大杯选项
+            const itemObj = menuData.flatMap(c=>c.items)[id-1];
+            if (sizeRow && itemObj && itemObj.bigHot) {
                 sizeRow.style.display = isHot ? 'flex' : 'none';
             }
-            
             calculateCurrentPrice(id, hot, cold);
         }
 
-        function selectSizeTag(element, id, hot) {
+        function selectSizeTag(element, id, hot, addon) {
             selectTag(element);
             calculateCurrentPrice(id, hot, 0);
         }
 
-        // 💡 动态计算当前单价
         function calculateCurrentPrice(id, hot, cold) {
             const itemDiv = document.getElementById(`item-${id}`);
             const tempTag = itemDiv.querySelector('[data-type="temp"] .active');
@@ -293,11 +314,11 @@
             
             let price = isIced ? cold : hot;
             
-            // 如果是热饮且选了大杯，加 0.60
             if (!isIced) {
                 const sizeTag = itemDiv.querySelector('[data-type="size"] .active');
                 if (sizeTag && sizeTag.innerText.includes('Big')) {
-                    price += 0.60;
+                    const itemObj = menuData.flatMap(c=>c.items)[id-1];
+                    price = itemObj.bigHot; // 强制使用原稿对应的大杯总价
                 }
             }
             
@@ -308,12 +329,9 @@
         }
 
         function updatePriceWithEgg(id, base) {
-            const itemDiv = document.getElementById(`item-${id}`);
-            const tempTag = itemDiv.querySelector('[data-type="temp"] .active');
             calculateCurrentPrice(id, base, 0);
         }
 
-        // 💡 数量加减
         function changeQty(id, delta) {
             const qtyDiv = document.getElementById(`qty-${id}`);
             let currentQty = parseInt(qtyDiv.innerText);
@@ -331,10 +349,12 @@
             const sugar = itemDiv.querySelector('[data-type="sugar"] .active')?.innerText || 'N/A';
             const prep = itemDiv.querySelector('[data-type="prep"] .active')?.innerText || 'N/A';
             
-            // 抓取大杯属性
             let size = 'N/A';
             if (temp === 'Hot') {
-                size = itemDiv.querySelector('[data-type="size"] .active')?.innerText.includes('Big') ? 'Big' : 'Normal';
+                const sizeRow = document.getElementById(`size-row-${id}`);
+                if (sizeRow && sizeRow.style.display !== 'none') {
+                    size = itemDiv.querySelector('[data-type="size"] .active')?.innerText.includes('Big') ? 'Big' : 'Normal';
+                }
             }
 
             const activeSpreads = itemDiv.querySelectorAll('[data-type="spread"] .active');
@@ -345,7 +365,6 @@
             const egg = document.getElementById(`egg-${id}`)?.checked || false;
             const remarks = itemDiv.querySelector('.remarks-input').value;
 
-            // 💡 价格按数量翻倍
             const totalPrice = singlePrice * qty;
 
             cart.push({ name, price: totalPrice, singlePrice, qty, temp, size, sugar, prep, spread, egg, remarks });
@@ -354,8 +373,6 @@
             document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
             
             alert(`Added: ${qty}x ${name.toUpperCase()}`);
-            
-            // 重置数量
             document.getElementById(`qty-${id}`).innerText = '1';
             itemDiv.querySelector('.remarks-input').value = '';
         }
@@ -376,7 +393,7 @@
                 let details = [];
                 if (item.temp !== 'N/A') {
                     let tempStr = item.temp;
-                    if (item.size !== 'N/A') tempStr += ` (${item.size})`;
+                    if (item.size !== 'N/A' && item.size !== 'Normal') tempStr += ` (${item.size})`;
                     details.push(`${tempStr} / ${item.sugar}`);
                 }
                 if (item.prep !== 'N/A') details.push(`Type: ${item.prep}`);
