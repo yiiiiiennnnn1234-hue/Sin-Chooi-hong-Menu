@@ -11,7 +11,6 @@
         header h1 { margin: 0; font-size: 24px; text-transform: uppercase; color: var(--primary-color); letter-spacing: 1.5px; font-weight: 800; }
         header .subtitle { margin: 6px 0 0; font-size: 13px; color: #795548; font-style: italic; }
         
-        /* 💡 顶部桌号条：自适应顾客/平板模式 */
         .table-banner { background-color: #EFEBE9; text-align: center; padding: 12px; font-weight: bold; font-size: 16px; color: var(--primary-color); border-bottom: 1px solid #D7CCC8; display: flex; justify-content: center; align-items: center; gap: 10px; }
         .table-select { padding: 6px; font-size: 15px; font-weight: bold; color: var(--primary-color); border: 1px solid #BCAAA4; border-radius: 6px; background: white; }
 
@@ -34,7 +33,7 @@
         .tag.active { background: var(--primary-color); color: white; border-color: var(--primary-color); font-weight: bold;}
         .addon-row { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #DDD; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; }
         
-        /* 🆕 新增：数量选择样式 */
+        /* 数量加减的样式 */
         .qty-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #EEE; }
         .qty-label { font-size: 14px; font-weight: bold; color: var(--primary-color); }
         .qty-controls { display: flex; align-items: center; gap: 12px; }
@@ -94,48 +93,28 @@
     <script>
         const menuData = [
             { id: "cat1", name: "☕ Classic Kopi & Teh", items: [
-                { name: "barli", hot: 2.0, cold: 2.0 }, 
-                { name: "teh o", hot: 1.8, cold: 2.0, bigHot: 2.2 },
-                { name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4 }, 
-                { name: "teh c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
-                { name: "kopi o", hot: 1.8, cold: 2.0, bigHot: 2.2 }, 
-                { name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4 },
-                { name: "kopi c", hot: 2.2, cold: 2.4, bigHot: 2.6 }, 
-                { name: "cham o", hot: 1.8, cold: 2.0, bigHot: 2.2 },
-                { name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4 }, 
-                { name: "cham c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
-                { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.2 }, 
-                { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 4.0 },
-                { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
-                { name: "nescafe o", hot: 2.8, cold: 2.0, bigHot: 4.0 }, 
-                { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
-                { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0 },
-                { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0 }, 
-                { name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true },
-                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true }, 
-                { name: "nestum", hot: 2.8, cold: 3.0 },
-                { name: "limau", hot: 1.6, cold: 1.6 }, 
-                { name: "sirap", hot: 1.4, cold: 1.4 },
-                { name: "sirap bandung", hot: 2.0, cold: 2.2 }, 
-                { name: "oren bancuh", hot: 2.0, cold: 2.0 },
-                { name: "papo (八宝)", hot: 1.8, cold: 1.8 }, 
-                { name: "asam", hot: 1.8, cold: 1.8 },
-                { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8 }, 
-                { name: "jus cinta (932)", hot: 2.0, cold: 2.0 },
-                { name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true }, 
-                { name: "air ais (冰水)", hot: 0.7, cold: 0.7, isWater: true }
+                { name: "barli", hot: 2.0, cold: 2.0 }, { name: "teh o", hot: 1.8, cold: 2.0 },
+                { name: "teh", hot: 2.0, cold: 2.2 }, { name: "teh c", hot: 2.2, cold: 2.4 },
+                { name: "kopi o", hot: 1.8, cold: 2.0 }, { name: "kopi", hot: 2.0, cold: 2.2 },
+                { name: "kopi c", hot: 2.2, cold: 2.4 }, { name: "cham o", hot: 1.8, cold: 2.0 },
+                { name: "cham", hot: 2.0, cold: 2.2 }, { name: "cham c", hot: 2.2, cold: 2.4 },
+                { name: "susu", hot: 2.0, cold: 2.2 }, { name: "milo o", hot: 2.8, cold: 3.0 },
+                { name: "milo", hot: 3.0, cold: 3.2 }, { name: "nescafe o", hot: 2.8, cold: 3.0 },
+                { name: "nescafe", hot: 3.0, cold: 3.2 }, { name: "nescafe c", hot: 3.2, cold: 3.4 },
+                { name: "neslo", hot: 3.8, cold: 4.0 }, { name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true },
+                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true }, { name: "nestum", hot: 2.8, cold: 3.0 },
+                { name: "limau", hot: 1.6, cold: 1.6 }, { name: "sirap", hot: 1.4, cold: 1.4 },
+                { name: "sirap bandung", hot: 2.0, cold: 2.2 }, { name: "oren bancuh", hot: 2.0, cold: 2.0 },
+                { name: "papo (八宝)", hot: 1.8, cold: 1.8 }, { name: "asam", hot: 1.8, cold: 1.8 },
+                { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8 }, { name: "jus cinta (932)", hot: 2.0, cold: 2.0 },
+                { name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true }, { name: "air ais (冰水)", hot: 0.7, cold: 0.7, isWater: true }
             ]},
             { id: "cat2", name: "🌟 Specialties & Packaged", items: [
-                { name: "white coffee", hot: 2.8, cold: 3.0, noSugar: true }, 
-                { name: "cappocino", hot: 2.8, cold: 3.0, noSugar: true },
-                { name: "larat", hot: 2.8, cold: 3.0, noSugar: true }, 
-                { name: "radix", hot: 2.8, cold: 3.0, noSugar: true },
-                { name: "tongkat ali", hot: 2.8, cold: 3.0, noSugar: true }, 
-                { name: "tutu (milo kopi nestum)", hot: 4.5, cold: 4.5 },
-                { name: "3 rasa (milo kopi nescafe)", hot: 4.5, cold: 4.5 }, 
-                { name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true },
-                { name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true }, 
-                { name: "thai green teh", hot: 4.0, cold: 4.0 },
+                { name: "white coffee", hot: 2.8, cold: 3.0, noSugar: true }, { name: "cappocino", hot: 2.8, cold: 3.0, noSugar: true },
+                { name: "larat", hot: 2.8, cold: 3.0, noSugar: true }, { name: "radix", hot: 2.8, cold: 3.0, noSugar: true },
+                { name: "tongkat ali", hot: 2.8, cold: 3.0, noSugar: true }, { name: "tutu (milo kopi nestum)", hot: 4.5, cold: 4.5 },
+                { name: "3 rasa (milo kopi nescafe)", hot: 4.5, cold: 4.5 }, { name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true },
+                { name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true }, { name: "thai green teh", hot: 4.0, cold: 4.0 },
                 { name: "miko (ho ka sai)", hot: 4.0, cold: 4.0 }
             ]},
             { id: "cat3", name: "🍞 Toast & Eggs", items: [
@@ -148,28 +127,20 @@
         let cart = [];
         let itemCounter = 0;
         let currentTable = "Not Specified";
-        
-        // 💡 所有的桌号清单
         const allTables = ["A1","A2","A3","B1","B2","B3","C1","C2","C3","C4","C5","C6","A","B","C","D","E","F","L1","L2","Tepi"];
 
-        // 💡 核心逻辑：区分顾客扫码和平板手动选号
         function checkTable() {
             const urlParams = new URLSearchParams(window.location.search);
             const table = urlParams.get('table');
             const displayDiv = document.getElementById('table-display');
-            
             if (table) {
-                // 扫码模式（顾客手机）
                 currentTable = table;
                 displayDiv.innerText = `Table: ${table}`;
-                displayDiv.style.backgroundColor = '#C8E6C9'; // 扫码成功显示浅绿色
+                displayDiv.style.backgroundColor = '#C8E6C9';
             } else {
-                // 柜台模式（平板电脑）
                 let selectHTML = `<span>Select Table:</span><select class="table-select" onchange="currentTable=this.value">`;
                 selectHTML += `<option value="Not Specified">Choose...</option>`;
-                allTables.forEach(t => {
-                    selectHTML += `<option value="${t}">${t}</option>`;
-                });
+                allTables.forEach(t => { selectHTML += `<option value="${t}">${t}</option>`; });
                 selectHTML += `</select>`;
                 displayDiv.innerHTML = selectHTML;
                 displayDiv.style.backgroundColor = '#EFEBE9';
@@ -178,8 +149,6 @@
 
         function renderMenu() {
             const container = document.getElementById('menu-container');
-            container.innerHTML = ''; // 清空容器
-            
             menuData.forEach(cat => {
                 const catDiv = document.createElement('div');
                 catDiv.className = 'category-container';
@@ -202,9 +171,6 @@
                     const isFood = item.isFood || false;
                     const isWater = item.isWater || false;
 
-                    // 计算大杯加价多少
-                    const bigAddon = item.bigHot ? (item.bigHot - item.hot) : 0;
-
                     itemDiv.innerHTML = `
                         <div class="item-header">
                             <span class="item-name">${item.name}</span>
@@ -214,18 +180,10 @@
                             ${(!isFood && !isWater) ? `
                             <div class="option-row"><span class="option-label">Temp:</span>
                                 <div class="tags" data-type="temp">
-                                    <div class="tag active" onclick="selectTempTag(this, ${itemCounter}, ${item.hot}, ${item.cold})">Hot</div>
-                                    <div class="tag" onclick="selectTempTag(this, ${itemCounter}, ${item.hot}, ${item.cold})">Iced</div>
+                                    <div class="tag active" onclick="selectTag(this);updatePrice(${itemCounter},${item.hot},${item.cold},'hot')">Hot</div>
+                                    <div class="tag" onclick="selectTag(this);updatePrice(${itemCounter},${item.hot},${item.cold},'cold')">Iced</div>
                                 </div>
                             </div>` : ''}
-
-                            ${/* 🆕 新增：如果有大杯，并且选了Hot时显示 */ ''}
-                            <div class="option-row" id="size-row-${itemCounter}" style="display: none;"><span class="option-label">Size:</span>
-                                <div class="tags" data-type="size">
-                                    <div class="tag active" onclick="selectSizeTag(this, ${itemCounter}, ${item.hot}, ${bigAddon})">Normal</div>
-                                    <div class="tag" onclick="selectSizeTag(this, ${itemCounter}, ${item.hot}, ${bigAddon})">Big (+RM ${bigAddon.toFixed(2)})</div>
-                                </div>
-                            </div>
                             
                             ${item.hasRotiPrep ? `
                             <div class="option-row"><span class="option-label">Method:</span>
@@ -255,7 +213,6 @@
                         </div>
                         ${item.hasEggAddon ? `<div class="addon-row"><span>+ Add 1 egg (RM 1.40)</span><input type="checkbox" id="egg-${itemCounter}" onchange="updatePriceWithEgg(${itemCounter}, ${item.hot})"></div>` : ''}
                         
-                        ${/* 🆕 新增：数量加减控件 */ ''}
                         <div class="qty-row">
                             <div class="qty-label">Quantity:</div>
                             <div class="qty-controls">
@@ -269,11 +226,6 @@
                         <button class="add-btn" onclick="addToCart('${item.name}', ${itemCounter}, ${isFood}, ${isWater})">Add to Order</button>
                     `;
                     grid.appendChild(itemDiv);
-                    
-                    // 默认如果是热饮且有大杯，显示Size行
-                    if (item.bigHot) {
-                        document.getElementById(`size-row-${itemCounter}`).style.display = 'flex';
-                    }
                 });
                 contentDiv.appendChild(grid);
                 catDiv.appendChild(contentDiv);
@@ -292,95 +244,46 @@
             if (element.classList.contains('active')) {
                 let activeCount = 0;
                 for (let t of tags) { if (t.classList.contains('active')) activeCount++; }
-                if (activeCount > 1) {
-                    element.classList.remove('active');
-                    return;
-                }
+                if (activeCount > 1) { element.classList.remove('active'); return; }
             }
             element.classList.add('active');
             let activeTags = [];
-            for (let t of tags) {
-                if (t.classList.contains('active')) activeTags.push(t);
-            }
-            if (activeTags.length > 2) {
-                activeTags[0].classList.remove('active');
-            }
+            for (let t of tags) { if (t.classList.contains('active')) activeTags.push(t); }
+            if (activeTags.length > 2) { activeTags[0].classList.remove('active'); }
         }
 
-        // 🆕 新增：切换冷热时处理大杯显示
-        function selectTempTag(element, id, hot, cold) {
-            selectTag(element);
-            const isHot = element.innerText === 'Hot';
-            const sizeRow = document.getElementById(`size-row-${id}`);
-            
-            // 只有在选Hot并且有大杯数据时，才显示大杯选项
-            const itemObj = menuData.flatMap(c=>c.items)[id-1];
-            if (sizeRow && itemObj && itemObj.bigHot) {
-                sizeRow.style.display = isHot ? 'flex' : 'none';
-            }
-            calculateCurrentPrice(id, hot, cold);
-        }
-
-        // 🆕 新增：切换大杯正常杯
-        function selectSizeTag(element, id, hot, addon) {
-            selectTag(element);
-            calculateCurrentPrice(id, hot, 0);
-        }
-
-        // 🆕 新增：统一算价逻辑
-        function calculateCurrentPrice(id, hot, cold) {
-            const itemDiv = document.getElementById(`item-${id}`);
-            const tempTag = itemDiv.querySelector('[data-type="temp"] .active');
-            const isIced = tempTag ? tempTag.innerText === 'Iced' : false;
-            
-            let price = isIced ? cold : hot;
-            
-            // 如果是热的，需要看选的是不是Big
-            if (!isIced) {
-                const sizeTag = itemDiv.querySelector('[data-type="size"] .active');
-                if (sizeTag && sizeTag.innerText.includes('Big')) {
-                    const itemObj = menuData.flatMap(c=>c.items)[id-1];
-                    price = itemObj.bigHot;
-                }
-            }
-            
+        function updatePrice(id, hot, cold, type) {
             const eggChecked = document.getElementById(`egg-${id}`)?.checked || false;
+            let price = (type === 'hot' ? hot : cold);
             if (eggChecked) price += 1.40;
-            
             document.getElementById(`price-${id}`).innerText = `RM ${price.toFixed(2)}`;
         }
 
         function updatePriceWithEgg(id, base) {
-            calculateCurrentPrice(id, base, 0);
+            const itemDiv = document.getElementById(`item-${id}`);
+            const isIced = itemDiv.querySelector('[data-type="temp"] .active')?.innerText === 'Iced';
+            let price = isIced ? base + 0.2 : base; 
+            if (document.getElementById(`egg-${id}`).checked) price += 1.40;
+            document.getElementById(`price-${id}`).innerText = `RM ${price.toFixed(2)}`;
         }
 
-        // 🆕 新增：数量加减函数
+        // 🆕 数量加减小函数
         function changeQty(id, delta) {
             const qtyDiv = document.getElementById(`qty-${id}`);
             let currentQty = parseInt(qtyDiv.innerText);
             currentQty += delta;
-            if (currentQty < 1) currentQty = 1; // 最小为1
+            if (currentQty < 1) currentQty = 1;
             qtyDiv.innerText = currentQty;
         }
 
         function addToCart(name, id, isFood, isWater) {
             const itemDiv = document.getElementById(`item-${id}`);
             const singlePrice = parseFloat(itemDiv.querySelector('.price-tag').innerText.replace('RM ', ''));
-            const qty = parseInt(document.getElementById(`qty-${id}`).innerText);
+            const qty = parseInt(document.getElementById(`qty-${id}`).innerText); // 获取数量
             
             const temp = (!isFood && !isWater) ? itemDiv.querySelector('[data-type="temp"] .active').innerText : 'N/A';
             const sugar = itemDiv.querySelector('[data-type="sugar"] .active')?.innerText || 'N/A';
             const prep = itemDiv.querySelector('[data-type="prep"] .active')?.innerText || 'N/A';
-            
-            // 记录Size
-            let size = 'N/A';
-            if (temp === 'Hot') {
-                const sizeRow = document.getElementById(`size-row-${id}`);
-                if (sizeRow && sizeRow.style.display !== 'none') {
-                    size = itemDiv.querySelector('[data-type="size"] .active')?.innerText.includes('Big') ? 'Big' : 'Normal';
-                }
-            }
-
             const activeSpreads = itemDiv.querySelectorAll('[data-type="spread"] .active');
             let spreadList = [];
             activeSpreads.forEach(s => spreadList.push(s.innerText));
@@ -389,18 +292,18 @@
             const egg = document.getElementById(`egg-${id}`)?.checked || false;
             const remarks = itemDiv.querySelector('.remarks-input').value;
 
-            const totalPrice = singlePrice * qty; // 总价 = 单价 * 数量
+            // 总价 = 单价 × 数量
+            const totalPrice = singlePrice * qty;
 
-            // 在购物车数组里，把单价、数量、总价等存下来
-            cart.push({ name, price: totalPrice, singlePrice, qty, temp, size, sugar, prep, spread, egg, remarks });
+            cart.push({ name, price: totalPrice, qty, temp, sugar, prep, spread, egg, remarks });
             
-            // 更新底部显示
+            // 更新底部购物车数字：数量相加，金额相加
             document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
             document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
             
             alert(`Added: ${qty}x ${name.toUpperCase()}`);
             
-            // 重置该商品的数量和备注
+            // 重置数量为1，清空备注
             document.getElementById(`qty-${id}`).innerText = '1';
             itemDiv.querySelector('.remarks-input').value = '';
         }
@@ -419,13 +322,7 @@
                     </div>
                 `;
                 let details = [];
-                if (item.temp !== 'N/A') {
-                    let tempStr = item.temp;
-                    if (item.size !== 'N/A' && item.size !== 'Normal') {
-                        tempStr += ` (${item.size})`;
-                    }
-                    details.push(`${tempStr} / ${item.sugar}`);
-                }
+                if (item.temp !== 'N/A') details.push(`${item.temp} / ${item.sugar}`);
                 if (item.prep !== 'N/A') details.push(`Type: ${item.prep}`);
                 if (item.spread !== 'N/A') details.push(`Flavour: ${item.spread}`);
                 if (item.egg) details.push(`+ Add 1 egg`);
@@ -441,9 +338,7 @@
             document.getElementById('order-modal').style.display = 'flex';
         }
 
-        function closeModal() {
-            document.getElementById('order-modal').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
         function confirmOrder() {
             closeModal();
@@ -453,10 +348,7 @@
             document.getElementById('cart-total').innerText = '0.00';
         }
 
-        window.onload = () => {
-            checkTable();
-            renderMenu();
-        };
+        window.onload = () => { checkTable(); renderMenu(); };
     </script>
 </body>
 </html>
