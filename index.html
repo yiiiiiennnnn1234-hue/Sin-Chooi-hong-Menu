@@ -484,12 +484,79 @@
 
         function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
+        // 🆕 新增：将购物车内容格式化为后厨看的纯英文小票文本（带 Total）
+        function generateEnglishReceipt() {
+            let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+            
+            let receipt = "";
+            receipt += "================================\n";
+            receipt += "     SIN CHOOI HONG KOPI      \n";
+            receipt += `TABLE: ${currentTable} \n`;
+            receipt += "================================\n\n";
+
+            cart.forEach(item => {
+                let displayName = item.name.toUpperCase();
+                if (item.isLarge) displayName += " (LARGE)";
+                
+                // 限制名称长度在16个字符内，方便右侧对齐价格
+                let shortName = displayName.length > 16 ? displayName.substring(0, 16) : displayName;
+                receipt += `${item.qty}x ${shortName.padEnd(16)} RM ${item.price.toFixed(2)}\n`;
+                
+                // 打印客制化详情
+                if (item.temp !== 'N/A') receipt += `   - [ ${item.temp} / ${item.sugar} ]\n`;
+                if (item.prep !== 'N/A') receipt += `   - [ Type: ${item.prep} ]\n`;
+                if (item.spread !== 'N/A') receipt += `   - [ Flavour: ${item.spread} ]\n`;
+                if (item.egg) receipt += `   - [ + Add 1 egg ]\n`;
+                if (item.remarks.trim()) receipt += `   - [ Note: ${item.remarks} ]\n`;
+                receipt += "\n";
+            });
+
+            receipt += "--------------------------------\n";
+            receipt += `TOTAL AMOUNT:        RM ${total}\n`; // 👈 这就是后厨要看的 Total
+            receipt += "--------------------------------\n";
+            receipt += "Please pay when food arrives.\n";
+            receipt += "================================\n";
+            
+            return receipt;
+        }
+
+        // 🔄 替换：原有的 confirmOrder 函数
         function confirmOrder() {
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+
+            // 1. 生成纯英文的小票内容
+            const receiptContent = generateEnglishReceipt();
+
             closeModal();
-            alert("Order Confirmed! 🎉\n\n订单已确认！饮料/食物送达时请付款。\nPlease make payment when your drinks/food arrive.");
-            cart = [];
-            document.getElementById('cart-count').innerText = '0';
-            document.getElementById('cart-total').innerText = '0.00';
+
+            // 2. 🚀 通过网络，把小票内容发送到你的 WiFi 云打印机
+            // 🔴 注意：以下这个 fetch 里的地址和参数，需要根据你买的打印机品牌开发文档修改
+            fetch('https://你买的打印机品牌的云端API地址', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({
+                    "printer_sn": "你打印机底部的机身SN码", // 🔴 填入你的打印机编号
+                    "content": receiptContent
+                })
+            })
+            .then(response => {
+                // 如果发送成功，清空购物车，并弹出原本的成功提示
+                alert("Order Confirmed & Sent to Kitchen! 🎉\n\n订单已发送到后厨！饮料/食物送达时请付款。\nPlease make payment when your drinks/food arrive.");
+                
+                cart = [];
+                document.getElementById('cart-count').innerText = '0';
+                document.getElementById('cart-total').innerText = '0.00';
+            })
+            .catch(error => {
+                // 如果 Portable WiFi 网络断开或者打印机死机，会走这里
+                alert("Failed to send to kitchen printer! Please inform counter staff directly.\n发送到厨房打印机失败，请直接去柜台通知员工点单！");
+                console.error('Error sending to printer:', error);
+            });
         }
 
         window.onload = () => { checkTable(); renderMenu(); };
