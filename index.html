@@ -90,7 +90,6 @@
     </div>
 
     <script>
-        // 💡 基础菜单数据（完全按照 PDF 原稿核对调整）
         const menuData = [
             { id: "cat1", name: "☕ Classic Kopi & Teh", items: [
                 { name: "barli", hot: 2.0, cold: 2.0 }, 
@@ -106,7 +105,7 @@
                 { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.2 }, 
                 { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 4.0 },
                 { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
-                { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.0 }, // PDF 标明冷饮是 2.0 
+                { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.0 }, 
                 { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
                 { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0 },
                 { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0 }, 
@@ -126,7 +125,7 @@
                 { name: "air ais (冰水)", hot: 0.5, cold: 0.5, isWater: true }
             ]},
             { id: "cat2", name: "🌟 Specialties & Packaged", items: [
-                { name: "white coffee", hot: 3.0, cold: 3.0, noSugar: true }, // 修正为 3.0
+                { name: "white coffee", hot: 3.0, cold: 3.0, noSugar: true }, 
                 { name: "cappocino", hot: 3.0, cold: 3.0, noSugar: true }, 
                 { name: "larat", hot: 3.0, cold: 3.0, noSugar: true }, 
                 { name: "radix", hot: 3.0, cold: 3.0, noSugar: true }, 
@@ -191,8 +190,6 @@
                     itemDiv.id = `item-${itemCounter}`;
                     const isFood = item.isFood || false;
                     const isWater = item.isWater || false;
-
-                    // 计算大杯加多少
                     const bigAddon = item.bigHot ? (item.bigHot - item.hot) : 0;
 
                     itemDiv.innerHTML = `
@@ -259,7 +256,6 @@
                     `;
                     grid.appendChild(itemDiv);
                     
-                    // 初始化大杯状态
                     if (item.bigHot) {
                         document.getElementById(`size-row-${itemCounter}`).style.display = 'flex';
                     }
@@ -294,7 +290,6 @@
             const isHot = element.innerText === 'Hot';
             const sizeRow = document.getElementById(`size-row-${id}`);
             
-            // 只有原稿有 bigHot 的热饮，在选 Hot 时才显示大杯选项
             const itemObj = menuData.flatMap(c=>c.items)[id-1];
             if (sizeRow && itemObj && itemObj.bigHot) {
                 sizeRow.style.display = isHot ? 'flex' : 'none';
@@ -318,7 +313,7 @@
                 const sizeTag = itemDiv.querySelector('[data-type="size"] .active');
                 if (sizeTag && sizeTag.innerText.includes('Big')) {
                     const itemObj = menuData.flatMap(c=>c.items)[id-1];
-                    price = itemObj.bigHot; // 强制使用原稿对应的大杯总价
+                    price = itemObj.bigHot;
                 }
             }
             
