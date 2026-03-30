@@ -87,8 +87,8 @@
                 <button class="modal-btn btn-confirm" onclick="confirmOrder()">Confirm</button>
             </div>
         </div>
-    </div>
-
+    </head>
+    
     <script>
         const menuData = [
             { id: "cat1", name: "☕ Classic Kopi & Teh", items: [
@@ -105,7 +105,7 @@
                 { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.2 }, 
                 { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 4.0 },
                 { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
-                { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.0 }, 
+                { name: "nescafe o", hot: 2.8, cold: 2.0, bigHot: 4.0 }, 
                 { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
                 { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0 },
                 { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0 }, 
@@ -125,11 +125,11 @@
                 { name: "air ais (冰水)", hot: 0.5, cold: 0.5, isWater: true }
             ]},
             { id: "cat2", name: "🌟 Specialties & Packaged", items: [
-                { name: "white coffee", hot: 3.0, cold: 3.0, noSugar: true }, 
-                { name: "cappocino", hot: 3.0, cold: 3.0, noSugar: true }, 
-                { name: "larat", hot: 3.0, cold: 3.0, noSugar: true }, 
-                { name: "radix", hot: 3.0, cold: 3.0, noSugar: true }, 
-                { name: "tongkat ali", hot: 3.0, cold: 3.0, noSugar: true }, 
+                { name: "white coffee", hot: 2.8, cold: 3.0, noSugar: true }, 
+                { name: "cappocino", hot: 2.8, cold: 3.0, noSugar: true }, 
+                { name: "larat", hot: 2.8, cold: 3.0, noSugar: true }, 
+                { name: "radix", hot: 2.8, cold: 3.0, noSugar: true }, 
+                { name: "tongkat ali", hot: 2.8, cold: 3.0, noSugar: true }, 
                 { name: "tutu (milo kopi nestum)", hot: 4.5, cold: 4.5 },
                 { name: "3 rasa (milo kopi nescafe)", hot: 4.5, cold: 4.5 }, 
                 { name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true },
@@ -169,6 +169,8 @@
 
         function renderMenu() {
             const container = document.getElementById('menu-container');
+            container.innerHTML = ''; // 清空之前的
+            
             menuData.forEach(cat => {
                 const catDiv = document.createElement('div');
                 catDiv.className = 'category-container';
