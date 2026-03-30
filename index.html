@@ -24,9 +24,8 @@
         .category-section { margin-bottom: 25px; scroll-margin-top: 50px; }
         .category-title { font-size: 16px; font-weight: 800; color: var(--primary-color); margin-bottom: 10px; border-left: 4px solid var(--primary-color); padding-left: 8px; }
         
-        .menu-item { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-        .item-img { width: 65px; height: 65px; border-radius: 8px; object-fit: cover; background: #EEE; flex-shrink: 0; }
-        .item-left { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+        .menu-item { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; }
+        .item-left { display: flex; flex-direction: column; gap: 4px; }
         .item-name { text-transform: uppercase; font-size: 14px; font-weight: bold; color: #333; }
         .item-price { color: var(--accent-color); font-size: 14px; font-weight: 700; }
         
@@ -156,9 +155,9 @@
                 { name: "miko (ho ka sai)", hot: 4.0, cold: 4.0 }
             ]},
             { id: "cat3", name: "🍞 Toast & Eggs", items: [
-                { name: "Roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true, remarksPlaceholder: "Choose 1 to 2 jams", img: "images/roti.jpg" },
+                { name: "Roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true, remarksPlaceholder: "Choose 1 to 2 jams" },
                 { name: "half boiled egg (2 biji)", hot: 2.8, cold: 2.8, isFood: true, hasEggAddon: true },
-                { name: "roti goyang", hot: 4.8, cold: 4.8, isFood: true, img: "images/roti-goyang.jpg" }
+                { name: "roti goyang", hot: 4.8, cold: 4.8, isFood: true }
             ]}
         ];
 
@@ -207,11 +206,7 @@
                 cat.items.forEach(item => {
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'menu-item';
-                    
-                    const imgSrc = item.img ? item.img : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65"><rect width="65" height="65" fill="%23eeeeee"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23aaaaaa" font-size="12">No Pic</text></svg>';
-
                     itemDiv.innerHTML = `
-                        <img src="${imgSrc}" class="item-img" alt="${item.name}">
                         <div class="item-left">
                             <span class="item-name">${item.name}</span>
                             <span class="item-price">RM ${item.hot.toFixed(2)}</span>
@@ -399,7 +394,7 @@
             };
         }
 
-        // 🌟 核心改动：加入购物车时，判断是否有完全一样的商品
+        // 🌟 合并逻辑：判断是否有完全一样的商品
         function executeAddToCart(item, singlePrice) {
             const qty = parseInt(document.getElementById('modal-qty-val').innerText);
             const temp = document.querySelector('#modal-temp-tags .active')?.innerText || 'N/A';
@@ -415,7 +410,6 @@
             const isLarge = document.getElementById('modal-large-check')?.checked || false;
             const remarks = document.getElementById('opt-remarks').value.trim();
 
-            // 检查购物车中是否已经存在一模一样配置的商品
             const existingItem = cart.find(c => 
                 c.name === item.name &&
                 c.temp === temp &&
@@ -428,11 +422,9 @@
             );
 
             if (existingItem) {
-                // 如果存在，直接累加数量和总价格
                 existingItem.qty += qty;
                 existingItem.price = existingItem.singlePrice * existingItem.qty;
             } else {
-                // 如果不存在，正常作为一个新项推入购物车
                 const cartId = Date.now() + Math.random();
                 cart.push({ cartId, name: item.name, price: singlePrice * qty, singlePrice, qty, temp, sugar, prep, spread, egg, isLarge, remarks });
             }
