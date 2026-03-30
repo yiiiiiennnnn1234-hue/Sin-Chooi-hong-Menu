@@ -107,50 +107,50 @@
     </div>
 
     <script>
-        // 🌟 按照 PDF Sheet1-3 录入的精准价格与变价逻辑
+        // 🌟 按照 PDF Sheet1-3 录入的精准价格
         const menuData = [
             { id: "cat1", name: "☕ Classic Kopi & Teh", items: [
                 { name: "barli", hot: 2.0, cold: 2.0, bigHot: 2.0, noSugarHot: 2.0 }, 
                 { name: "teh o", hot: 1.8, cold: 2.0, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
-                { name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4, noSugar: true }, // delete no sugar
+                { name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true }, // 禁止 No Sugar，但保留 Normal / Less Sugar
                 { name: "teh c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
                 { name: "kopi o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 }, 
-                { name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4, noSugar: true }, // delete no sugar
+                { name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true }, // 禁止 No Sugar
                 { name: "kopi c", hot: 2.2, cold: 2.4, bigHot: 2.6 }, 
                 { name: "cham o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
-                { name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4, noSugar: true }, // delete no sugar
+                { name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true }, // 禁止 No Sugar
                 { name: "cham c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
-                { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.2, noSugar: true }, // delete no sugar
-                { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 3.8, noSugar: true }, // delete no sugar
+                { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.2, noNoSugar: true }, // 禁止 No Sugar
+                { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 3.8, noNoSugar: true }, // 禁止 No Sugar
                 { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugarHot: 2.8, noSugarCold: 3.0 }, 
                 { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.8, noSugarHot: 2.6, noSugarCold: 2.8 },
-                { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugar: true }, // delete no sugar
+                { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0, noNoSugar: true }, // 禁止 No Sugar
                 { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0, noSugarHot: 3.2, noSugarCold: 3.4 },
                 { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0, noSugarHot: 3.6, noSugarCold: 3.8 }, 
-                { name: "3 layer teh", hot: 3.3, cold: 3.5, noSugar: true }, // delete no sugar
-                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noSugar: true }, // delete no sugar
-                { name: "nestum", hot: 2.8, cold: 3.0, noSugar: true }, // delete no sugar
+                { name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true }, // 禁止 No Sugar
+                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true }, // 禁止 No Sugar
+                { name: "nestum", hot: 2.8, cold: 3.0, noNoSugar: true }, // 禁止 No Sugar
                 { name: "limau", hot: 1.6, cold: 1.6 }, 
                 { name: "sirap", hot: 1.4, cold: 1.4 },
                 { name: "sirap bandung", hot: 2.0, cold: 2.2 }, 
                 { name: "oren bancuh", hot: 2.0, cold: 2.0 },
-                { name: "papo (八宝)", hot: 1.8, cold: 1.8, noSugar: true }, // delete no sugar
+                { name: "papo (八宝)", hot: 1.8, cold: 1.8, noNoSugar: true }, // 禁止 No Sugar
                 { name: "asam", hot: 1.8, cold: 1.8 },
-                { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8 }, 
-                { name: "jus cinta (932)", hot: 2.0, cold: 2.0, noSugar: true }, // delete no sugar
+                { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8, noNoSugar: true }, // 禁止 No Sugar
+                { name: "jus cinta (932)", hot: 2.0, cold: 2.0, noNoSugar: true }, // 禁止 No Sugar
                 { name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true }, 
                 { name: "air ais (冰水)", hot: 0.5, cold: 0.5, isWater: true }
             ]},
             { id: "cat2", name: "🌟 Specialties", items: [
-                { name: "white coffee", hot: 2.8, cold: 3.0, noSugar: true }, 
-                { name: "cappocino", hot: 2.8, cold: 3.0, noSugar: true },
-                { name: "larat", hot: 2.8, cold: 3.0, noSugar: true }, 
-                { name: "radix", hot: 2.8, cold: 3.0, noSugar: true },
-                { name: "tongkat ali", hot: 2.8, cold: 3.0, noSugar: true }, 
+                { name: "white coffee", hot: 2.8, cold: 3.0, noNoSugar: true }, 
+                { name: "cappocino", hot: 2.8, cold: 3.0, noNoSugar: true },
+                { name: "larat", hot: 2.8, cold: 3.0, noNoSugar: true }, 
+                { name: "radix", hot: 2.8, cold: 3.0, noNoSugar: true },
+                { name: "tongkat ali", hot: 2.8, cold: 3.0, noNoSugar: true }, 
                 { name: "tutu (milo kopi nestum)", hot: 4.5, cold: 4.5 },
                 { name: "3 rasa (milo kopi nescafe)", hot: 4.5, cold: 4.5 }, 
-                { name: "3 layer lava", hot: 4.5, cold: 4.5, noSugar: true },
-                { name: "3 layar pandan", hot: 3.5, cold: 3.5, noSugar: true }, 
+                { name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true },
+                { name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true }, 
                 { name: "thai green teh", hot: 4.0, cold: 4.0 },
                 { name: "miko (ho ka sai)", hot: 4.0, cold: 4.0 }
             ]},
@@ -253,16 +253,19 @@
                     </div>`;
                 }
                 
-                if (!item.noSugar) {
-                    html += `
-                    <div class="option-row"><span class="option-label">Sugar:</span>
-                        <div class="tags" id="modal-sugar-tags">
-                            <div class="tag active" onclick="selectModalSugar(this, 'normal')">Normal</div>
-                            <div class="tag" onclick="selectModalSugar(this, 'less')">Less</div>
-                            <div class="tag" id="tag-no-sugar" onclick="selectModalSugar(this, 'nosugar')">NoSugar</div>
-                        </div>
-                    </div>`;
+                // 糖分选项调整
+                html += `
+                <div class="option-row"><span class="option-label">Sugar:</span>
+                    <div class="tags" id="modal-sugar-tags">
+                        <div class="tag active" onclick="selectModalSugar(this, 'Normal')">Normal</div>
+                        <div class="tag" onclick="selectModalSugar(this, 'Less Sugar')">Less Sugar</div>`; // 👈 字眼改成了 "Less Sugar"
+                
+                // 只有在没被禁止的情况下，才显示 No Sugar
+                if (!item.noNoSugar) {
+                    html += `<div class="tag" id="tag-no-sugar" onclick="selectModalSugar(this, 'No Sugar')">No Sugar</div>`;
                 }
+
+                html += `</div></div>`;
             }
 
             if (item.hasRotiPrep) {
@@ -343,7 +346,6 @@
             updateModalPrice();
         }
 
-        // 🌟 特殊处理：点击糖分调整价格
         function selectModalSugar(element, type) {
             selectModalTag(element);
             updateModalPrice();
@@ -358,7 +360,6 @@
             updateModalPrice();
         }
 
-        // 🌟 核心：计算精准价格，包含无糖独立变价逻辑
         function updateModalPrice() {
             if (!currentModalItem) return;
             
@@ -368,7 +369,7 @@
             let basePrice = isIced ? currentModalItem.cold : currentModalItem.hot;
             
             // 🛑 处理无糖特殊变价
-            if (sugarType === 'NoSugar') {
+            if (sugarType === 'No Sugar') {
                 if (isIced && currentModalItem.noSugarCold !== undefined) {
                     basePrice = currentModalItem.noSugarCold;
                 } else if (!isIced && currentModalItem.noSugarHot !== undefined) {
@@ -470,7 +471,7 @@
 
         function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
-        // 🌟 后厨英文小票生成函数（带 Total）
+        // 🌟 打印小票的字眼也会同步呈现 "Less Sugar" 或 "No Sugar"
         function generateEnglishReceipt() {
             let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
             
@@ -504,14 +505,12 @@
             return receipt;
         }
 
-        // 🚀 核心：Confirm 动作连接云打印机
         function confirmOrder() {
             if (cart.length === 0) { alert("Your cart is empty!"); return; }
 
             const receiptContent = generateEnglishReceipt();
             closeModal();
 
-            // 🔴 购买云打印机后，请将下列 API 地址和机身SN码替换为厂家提供的信息
             fetch('https://你买的打印机品牌的云端API地址', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
