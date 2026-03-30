@@ -14,16 +14,14 @@
         .table-banner { background-color: #EFEBE9; text-align: center; padding: 10px; font-weight: bold; font-size: 14px; color: var(--primary-color); border-bottom: 1px solid #D7CCC8; display: flex; justify-content: center; align-items: center; gap: 10px; }
         .table-select { padding: 4px; font-size: 14px; font-weight: bold; color: var(--primary-color); border: 1px solid #BCAAA4; border-radius: 6px; background: white; }
 
-        /* 🆕 顶部横向分类导航，固定在顶部 */
         .category-nav { position: sticky; top: 0; background: white; z-index: 50; display: flex; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .category-nav::-webkit-scrollbar { display: none; } /* 隐藏滚动条 */
+        .category-nav::-webkit-scrollbar { display: none; } 
         .nav-item { padding: 12px 20px; font-size: 14px; font-weight: bold; color: #777; cursor: pointer; }
         .nav-item.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
 
         .main-container { padding: 10px 15px; }
         
-        /* 🆕 超级紧凑的列表排版 */
-        .category-section { margin-bottom: 25px; scroll-margin-top: 50px; /* 点击导航跳转时的停留位置 */ }
+        .category-section { margin-bottom: 25px; scroll-margin-top: 50px; }
         .category-title { font-size: 16px; font-weight: 800; color: var(--primary-color); margin-bottom: 10px; border-left: 4px solid var(--primary-color); padding-left: 8px; }
         
         .menu-item { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; }
@@ -31,15 +29,12 @@
         .item-name { text-transform: uppercase; font-size: 14px; font-weight: bold; color: #333; }
         .item-price { color: var(--accent-color); font-size: 14px; font-weight: 700; }
         
-        /* 紧凑版加号按钮 */
         .add-trigger-btn { background-color: #2E7D32; color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* 🆕 规格选填大弹窗通用样式 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; }
         .modal-box { background: white; width: 85%; max-width: 380px; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 85vh; overflow-y: auto; }
         .modal-title { font-size: 16px; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         
-        /* 弹窗内的选项组 */
         .options-group { font-size: 13px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
         .option-row { display: flex; align-items: center; gap: 10px; }
         .option-label { font-weight: bold; min-width: 60px; color: #6D4C41; }
@@ -48,7 +43,6 @@
         .tag.active { background: var(--primary-color); color: white; border-color: var(--primary-color); font-weight: bold;}
         .addon-row { margin-top: 5px; padding-top: 10px; border-top: 1px dashed #DDD; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; }
         
-        /* 数量加减 */
         .qty-row { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; padding-top: 10px; border-top: 1px solid #EEE; }
         .qty-label { font-size: 14px; font-weight: bold; color: var(--primary-color); }
         .qty-controls { display: flex; align-items: center; gap: 12px; }
@@ -58,11 +52,9 @@
         .remarks-input { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #CCC; border-radius: 6px; margin-top: 10px; font-size: 13px; height: 34px; }
         .confirm-add-btn { background-color: #2E7D32; color: white; border: none; width: 100%; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; }
         
-        /* 购物车底部黑条 */
         .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(51, 51, 51, 0.95); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .submit-btn { background: #FF9800; color: #fff; border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; }
 
-        /* 订单总结弹窗里的列表 */
         .modal-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 8px; font-weight: bold; }
         .modal-item-info { display: flex; align-items: center; gap: 8px; flex: 1; }
         .delete-btn { background: none; border: none; color: #e53935; font-size: 16px; cursor: pointer; padding: 0 5px; font-weight: bold; }
@@ -81,9 +73,7 @@
     </header>
 
     <div class="table-banner" id="table-display">Loading Table...</div>
-
     <div class="category-nav" id="category-nav"></div>
-
     <div class="main-container" id="menu-container"></div>
     
     <div class="cart-bar">
@@ -95,9 +85,7 @@
         <div class="modal-box">
             <div class="modal-title" id="opt-modal-title">Select Options</div>
             <div class="options-group" id="opt-modal-content"></div>
-            
             <textarea class="remarks-input" id="opt-remarks" placeholder="Remarks (e.g., Kaw)"></textarea>
-            
             <button class="confirm-add-btn" id="opt-confirm-btn">Add to Order</button>
             <button class="modal-btn btn-cancel" style="width:100%; margin-top:8px;" onclick="closeOptionModal()">Cancel</button>
         </div>
@@ -119,38 +107,39 @@
     </div>
 
     <script>
+        // 🌟 按照 PDF Sheet1-3 录入的精准价格与变价逻辑
         const menuData = [
             { id: "cat1", name: "☕ Classic Kopi & Teh", items: [
-                { name: "barli", hot: 2.0, cold: 2.0 }, 
-                { name: "teh o", hot: 1.8, cold: 2.0, bigHot: 2.2 },
-                { name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4 }, 
+                { name: "barli", hot: 2.0, cold: 2.0, bigHot: 2.0, noSugarHot: 2.0 }, 
+                { name: "teh o", hot: 1.8, cold: 2.0, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
+                { name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4, noSugar: true }, // delete no sugar
                 { name: "teh c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
-                { name: "kopi o", hot: 1.8, cold: 2.0, bigHot: 2.2 }, 
-                { name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4 },
+                { name: "kopi o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 }, 
+                { name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4, noSugar: true }, // delete no sugar
                 { name: "kopi c", hot: 2.2, cold: 2.4, bigHot: 2.6 }, 
-                { name: "cham o", hot: 1.8, cold: 2.0, bigHot: 2.2 },
-                { name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4 }, 
+                { name: "cham o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
+                { name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4, noSugar: true }, // delete no sugar
                 { name: "cham c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
-                { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.2 }, 
-                { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 4.0 },
-                { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
-                { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 4.0 },
-                { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
-                { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0 },
-                { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0 }, 
-                { name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true },
-                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true }, 
-                { name: "nestum", hot: 2.8, cold: 3.0 },
+                { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.2, noSugar: true }, // delete no sugar
+                { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 3.8, noSugar: true }, // delete no sugar
+                { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugarHot: 2.8, noSugarCold: 3.0 }, 
+                { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.8, noSugarHot: 2.6, noSugarCold: 2.8 },
+                { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugar: true }, // delete no sugar
+                { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0, noSugarHot: 3.2, noSugarCold: 3.4 },
+                { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0, noSugarHot: 3.6, noSugarCold: 3.8 }, 
+                { name: "3 layer teh", hot: 3.3, cold: 3.5, noSugar: true }, // delete no sugar
+                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noSugar: true }, // delete no sugar
+                { name: "nestum", hot: 2.8, cold: 3.0, noSugar: true }, // delete no sugar
                 { name: "limau", hot: 1.6, cold: 1.6 }, 
                 { name: "sirap", hot: 1.4, cold: 1.4 },
                 { name: "sirap bandung", hot: 2.0, cold: 2.2 }, 
                 { name: "oren bancuh", hot: 2.0, cold: 2.0 },
-                { name: "papo (八宝)", hot: 1.8, cold: 1.8 }, 
+                { name: "papo (八宝)", hot: 1.8, cold: 1.8, noSugar: true }, // delete no sugar
                 { name: "asam", hot: 1.8, cold: 1.8 },
                 { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8 }, 
-                { name: "jus cinta (932)", hot: 2.0, cold: 2.0 },
+                { name: "jus cinta (932)", hot: 2.0, cold: 2.0, noSugar: true }, // delete no sugar
                 { name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true }, 
-                { name: "air ais (冰水)", hot: 0.7, cold: 0.5, isWater: true }
+                { name: "air ais (冰水)", hot: 0.5, cold: 0.5, isWater: true }
             ]},
             { id: "cat2", name: "🌟 Specialties", items: [
                 { name: "white coffee", hot: 2.8, cold: 3.0, noSugar: true }, 
@@ -160,13 +149,13 @@
                 { name: "tongkat ali", hot: 2.8, cold: 3.0, noSugar: true }, 
                 { name: "tutu (milo kopi nestum)", hot: 4.5, cold: 4.5 },
                 { name: "3 rasa (milo kopi nescafe)", hot: 4.5, cold: 4.5 }, 
-                { name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true },
-                { name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true }, 
+                { name: "3 layer lava", hot: 4.5, cold: 4.5, noSugar: true },
+                { name: "3 layar pandan", hot: 3.5, cold: 3.5, noSugar: true }, 
                 { name: "thai green teh", hot: 4.0, cold: 4.0 },
                 { name: "miko (ho ka sai)", hot: 4.0, cold: 4.0 }
             ]},
             { id: "cat3", name: "🍞 Toast & Eggs", items: [
-                { name: "Roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true, remarksPlaceholder: "Kaya Ori, Pandan, Choose two flavors?" },
+                { name: "Roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true, remarksPlaceholder: "Choose 1 to 2 jams (Kaya Ori, Pandan, Butter, Peanut)" },
                 { name: "half boiled egg (2 biji)", hot: 2.8, cold: 2.8, isFood: true, hasEggAddon: true },
                 { name: "roti goyang", hot: 4.8, cold: 4.8, isFood: true }
             ]}
@@ -199,14 +188,12 @@
             const menuContainer = document.getElementById('menu-container');
 
             menuData.forEach((cat, index) => {
-                // 1. 渲染顶部导航
                 const navItem = document.createElement('div');
                 navItem.className = `nav-item ${index === 0 ? 'active' : ''}`;
-                navItem.innerText = cat.name.split(' ')[1] || cat.name; // 简短名字
+                navItem.innerText = cat.name.split(' ')[1] || cat.name;
                 navItem.onclick = () => scrollToCategory(cat.id, navItem);
                 navContainer.appendChild(navItem);
 
-                // 2. 渲染主菜单
                 const section = document.createElement('div');
                 section.className = 'category-section';
                 section.id = cat.id;
@@ -219,8 +206,6 @@
                 cat.items.forEach(item => {
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'menu-item';
-                    
-                    // 主界面只显示名字和基本价格
                     itemDiv.innerHTML = `
                         <div class="item-left">
                             <span class="item-name">${item.name}</span>
@@ -234,11 +219,9 @@
             });
         }
 
-        // 顶部导航点击滚动
         function scrollToCategory(id, element) {
             const documentElement = document.getElementById(id);
             documentElement.scrollIntoView({ behavior: 'smooth' });
-            
             const navItems = document.getElementsByClassName('nav-item');
             for (let item of navItems) item.classList.remove('active');
             element.classList.add('active');
@@ -246,18 +229,14 @@
 
         let currentModalItem = null;
 
-        // 🆕 点击 ➕ 号弹窗
         function openOptionModal(item) {
             currentModalItem = item;
             document.getElementById('opt-modal-title').innerText = item.name.toUpperCase();
-            
             const isFood = item.isFood || false;
             const isWater = item.isWater || false;
-            
             let html = '';
 
             if (!isFood && !isWater) {
-                // 冷热
                 html += `
                 <div class="option-row"><span class="option-label">Temp:</span>
                     <div class="tags" id="modal-temp-tags">
@@ -266,7 +245,6 @@
                     </div>
                 </div>`;
                 
-                // 大杯
                 if (item.bigHot) {
                     html += `
                     <div class="addon-row" id="modal-large-row">
@@ -275,20 +253,18 @@
                     </div>`;
                 }
                 
-                // 糖分
                 if (!item.noSugar) {
                     html += `
                     <div class="option-row"><span class="option-label">Sugar:</span>
                         <div class="tags" id="modal-sugar-tags">
-                            <div class="tag active" onclick="selectModalTag(this)">Normal</div>
-                            <div class="tag" onclick="selectModalTag(this)">Less</div>
-                            ${!item.noNoSugar ? `<div class="tag" onclick="selectModalTag(this)">NoSugar</div>` : ''}
+                            <div class="tag active" onclick="selectModalSugar(this, 'normal')">Normal</div>
+                            <div class="tag" onclick="selectModalSugar(this, 'less')">Less</div>
+                            <div class="tag" id="tag-no-sugar" onclick="selectModalSugar(this, 'nosugar')">NoSugar</div>
                         </div>
                     </div>`;
                 }
             }
 
-            // 面包方式
             if (item.hasRotiPrep) {
                 html += `
                 <div class="option-row"><span class="option-label">Method:</span>
@@ -299,7 +275,6 @@
                 </div>`;
             }
 
-            // 面包酱
             if (item.hasRotiSpread) {
                 html += `
                 <div class="option-row"><span class="option-label">Flavour:</span>
@@ -311,12 +286,10 @@
                 </div>`;
             }
 
-            // 加蛋
             if (item.hasEggAddon) {
                 html += `<div class="addon-row"><span>+ Add 1 egg (RM 1.40)</span><input type="checkbox" id="modal-egg-check" onchange="updateModalPrice()"></div>`;
             }
 
-            // 数量加减
             html += `
             <div class="qty-row">
                 <div class="qty-label">Quantity:</div>
@@ -335,10 +308,7 @@
             document.getElementById('option-modal').style.display = 'flex';
         }
 
-        function closeOptionModal() {
-            document.getElementById('option-modal').style.display = 'none';
-        }
-
+        function closeOptionModal() { document.getElementById('option-modal').style.display = 'none'; }
         function selectModalTag(element) {
             const tags = element.parentElement.getElementsByClassName('tag');
             for (let t of tags) t.classList.remove('active');
@@ -373,6 +343,12 @@
             updateModalPrice();
         }
 
+        // 🌟 特殊处理：点击糖分调整价格
+        function selectModalSugar(element, type) {
+            selectModalTag(element);
+            updateModalPrice();
+        }
+
         function changeModalQty(delta) {
             const qtyDiv = document.getElementById('modal-qty-val');
             let currentQty = parseInt(qtyDiv.innerText);
@@ -382,36 +358,46 @@
             updateModalPrice();
         }
 
+        // 🌟 核心：计算精准价格，包含无糖独立变价逻辑
         function updateModalPrice() {
             if (!currentModalItem) return;
             
             const isIced = document.querySelector('#modal-temp-tags .active')?.innerText === 'Iced';
-            let price = isIced ? currentModalItem.cold : currentModalItem.hot;
+            const sugarType = document.querySelector('#modal-sugar-tags .active')?.innerText || 'Normal';
             
+            let basePrice = isIced ? currentModalItem.cold : currentModalItem.hot;
+            
+            // 🛑 处理无糖特殊变价
+            if (sugarType === 'NoSugar') {
+                if (isIced && currentModalItem.noSugarCold !== undefined) {
+                    basePrice = currentModalItem.noSugarCold;
+                } else if (!isIced && currentModalItem.noSugarHot !== undefined) {
+                    basePrice = currentModalItem.noSugarHot;
+                }
+            }
+
+            // 处理热饮大杯
             if (!isIced) {
                 const largeChecked = document.getElementById('modal-large-check')?.checked || false;
                 if (largeChecked && currentModalItem.bigHot) {
-                    price = currentModalItem.bigHot;
+                    basePrice = currentModalItem.bigHot;
                 }
             }
             
             const eggChecked = document.getElementById('modal-egg-check')?.checked || false;
-            if (eggChecked) price += 1.40;
+            if (eggChecked) basePrice += 1.40;
             
             const qty = parseInt(document.getElementById('modal-qty-val').innerText);
-            const total = price * qty;
+            const total = basePrice * qty;
             
             document.getElementById('opt-confirm-btn').innerText = `Add to Order - RM ${total.toFixed(2)}`;
-            
-            // 绑定真正的点击加入动作
             document.getElementById('opt-confirm-btn').onclick = () => {
-                executeAddToCart(currentModalItem, price);
+                executeAddToCart(currentModalItem, basePrice);
             };
         }
 
         function executeAddToCart(item, singlePrice) {
             const qty = parseInt(document.getElementById('modal-qty-val').innerText);
-            
             const temp = document.querySelector('#modal-temp-tags .active')?.innerText || 'N/A';
             const sugar = document.querySelector('#modal-sugar-tags .active')?.innerText || 'N/A';
             const prep = document.querySelector('#modal-prep-tags .active')?.innerText || 'N/A';
@@ -484,7 +470,7 @@
 
         function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
-        // 🆕 新增：将购物车内容格式化为后厨看的纯英文小票文本（带 Total）
+        // 🌟 后厨英文小票生成函数（带 Total）
         function generateEnglishReceipt() {
             let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
             
@@ -498,11 +484,9 @@
                 let displayName = item.name.toUpperCase();
                 if (item.isLarge) displayName += " (LARGE)";
                 
-                // 限制名称长度在16个字符内，方便右侧对齐价格
                 let shortName = displayName.length > 16 ? displayName.substring(0, 16) : displayName;
                 receipt += `${item.qty}x ${shortName.padEnd(16)} RM ${item.price.toFixed(2)}\n`;
                 
-                // 打印客制化详情
                 if (item.temp !== 'N/A') receipt += `   - [ ${item.temp} / ${item.sugar} ]\n`;
                 if (item.prep !== 'N/A') receipt += `   - [ Type: ${item.prep} ]\n`;
                 if (item.spread !== 'N/A') receipt += `   - [ Flavour: ${item.spread} ]\n`;
@@ -512,7 +496,7 @@
             });
 
             receipt += "--------------------------------\n";
-            receipt += `TOTAL AMOUNT:        RM ${total}\n`; // 👈 这就是后厨要看的 Total
+            receipt += `TOTAL AMOUNT:        RM ${total}\n`;
             receipt += "--------------------------------\n";
             receipt += "Please pay when food arrives.\n";
             receipt += "================================\n";
@@ -520,40 +504,29 @@
             return receipt;
         }
 
-        // 🔄 替换：原有的 confirmOrder 函数
+        // 🚀 核心：Confirm 动作连接云打印机
         function confirmOrder() {
-            if (cart.length === 0) {
-                alert("Your cart is empty!");
-                return;
-            }
+            if (cart.length === 0) { alert("Your cart is empty!"); return; }
 
-            // 1. 生成纯英文的小票内容
             const receiptContent = generateEnglishReceipt();
-
             closeModal();
 
-            // 2. 🚀 通过网络，把小票内容发送到你的 WiFi 云打印机
-            // 🔴 注意：以下这个 fetch 里的地址和参数，需要根据你买的打印机品牌开发文档修改
+            // 🔴 购买云打印机后，请将下列 API 地址和机身SN码替换为厂家提供的信息
             fetch('https://你买的打印机品牌的云端API地址', {
                 method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json' 
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    "printer_sn": "你打印机底部的机身SN码", // 🔴 填入你的打印机编号
+                    "printer_sn": "你打印机底部的机身SN码", 
                     "content": receiptContent
                 })
             })
             .then(response => {
-                // 如果发送成功，清空购物车，并弹出原本的成功提示
                 alert("Order Confirmed & Sent to Kitchen! 🎉\n\n订单已发送到后厨！饮料/食物送达时请付款。\nPlease make payment when your drinks/food arrive.");
-                
                 cart = [];
                 document.getElementById('cart-count').innerText = '0';
                 document.getElementById('cart-total').innerText = '0.00';
             })
             .catch(error => {
-                // 如果 Portable WiFi 网络断开或者打印机死机，会走这里
                 alert("Failed to send to kitchen printer! Please inform counter staff directly.\n发送到厨房打印机失败，请直接去柜台通知员工点单！");
                 console.error('Error sending to printer:', error);
             });
