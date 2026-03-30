@@ -87,7 +87,7 @@
                 <button class="modal-btn btn-confirm" onclick="confirmOrder()">Confirm</button>
             </div>
         </div>
-    </head>
+    </div>
     
     <script>
         const menuData = [
@@ -169,7 +169,7 @@
 
         function renderMenu() {
             const container = document.getElementById('menu-container');
-            container.innerHTML = ''; // 清空之前的
+            container.innerHTML = ''; 
             
             menuData.forEach(cat => {
                 const catDiv = document.createElement('div');
