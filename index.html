@@ -5,59 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sin Chooi Hong Kopitiam - QR Order</title>
     <style>
-        :root { --primary-color: #5D4037; --bg-color: #FAF6F0; --card-bg: #FFFFFF; --text-color: #3E2723; --accent-color: #BF360C; --border-color: #EEE; }
+        :root { --primary-color: #5D4037; --bg-color: #FAF6F0; --card-bg: #FFFFFF; --text-color: #3E2723; --accent-color: #BF360C; --border-color: #F0EAE1; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding-bottom: 90px; }
-        header { background-color: var(--card-bg); padding: 25px 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
-        header h1 { margin: 0; font-size: 24px; text-transform: uppercase; color: var(--primary-color); letter-spacing: 1.5px; font-weight: 800; }
-        header .subtitle { margin: 6px 0 0; font-size: 13px; color: #795548; font-style: italic; }
+        header { background-color: var(--card-bg); padding: 15px 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
+        header h1 { margin: 0; font-size: 20px; text-transform: uppercase; color: var(--primary-color); letter-spacing: 1.5px; font-weight: 800; }
+        header .subtitle { margin: 4px 0 0; font-size: 11px; color: #795548; font-style: italic; }
         
-        .table-banner { background-color: #EFEBE9; text-align: center; padding: 12px; font-weight: bold; font-size: 16px; color: var(--primary-color); border-bottom: 1px solid #D7CCC8; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .table-select { padding: 6px; font-size: 15px; font-weight: bold; color: var(--primary-color); border: 1px solid #BCAAA4; border-radius: 6px; background: white; }
+        .table-banner { background-color: #EFEBE9; text-align: center; padding: 10px; font-weight: bold; font-size: 14px; color: var(--primary-color); border-bottom: 1px solid #D7CCC8; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .table-select { padding: 4px; font-size: 14px; font-weight: bold; color: var(--primary-color); border: 1px solid #BCAAA4; border-radius: 6px; background: white; }
 
-        .main-container { padding: 15px; }
-        .category-container { margin-bottom: 15px; border-radius: 12px; overflow: hidden; background-color: var(--card-bg); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .category-header { background: var(--primary-color); color: white; padding: 15px 18px; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; justify-content: space-between; }
-        .category-content { display: none; padding: 10px; }
-        .category-container.active .category-content { display: block; }
-        .menu-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        @media (min-width: 600px) { .menu-grid { grid-template-columns: 1fr 1fr; } }
-        .menu-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 15px; }
-        .item-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px;}
-        .item-name { text-transform: uppercase; font-size: 15px; color: var(--primary-color); }
-        .price-tag { color: var(--accent-color); font-size: 1.1em; font-weight: 800; }
-        .options-group { font-size: 13px; display: flex; flex-direction: column; gap: 8px; }
-        .option-row { display: flex; align-items: center; gap: 10px; }
-        .option-label { font-weight: bold; min-width: 80px; color: #6D4C41; }
-        .tags { display: flex; gap: 5px; flex-wrap: wrap; }
-        .tag { background: #F5F5F5; border: 1px solid #DDD; padding: 4px 10px; border-radius: 14px; cursor: pointer; font-size: 12px; }
-        .tag.active { background: var(--primary-color); color: white; border-color: var(--primary-color); font-weight: bold;}
-        .addon-row { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #DDD; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; }
+        /* 🆕 顶部横向分类导航，固定在顶部 */
+        .category-nav { position: sticky; top: 0; background: white; z-index: 50; display: flex; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .category-nav::-webkit-scrollbar { display: none; } /* 隐藏滚动条 */
+        .nav-item { padding: 12px 20px; font-size: 14px; font-weight: bold; color: #777; cursor: pointer; }
+        .nav-item.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
+
+        .main-container { padding: 10px 15px; }
         
-        .qty-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #EEE; }
+        /* 🆕 超级紧凑的列表排版 */
+        .category-section { margin-bottom: 25px; scroll-margin-top: 50px; /* 点击导航跳转时的停留位置 */ }
+        .category-title { font-size: 16px; font-weight: 800; color: var(--primary-color); margin-bottom: 10px; border-left: 4px solid var(--primary-color); padding-left: 8px; }
+        
+        .menu-item { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; }
+        .item-left { display: flex; flex-direction: column; gap: 4px; }
+        .item-name { text-transform: uppercase; font-size: 14px; font-weight: bold; color: #333; }
+        .item-price { color: var(--accent-color); font-size: 14px; font-weight: 700; }
+        
+        /* 紧凑版加号按钮 */
+        .add-trigger-btn { background-color: #2E7D32; color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        /* 🆕 规格选填大弹窗通用样式 */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; }
+        .modal-box { background: white; width: 85%; max-width: 380px; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 85vh; overflow-y: auto; }
+        .modal-title { font-size: 16px; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        /* 弹窗内的选项组 */
+        .options-group { font-size: 13px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
+        .option-row { display: flex; align-items: center; gap: 10px; }
+        .option-label { font-weight: bold; min-width: 60px; color: #6D4C41; }
+        .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .tag { background: #F5F5F5; border: 1px solid #DDD; padding: 5px 12px; border-radius: 14px; cursor: pointer; font-size: 12px; }
+        .tag.active { background: var(--primary-color); color: white; border-color: var(--primary-color); font-weight: bold;}
+        .addon-row { margin-top: 5px; padding-top: 10px; border-top: 1px dashed #DDD; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; }
+        
+        /* 数量加减 */
+        .qty-row { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; padding-top: 10px; border-top: 1px solid #EEE; }
         .qty-label { font-size: 14px; font-weight: bold; color: var(--primary-color); }
         .qty-controls { display: flex; align-items: center; gap: 12px; }
         .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--primary-color); background: white; color: var(--primary-color); font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .qty-val { font-size: 16px; font-weight: bold; width: 20px; text-align: center; }
 
-        .remarks-input { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #CCC; border-radius: 6px; margin-top: 8px; font-size: 13px; height: 34px; }
-        .add-btn { background-color: #2E7D32; color: white; border: none; width: 100%; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 12px; }
+        .remarks-input { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #CCC; border-radius: 6px; margin-top: 10px; font-size: 13px; height: 34px; }
+        .confirm-add-btn { background-color: #2E7D32; color: white; border: none; width: 100%; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; }
         
-        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(51, 51, 51, 0.95); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-        .submit-btn { background: #FF9800; color: #fff; border: none; padding: 12px 25px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        /* 购物车底部黑条 */
+        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(51, 51, 51, 0.95); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+        .submit-btn { background: #FF9800; color: #fff; border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; }
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; }
-        .modal-box { background: white; width: 85%; max-width: 400px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; }
-        .modal-title { font-size: 18px; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        
-        /* 🆕 优化了弹窗里每一项的布局，加入了删除按钮 */
-        .modal-item { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 8px; font-weight: bold; }
+        /* 订单总结弹窗里的列表 */
+        .modal-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 8px; font-weight: bold; }
         .modal-item-info { display: flex; align-items: center; gap: 8px; flex: 1; }
         .delete-btn { background: none; border: none; color: #e53935; font-size: 16px; cursor: pointer; padding: 0 5px; font-weight: bold; }
-        
-        .modal-sub { font-size: 12px; color: #777; padding-left: 28px; margin-bottom: 8px; margin-top: -5px;}
-        .modal-total { font-size: 18px; font-weight: 800; color: var(--accent-color); display: flex; justify-content: space-between; border-top: 1px dashed #ddd; padding-top: 10px; margin-top: 10px; }
-        .modal-footer { margin-top: 20px; display: flex; gap: 10px; }
-        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .modal-sub { font-size: 11px; color: #777; padding-left: 28px; margin-bottom: 8px; margin-top: -3px;}
+        .modal-total { font-size: 16px; font-weight: 800; color: var(--accent-color); display: flex; justify-content: space-between; border-top: 1px dashed #ddd; padding-top: 10px; margin-top: 10px; }
+        .modal-footer { margin-top: 15px; display: flex; gap: 10px; }
+        .modal-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
         .btn-cancel { background: #ddd; color: #333; }
         .btn-confirm { background: #2E7D32; color: white; }
     </style>
@@ -70,13 +82,25 @@
 
     <div class="table-banner" id="table-display">Loading Table...</div>
 
-    <div class="main-container">
-        <div id="menu-container"></div>
-    </div>
+    <div class="category-nav" id="category-nav"></div>
+
+    <div class="main-container" id="menu-container"></div>
     
     <div class="cart-bar">
-        <div style="font-size: 14px;">Items: <span id="cart-count">0</span> | Total: <b>RM <span id="cart-total">0.00</span></b></div>
+        <div style="font-size: 13px;">Items: <span id="cart-count">0</span> | Total: <b>RM <span id="cart-total">0.00</span></b></div>
         <button class="submit-btn" onclick="showOrderSummary()">Place Order</button>
+    </div>
+
+    <div class="modal-overlay" id="option-modal">
+        <div class="modal-box">
+            <div class="modal-title" id="opt-modal-title">Select Options</div>
+            <div class="options-group" id="opt-modal-content"></div>
+            
+            <textarea class="remarks-input" id="opt-remarks" placeholder="Remarks (e.g., Kaw)"></textarea>
+            
+            <button class="confirm-add-btn" id="opt-confirm-btn">Add to Order</button>
+            <button class="modal-btn btn-cancel" style="width:100%; margin-top:8px;" onclick="closeOptionModal()">Cancel</button>
+        </div>
     </div>
 
     <div class="modal-overlay" id="order-modal">
@@ -128,7 +152,7 @@
                 { name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true }, 
                 { name: "air ais (冰水)", hot: 0.7, cold: 0.5, isWater: true }
             ]},
-            { id: "cat2", name: "🌟 Specialties & Packaged", items: [
+            { id: "cat2", name: "🌟 Specialties", items: [
                 { name: "white coffee", hot: 2.8, cold: 3.0, noSugar: true }, 
                 { name: "cappocino", hot: 2.8, cold: 3.0, noSugar: true },
                 { name: "larat", hot: 2.8, cold: 3.0, noSugar: true }, 
@@ -149,7 +173,6 @@
         ];
 
         let cart = [];
-        let itemCounter = 0;
         let currentTable = "Not Specified";
         const allTables = ["A1","A2","A3","B1","B2","B3","C1","C2","C3","C4","C5","C6","A","B","C","D","E","F","L1","L2","Tepi"];
 
@@ -172,104 +195,157 @@
         }
 
         function renderMenu() {
-            const container = document.getElementById('menu-container');
-            menuData.forEach(cat => {
-                const catDiv = document.createElement('div');
-                catDiv.className = 'category-container';
-                const headerDiv = document.createElement('div');
-                headerDiv.className = 'category-header';
-                headerDiv.innerHTML = `<span>${cat.name}</span><span>▼</span>`;
-                headerDiv.onclick = () => catDiv.classList.toggle('active');
-                catDiv.appendChild(headerDiv);
+            const navContainer = document.getElementById('category-nav');
+            const menuContainer = document.getElementById('menu-container');
 
-                const contentDiv = document.createElement('div');
-                contentDiv.className = 'category-content';
-                const grid = document.createElement('div');
-                grid.className = 'menu-grid';
+            menuData.forEach((cat, index) => {
+                // 1. 渲染顶部导航
+                const navItem = document.createElement('div');
+                navItem.className = `nav-item ${index === 0 ? 'active' : ''}`;
+                navItem.innerText = cat.name.split(' ')[1] || cat.name; // 简短名字
+                navItem.onclick = () => scrollToCategory(cat.id, navItem);
+                navContainer.appendChild(navItem);
+
+                // 2. 渲染主菜单
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                section.id = cat.id;
+                
+                const title = document.createElement('div');
+                title.className = 'category-title';
+                title.innerText = cat.name;
+                section.appendChild(title);
 
                 cat.items.forEach(item => {
-                    itemCounter++;
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'menu-item';
-                    itemDiv.id = `item-${itemCounter}`;
-                    const isFood = item.isFood || false;
-                    const isWater = item.isWater || false;
-
+                    
+                    // 主界面只显示名字和基本价格
                     itemDiv.innerHTML = `
-                        <div class="item-header">
+                        <div class="item-left">
                             <span class="item-name">${item.name}</span>
-                            <span class="price-tag" id="price-${itemCounter}">RM ${item.hot.toFixed(2)}</span>
+                            <span class="item-price">RM ${item.hot.toFixed(2)}</span>
                         </div>
-                        <div class="options-group">
-                            ${(!isFood && !isWater) ? `
-                            <div class="option-row"><span class="option-label">Temp:</span>
-                                <div class="tags" data-type="temp">
-                                    <div class="tag active" onclick="selectTempTag(this, ${itemCounter}, ${item.hot}, ${item.cold})">Hot</div>
-                                    <div class="tag" onclick="selectTempTag(this, ${itemCounter}, ${item.hot}, ${item.cold})">Iced</div>
-                                </div>
-                            </div>` : ''}
-
-                            ${item.bigHot ? `
-                            <div class="addon-row" id="large-row-${itemCounter}">
-                                <span>Upgrade to Large (+RM ${(item.bigHot - item.hot).toFixed(2)})</span>
-                                <input type="checkbox" id="large-${itemCounter}" onchange="calculateCurrentPrice(${itemCounter}, ${item.hot}, ${item.cold})">
-                            </div>` : ''}
-                            
-                            ${item.hasRotiPrep ? `
-                            <div class="option-row"><span class="option-label">Method:</span>
-                                <div class="tags" data-type="prep">
-                                    <div class="tag active" onclick="selectTag(this)">Toast (烤)</div>
-                                    <div class="tag" onclick="selectTag(this)">Steam (蒸)</div>
-                                </div>
-                            </div>` : ''}
-
-                            ${item.hasRotiSpread ? `
-                            <div class="option-row"><span class="option-label">Flavour:</span>
-                                <div class="tags" data-type="spread">
-                                    <div class="tag active" onclick="selectMultiTag(this)">Kaya</div>
-                                    <div class="tag" onclick="selectMultiTag(this)">Butter</div>
-                                    <div class="tag" onclick="selectMultiTag(this)">Peanut</div>
-                                </div>
-                            </div>` : ''}
-
-                            ${(!isFood && !isWater && !item.noSugar) ? `
-                            <div class="option-row"><span class="option-label">Sugar:</span>
-                                <div class="tags" data-type="sugar">
-                                    <div class="tag active" onclick="selectTag(this)">Normal</div>
-                                    <div class="tag" onclick="selectTag(this)">Less</div>
-                                    ${!item.noNoSugar ? `<div class="tag" onclick="selectTag(this)">NoSugar</div>` : ''}
-                                </div>
-                            </div>` : ''}
-                        </div>
-                        ${item.hasEggAddon ? `<div class="addon-row"><span>+ Add 1 egg (RM 1.40)</span><input type="checkbox" id="egg-${itemCounter}" onchange="calculateCurrentPrice(${itemCounter}, ${item.hot}, ${item.cold})"></div>` : ''}
-                        
-                        <div class="qty-row">
-                            <div class="qty-label">Quantity:</div>
-                            <div class="qty-controls">
-                                <button class="qty-btn" onclick="changeQty(${itemCounter}, -1)">-</button>
-                                <div class="qty-val" id="qty-${itemCounter}">1</div>
-                                <button class="qty-btn" onclick="changeQty(${itemCounter}, 1)">+</button>
-                            </div>
-                        </div>
-
-                        <textarea class="remarks-input" placeholder="${item.remarksPlaceholder || 'Remarks (e.g., Kaw)'}"></textarea>
-                        <button class="add-btn" onclick="addToCart('${item.name}', ${itemCounter}, ${isFood}, ${isWater})">Add to Order</button>
+                        <button class="add-trigger-btn" onclick='openOptionModal(${JSON.stringify(item)})'>+</button>
                     `;
-                    grid.appendChild(itemDiv);
+                    section.appendChild(itemDiv);
                 });
-                contentDiv.appendChild(grid);
-                catDiv.appendChild(contentDiv);
-                container.appendChild(catDiv);
+                menuContainer.appendChild(section);
             });
         }
 
-        function selectTag(element) {
+        // 顶部导航点击滚动
+        function scrollToCategory(id, element) {
+            const documentElement = document.getElementById(id);
+            documentElement.scrollIntoView({ behavior: 'smooth' });
+            
+            const navItems = document.getElementsByClassName('nav-item');
+            for (let item of navItems) item.classList.remove('active');
+            element.classList.add('active');
+        }
+
+        let currentModalItem = null;
+
+        // 🆕 点击 ➕ 号弹窗
+        function openOptionModal(item) {
+            currentModalItem = item;
+            document.getElementById('opt-modal-title').innerText = item.name.toUpperCase();
+            
+            const isFood = item.isFood || false;
+            const isWater = item.isWater || false;
+            
+            let html = '';
+
+            if (!isFood && !isWater) {
+                // 冷热
+                html += `
+                <div class="option-row"><span class="option-label">Temp:</span>
+                    <div class="tags" id="modal-temp-tags">
+                        <div class="tag active" onclick="selectModalTemp(this, 'hot')">Hot</div>
+                        <div class="tag" onclick="selectModalTemp(this, 'cold')">Iced</div>
+                    </div>
+                </div>`;
+                
+                // 大杯
+                if (item.bigHot) {
+                    html += `
+                    <div class="addon-row" id="modal-large-row">
+                        <span>Upgrade to Large (+RM ${(item.bigHot - item.hot).toFixed(2)})</span>
+                        <input type="checkbox" id="modal-large-check" onchange="updateModalPrice()">
+                    </div>`;
+                }
+                
+                // 糖分
+                if (!item.noSugar) {
+                    html += `
+                    <div class="option-row"><span class="option-label">Sugar:</span>
+                        <div class="tags" id="modal-sugar-tags">
+                            <div class="tag active" onclick="selectModalTag(this)">Normal</div>
+                            <div class="tag" onclick="selectModalTag(this)">Less</div>
+                            ${!item.noNoSugar ? `<div class="tag" onclick="selectModalTag(this)">NoSugar</div>` : ''}
+                        </div>
+                    </div>`;
+                }
+            }
+
+            // 面包方式
+            if (item.hasRotiPrep) {
+                html += `
+                <div class="option-row"><span class="option-label">Method:</span>
+                    <div class="tags" id="modal-prep-tags">
+                        <div class="tag active" onclick="selectModalTag(this)">Toast (烤)</div>
+                        <div class="tag" onclick="selectModalTag(this)">Steam (蒸)</div>
+                    </div>
+                </div>`;
+            }
+
+            // 面包酱
+            if (item.hasRotiSpread) {
+                html += `
+                <div class="option-row"><span class="option-label">Flavour:</span>
+                    <div class="tags" id="modal-spread-tags">
+                        <div class="tag active" onclick="selectModalMultiTag(this)">Kaya</div>
+                        <div class="tag" onclick="selectModalMultiTag(this)">Butter</div>
+                        <div class="tag" onclick="selectModalMultiTag(this)">Peanut</div>
+                    </div>
+                </div>`;
+            }
+
+            // 加蛋
+            if (item.hasEggAddon) {
+                html += `<div class="addon-row"><span>+ Add 1 egg (RM 1.40)</span><input type="checkbox" id="modal-egg-check" onchange="updateModalPrice()"></div>`;
+            }
+
+            // 数量加减
+            html += `
+            <div class="qty-row">
+                <div class="qty-label">Quantity:</div>
+                <div class="qty-controls">
+                    <button class="qty-btn" onclick="changeModalQty(-1)">-</button>
+                    <div class="qty-val" id="modal-qty-val">1</div>
+                    <button class="qty-btn" onclick="changeModalQty(1)">+</button>
+                </div>
+            </div>`;
+
+            document.getElementById('opt-modal-content').innerHTML = html;
+            document.getElementById('opt-remarks').value = '';
+            document.getElementById('opt-remarks').placeholder = item.remarksPlaceholder || 'Remarks (e.g., Kaw)';
+            
+            updateModalPrice();
+            document.getElementById('option-modal').style.display = 'flex';
+        }
+
+        function closeOptionModal() {
+            document.getElementById('option-modal').style.display = 'none';
+        }
+
+        function selectModalTag(element) {
             const tags = element.parentElement.getElementsByClassName('tag');
             for (let t of tags) t.classList.remove('active');
             element.classList.add('active');
         }
 
-        function selectMultiTag(element) {
+        function selectModalMultiTag(element) {
             const tags = element.parentElement.getElementsByClassName('tag');
             if (element.classList.contains('active')) {
                 let activeCount = 0;
@@ -282,124 +358,104 @@
             if (activeTags.length > 2) { activeTags[0].classList.remove('active'); }
         }
 
-        function selectTempTag(element, id, hot, cold) {
-            selectTag(element);
-            const isIced = element.innerText === 'Iced';
-            const largeRow = document.getElementById(`large-row-${id}`);
-            
+        function selectModalTemp(element, type) {
+            selectModalTag(element);
+            const largeRow = document.getElementById('modal-large-row');
             if (largeRow) {
-                if (isIced) {
+                if (type === 'cold') {
                     largeRow.style.display = 'none';
-                    const largeCheck = document.getElementById(`large-${id}`);
+                    const largeCheck = document.getElementById('modal-large-check');
                     if (largeCheck) largeCheck.checked = false;
                 } else {
                     largeRow.style.display = 'flex';
                 }
             }
-            calculateCurrentPrice(id, hot, cold);
+            updateModalPrice();
         }
 
-        function calculateCurrentPrice(id, hot, cold) {
-            const itemDiv = document.getElementById(`item-${id}`);
-            const isIced = itemDiv.querySelector('[data-type="temp"] .active')?.innerText === 'Iced';
-            
-            let price = isIced ? cold : hot;
-            
-            if (!isIced) {
-                const largeChecked = document.getElementById(`large-${id}`)?.checked || false;
-                if (largeChecked) {
-                    const itemObj = menuData.flatMap(c => c.items)[id-1];
-                    if (itemObj && itemObj.bigHot) {
-                        price = itemObj.bigHot;
-                    }
-                }
-            }
-            
-            const eggChecked = document.getElementById(`egg-${id}`)?.checked || false;
-            if (eggChecked) price += 1.40;
-            
-            document.getElementById(`price-${id}`).innerText = `RM ${price.toFixed(2)}`;
-        }
-
-        function changeQty(id, delta) {
-            const qtyDiv = document.getElementById(`qty-${id}`);
+        function changeModalQty(delta) {
+            const qtyDiv = document.getElementById('modal-qty-val');
             let currentQty = parseInt(qtyDiv.innerText);
             currentQty += delta;
             if (currentQty < 1) currentQty = 1;
             qtyDiv.innerText = currentQty;
+            updateModalPrice();
         }
 
-        // 🆕 购物车里的每一项加了一个唯一的 cartId，方便定向删除
-        function addToCart(name, id, isFood, isWater) {
-            const itemDiv = document.getElementById(`item-${id}`);
-            const singlePrice = parseFloat(itemDiv.querySelector('.price-tag').innerText.replace('RM ', ''));
-            const qty = parseInt(document.getElementById(`qty-${id}`).innerText);
+        function updateModalPrice() {
+            if (!currentModalItem) return;
             
-            const temp = (!isFood && !isWater) ? itemDiv.querySelector('[data-type="temp"] .active').innerText : 'N/A';
-            const sugar = itemDiv.querySelector('[data-type="sugar"] .active')?.innerText || 'N/A';
-            const prep = itemDiv.querySelector('[data-type="prep"] .active')?.innerText || 'N/A';
-            const activeSpreads = itemDiv.querySelectorAll('[data-type="spread"] .active');
+            const isIced = document.querySelector('#modal-temp-tags .active')?.innerText === 'Iced';
+            let price = isIced ? currentModalItem.cold : currentModalItem.hot;
+            
+            if (!isIced) {
+                const largeChecked = document.getElementById('modal-large-check')?.checked || false;
+                if (largeChecked && currentModalItem.bigHot) {
+                    price = currentModalItem.bigHot;
+                }
+            }
+            
+            const eggChecked = document.getElementById('modal-egg-check')?.checked || false;
+            if (eggChecked) price += 1.40;
+            
+            const qty = parseInt(document.getElementById('modal-qty-val').innerText);
+            const total = price * qty;
+            
+            document.getElementById('opt-confirm-btn').innerText = `Add to Order - RM ${total.toFixed(2)}`;
+            
+            // 绑定真正的点击加入动作
+            document.getElementById('opt-confirm-btn').onclick = () => {
+                executeAddToCart(currentModalItem, price);
+            };
+        }
+
+        function executeAddToCart(item, singlePrice) {
+            const qty = parseInt(document.getElementById('modal-qty-val').innerText);
+            
+            const temp = document.querySelector('#modal-temp-tags .active')?.innerText || 'N/A';
+            const sugar = document.querySelector('#modal-sugar-tags .active')?.innerText || 'N/A';
+            const prep = document.querySelector('#modal-prep-tags .active')?.innerText || 'N/A';
+            
+            const activeSpreads = document.querySelectorAll('#modal-spread-tags .active');
             let spreadList = [];
             activeSpreads.forEach(s => spreadList.push(s.innerText));
             const spread = spreadList.length > 0 ? spreadList.join(' + ') : 'N/A';
 
-            const egg = document.getElementById(`egg-${id}`)?.checked || false;
-            const isLarge = document.getElementById(`large-${id}`)?.checked || false;
-            const remarks = itemDiv.querySelector('.remarks-input').value;
+            const egg = document.getElementById('modal-egg-check')?.checked || false;
+            const isLarge = document.getElementById('modal-large-check')?.checked || false;
+            const remarks = document.getElementById('opt-remarks').value;
 
             const totalPrice = singlePrice * qty;
+            const cartId = Date.now() + Math.random();
 
-            const cartId = Date.now() + Math.random(); // 随机生成唯一 ID
-
-            cart.push({ cartId, name, price: totalPrice, singlePrice, qty, temp, sugar, prep, spread, egg, isLarge, remarks });
+            cart.push({ cartId, name: item.name, price: totalPrice, singlePrice, qty, temp, sugar, prep, spread, egg, isLarge, remarks });
             
             updateCartBar();
-            
-            alert(`Added: ${qty}x ${name.toUpperCase()}`);
-            
-            // 重置
-            document.getElementById(`qty-${id}`).innerText = '1';
-            itemDiv.querySelector('.remarks-input').value = '';
-            const largeCheck = document.getElementById(`large-${id}`);
-            if (largeCheck) largeCheck.checked = false;
-            const eggCheck = document.getElementById(`egg-${id}`);
-            if (eggCheck) eggCheck.checked = false;
-            
-            const itemObj = menuData.flatMap(c => c.items)[id-1];
-            document.getElementById(`price-${id}`).innerText = `RM ${itemObj.hot.toFixed(2)}`;
-            const largeRow = document.getElementById(`large-row-${id}`);
-            if (largeRow) largeRow.style.display = 'flex';
+            alert(`Added: ${qty}x ${item.name.toUpperCase()}`);
+            closeOptionModal();
         }
 
-        // 🆕 抽离成单独的函数，方便多次调用刷新
         function updateCartBar() {
             document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
             document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
         }
 
-        // 🆕 核心新增：点击小叉叉删除购物车里的项目
         function deleteCartItem(cartId) {
-            cart = cart.filter(item => item.cartId !== cartId); // 过滤掉被删的项
-            updateCartBar(); // 刷新底部黑框数字
-            
-            if (cart.length === 0) {
-                closeModal(); // 如果全删完了，直接关掉弹窗
-            } else {
-                showOrderSummary(); // 否则刷新一下弹窗里的列表和总价
-            }
+            cart = cart.filter(item => item.cartId !== cartId);
+            updateCartBar();
+            if (cart.length === 0) { closeModal(); } else { showOrderSummary(); }
         }
 
         function showOrderSummary() {
             if (cart.length === 0) { alert("Your cart is empty!"); return; }
             let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
             
-            let contentHTML = `<div style="text-align:center; font-weight:800; color:#bf360c; font-size:16px; margin-bottom:15px; background:#fbe9e7; padding:5px; border-radius:5px;">📍 TABLE: ${currentTable}</div>`;
+            let contentHTML = `<div style="text-align:center; font-weight:800; color:#bf360c; font-size:14px; margin-bottom:15px; background:#fbe9e7; padding:5px; border-radius:5px;">📍 TABLE: ${currentTable}</div>`;
             
             cart.forEach(item => {
                 let displayName = item.name.toUpperCase();
                 if (item.isLarge) displayName += " (LARGE)";
 
-                // 🆕 每一项前面都加了一个带 X 的红色按钮
                 contentHTML += `
                     <div class="modal-item">
                         <div class="modal-item-info">
