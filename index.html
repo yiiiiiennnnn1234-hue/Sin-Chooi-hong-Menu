@@ -1,11 +1,422 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sin Chooi Hong Kopitiam - QR Order</title>
+    <style>
+        :root { --primary-color: #5D4037; --bg-color: #FAF6F0; --card-bg: #FFFFFF; --text-color: #3E2723; --accent-color: #BF360C; --border-color: #EEE; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding-bottom: 90px; }
+        header { background-color: var(--card-bg); padding: 25px 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
+        header h1 { margin: 0; font-size: 24px; text-transform: uppercase; color: var(--primary-color); letter-spacing: 1.5px; font-weight: 800; }
+        header .subtitle { margin: 6px 0 0; font-size: 13px; color: #795548; font-style: italic; }
+        
+        .table-banner { background-color: #EFEBE9; text-align: center; padding: 12px; font-weight: bold; font-size: 16px; color: var(--primary-color); border-bottom: 1px solid #D7CCC8; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .table-select { padding: 6px; font-size: 15px; font-weight: bold; color: var(--primary-color); border: 1px solid #BCAAA4; border-radius: 6px; background: white; }
+
+        .main-container { padding: 15px; }
+        .category-container { margin-bottom: 15px; border-radius: 12px; overflow: hidden; background-color: var(--card-bg); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .category-header { background: var(--primary-color); color: white; padding: 15px 18px; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; justify-content: space-between; }
+        .category-content { display: none; padding: 10px; }
+        .category-container.active .category-content { display: block; }
+        .menu-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 600px) { .menu-grid { grid-template-columns: 1fr 1fr; } }
+        .menu-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 15px; }
+        .item-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px;}
+        .item-name { text-transform: uppercase; font-size: 15px; color: var(--primary-color); }
+        .price-tag { color: var(--accent-color); font-size: 1.1em; font-weight: 800; }
+        .options-group { font-size: 13px; display: flex; flex-direction: column; gap: 8px; }
+        .option-row { display: flex; align-items: center; gap: 10px; }
+        .option-label { font-weight: bold; min-width: 80px; color: #6D4C41; }
+        .tags { display: flex; gap: 5px; flex-wrap: wrap; }
+        .tag { background: #F5F5F5; border: 1px solid #DDD; padding: 4px 10px; border-radius: 14px; cursor: pointer; font-size: 12px; }
+        .tag.active { background: var(--primary-color); color: white; border-color: var(--primary-color); font-weight: bold;}
+        .addon-row { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #DDD; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; }
+        
+        .qty-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #EEE; }
+        .qty-label { font-size: 14px; font-weight: bold; color: var(--primary-color); }
+        .qty-controls { display: flex; align-items: center; gap: 12px; }
+        .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--primary-color); background: white; color: var(--primary-color); font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .qty-val { font-size: 16px; font-weight: bold; width: 20px; text-align: center; }
+
+        .remarks-input { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #CCC; border-radius: 6px; margin-top: 8px; font-size: 13px; height: 34px; }
+        .add-btn { background-color: #2E7D32; color: white; border: none; width: 100%; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 12px; }
+        
+        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(51, 51, 51, 0.95); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+        .submit-btn { background: #FF9800; color: #fff; border: none; padding: 12px 25px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; }
+        .modal-box { background: white; width: 85%; max-width: 400px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; }
+        .modal-title { font-size: 18px; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .modal-item { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; font-weight: bold;}
+        .modal-sub { font-size: 12px; color: #777; padding-left: 10px; margin-bottom: 8px; margin-top: -5px;}
+        .modal-total { font-size: 18px; font-weight: 800; color: var(--accent-color); display: flex; justify-content: space-between; border-top: 1px dashed #ddd; padding-top: 10px; margin-top: 10px; }
+        .modal-footer { margin-top: 20px; display: flex; gap: 10px; }
+        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-cancel { background: #ddd; color: #333; }
+        .btn-confirm { background: #2E7D32; color: white; }
+    </style>
 </head>
 <body>
-    <h1>咖啡店点单系统测试</h1>
-    <p>如果你能看到这段字，说明 GitHub 正常！</p>
+    <header>
+        <h1>Sin Chooi Hong Kopitiam</h1>
+        <div class="subtitle">Since 1971</div>
+    </header>
+
+    <div class="table-banner" id="table-display">Loading Table...</div>
+
+    <div class="main-container">
+        <div id="menu-container"></div>
+    </div>
+    
+    <div class="cart-bar">
+        <div style="font-size: 14px;">Items: <span id="cart-count">0</span> | Total: <b>RM <span id="cart-total">0.00</span></b></div>
+        <button class="submit-btn" onclick="showOrderSummary()">Place Order</button>
+    </div>
+
+    <div class="modal-overlay" id="order-modal">
+        <div class="modal-box">
+            <div class="modal-title">Order Summary 🧾</div>
+            <div id="modal-content"></div>
+            <div class="modal-total">
+                <span>Total Amount:</span>
+                <span>RM <span id="modal-total-price">0.00</span></span>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn btn-cancel" onclick="closeModal()">Back</button>
+                <button class="modal-btn btn-confirm" onclick="confirmOrder()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuData = [
+            { id: "cat1", name: "☕ Classic Kopi & Teh", items: [
+                { name: "barli", hot: 2.0, cold: 2.0 }, 
+                { name: "teh o", hot: 1.8, cold: 2.0, bigHot: 2.2 },
+                { name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4 }, 
+                { name: "teh c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
+                { name: "kopi o", hot: 1.8, cold: 2.0, bigHot: 2.2 }, 
+                { name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4 },
+                { name: "kopi c", hot: 2.2, cold: 2.4, bigHot: 2.6 }, 
+                { name: "cham o", hot: 1.8, cold: 2.0, bigHot: 2.2 },
+                { name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4 }, 
+                { name: "cham c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
+                { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.2 }, 
+                { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 4.0 },
+                { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
+                { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.0 }, 
+                { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0 }, 
+                { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0 },
+                { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0 }, 
+                { name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true },
+                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true }, 
+                { name: "nestum", hot: 2.8, cold: 3.0 },
+                { name: "limau", hot: 1.6, cold: 1.6 }, 
+                { name: "sirap", hot: 1.4, cold: 1.4 },
+                { name: "sirap bandung", hot: 2.0, cold: 2.2 }, 
+                { name: "oren bancuh", hot: 2.0, cold: 2.0 },
+                { name: "papo (八宝)", hot: 1.8, cold: 1.8 }, 
+                { name: "asam", hot: 1.8, cold: 1.8 },
+                { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8 }, 
+                { name: "jus cinta (932)", hot: 2.0, cold: 2.0 },
+                { name: "oren asam", hot: 2.0, cold: 2.0 },
+                { name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true }, 
+                { name: "air ais (冰水)", hot: 0.5, cold: 0.5, isWater: true }
+            ]},
+            { id: "cat2", name: "🌟 Specialties & Packaged", items: [
+                { name: "white coffee", hot: 3.0, cold: 3.0, noSugar: true }, 
+                { name: "cappocino", hot: 3.0, cold: 3.0, noSugar: true }, 
+                { name: "larat", hot: 3.0, cold: 3.0, noSugar: true }, 
+                { name: "radix", hot: 3.0, cold: 3.0, noSugar: true }, 
+                { name: "tongkat ali", hot: 3.0, cold: 3.0, noSugar: true }, 
+                { name: "tutu (milo kopi nestum)", hot: 4.5, cold: 4.5 },
+                { name: "3 rasa (milo kopi nescafe)", hot: 4.5, cold: 4.5 }, 
+                { name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true },
+                { name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true }, 
+                { name: "thai green teh", hot: 4.0, cold: 4.0 },
+                { name: "miko (ho ka sai)", hot: 4.0, cold: 4.0 }
+            ]},
+            { id: "cat3", name: "🍞 Toast & Eggs", items: [
+                { name: "roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true },
+                { name: "half boiled egg (2 biji)", hot: 2.8, cold: 2.8, isFood: true, hasEggAddon: true },
+                { name: "roti goyang", hot: 4.8, cold: 4.8, isFood: true }
+            ]}
+        ];
+
+        let cart = [];
+        let itemCounter = 0;
+        let currentTable = "Not Specified";
+        const allTables = ["A1","A2","A3","B1","B2","B3","C1","C2","C3","C4","C5","C6","A","B","C","D","E","F","L1","L2","Tepi"];
+
+        function checkTable() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const table = urlParams.get('table');
+            const displayDiv = document.getElementById('table-display');
+            if (table) {
+                currentTable = table;
+                displayDiv.innerText = `Table: ${table}`;
+                displayDiv.style.backgroundColor = '#C8E6C9';
+            } else {
+                let selectHTML = `<span>Select Table:</span><select class="table-select" onchange="currentTable=this.value">`;
+                selectHTML += `<option value="Not Specified">Choose...</option>`;
+                allTables.forEach(t => { selectHTML += `<option value="${t}">${t}</option>`; });
+                selectHTML += `</select>`;
+                displayDiv.innerHTML = selectHTML;
+                displayDiv.style.backgroundColor = '#EFEBE9';
+            }
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            menuData.forEach(cat => {
+                const catDiv = document.createElement('div');
+                catDiv.className = 'category-container';
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'category-header';
+                headerDiv.innerHTML = `<span>${cat.name}</span><span>▼</span>`;
+                headerDiv.onclick = () => catDiv.classList.toggle('active');
+                catDiv.appendChild(headerDiv);
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'category-content';
+                const grid = document.createElement('div');
+                grid.className = 'menu-grid';
+
+                cat.items.forEach(item => {
+                    itemCounter++;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'menu-item';
+                    itemDiv.id = `item-${itemCounter}`;
+                    const isFood = item.isFood || false;
+                    const isWater = item.isWater || false;
+                    const bigAddon = item.bigHot ? (item.bigHot - item.hot) : 0;
+
+                    itemDiv.innerHTML = `
+                        <div class="item-header">
+                            <span class="item-name">${item.name}</span>
+                            <span class="price-tag" id="price-${itemCounter}">RM ${item.hot.toFixed(2)}</span>
+                        </div>
+                        <div class="options-group">
+                            ${(!isFood && !isWater) ? `
+                            <div class="option-row"><span class="option-label">Temp:</span>
+                                <div class="tags" data-type="temp">
+                                    <div class="tag active" onclick="selectTempTag(this, ${itemCounter}, ${item.hot}, ${item.cold})">Hot</div>
+                                    <div class="tag" onclick="selectTempTag(this, ${itemCounter}, ${item.hot}, ${item.cold})">Iced</div>
+                                </div>
+                            </div>` : ''}
+
+                            <div class="option-row" id="size-row-${itemCounter}" style="display: none;"><span class="option-label">Size:</span>
+                                <div class="tags" data-type="size">
+                                    <div class="tag active" onclick="selectSizeTag(this, ${itemCounter}, ${item.hot}, ${bigAddon})">Normal</div>
+                                    <div class="tag" onclick="selectSizeTag(this, ${itemCounter}, ${item.hot}, ${bigAddon})">Big (+RM ${bigAddon.toFixed(2)})</div>
+                                </div>
+                            </div>
+                            
+                            ${item.hasRotiPrep ? `
+                            <div class="option-row"><span class="option-label">Method:</span>
+                                <div class="tags" data-type="prep">
+                                    <div class="tag active" onclick="selectTag(this)">Toast (烤)</div>
+                                    <div class="tag" onclick="selectTag(this)">Steam (蒸)</div>
+                                </div>
+                            </div>` : ''}
+
+                            ${item.hasRotiSpread ? `
+                            <div class="option-row"><span class="option-label">Spread (1-2):</span>
+                                <div class="tags" data-type="spread">
+                                    <div class="tag active" onclick="selectMultiTag(this)">Kaya Ori</div>
+                                    <div class="tag" onclick="selectMultiTag(this)">Kaya Pandan</div>
+                                    <div class="tag" onclick="selectMultiTag(this)">Butter</div>
+                                    <div class="tag" onclick="selectMultiTag(this)">Peanut</div>
+                                </div>
+                            </div>` : ''}
+
+                            ${(!isFood && !isWater && !item.noSugar) ? `
+                            <div class="option-row"><span class="option-label">Sugar:</span>
+                                <div class="tags" data-type="sugar">
+                                    <div class="tag active" onclick="selectTag(this)">Normal</div>
+                                    <div class="tag" onclick="selectTag(this)">Less</div>
+                                    ${!item.noNoSugar ? `<div class="tag" onclick="selectTag(this)">NoSugar</div>` : ''}
+                                </div>
+                            </div>` : ''}
+                        </div>
+                        ${item.hasEggAddon ? `<div class="addon-row"><span>+ Add 1 egg (RM 1.40)</span><input type="checkbox" id="egg-${itemCounter}" onchange="updatePriceWithEgg(${itemCounter}, ${item.hot})"></div>` : ''}
+                        
+                        <div class="qty-row">
+                            <div class="qty-label">Quantity:</div>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQty(${itemCounter}, -1)">-</button>
+                                <div class="qty-val" id="qty-${itemCounter}">1</div>
+                                <button class="qty-btn" onclick="changeQty(${itemCounter}, 1)">+</button>
+                            </div>
+                        </div>
+
+                        <textarea class="remarks-input" placeholder="Remarks (e.g., Kaw)"></textarea>
+                        <button class="add-btn" onclick="addToCart('${item.name}', ${itemCounter}, ${isFood}, ${isWater})">Add to Order</button>
+                    `;
+                    grid.appendChild(itemDiv);
+                    
+                    if (item.bigHot) {
+                        document.getElementById(`size-row-${itemCounter}`).style.display = 'flex';
+                    }
+                });
+                contentDiv.appendChild(grid);
+                catDiv.appendChild(contentDiv);
+                container.appendChild(catDiv);
+            });
+        }
+
+        function selectTag(element) {
+            const tags = element.parentElement.getElementsByClassName('tag');
+            for (let t of tags) t.classList.remove('active');
+            element.classList.add('active');
+        }
+
+        function selectMultiTag(element) {
+            const tags = element.parentElement.getElementsByClassName('tag');
+            if (element.classList.contains('active')) {
+                let activeCount = 0;
+                for (let t of tags) { if (t.classList.contains('active')) activeCount++; }
+                if (activeCount > 1) { element.classList.remove('active'); return; }
+            }
+            element.classList.add('active');
+            let activeTags = [];
+            for (let t of tags) { if (t.classList.contains('active')) activeTags.push(t); }
+            if (activeTags.length > 2) { activeTags[0].classList.remove('active'); }
+        }
+
+        function selectTempTag(element, id, hot, cold) {
+            selectTag(element);
+            const isHot = element.innerText === 'Hot';
+            const sizeRow = document.getElementById(`size-row-${id}`);
+            
+            const itemObj = menuData.flatMap(c=>c.items)[id-1];
+            if (sizeRow && itemObj && itemObj.bigHot) {
+                sizeRow.style.display = isHot ? 'flex' : 'none';
+            }
+            calculateCurrentPrice(id, hot, cold);
+        }
+
+        function selectSizeTag(element, id, hot, addon) {
+            selectTag(element);
+            calculateCurrentPrice(id, hot, 0);
+        }
+
+        function calculateCurrentPrice(id, hot, cold) {
+            const itemDiv = document.getElementById(`item-${id}`);
+            const tempTag = itemDiv.querySelector('[data-type="temp"] .active');
+            const isIced = tempTag ? tempTag.innerText === 'Iced' : false;
+            
+            let price = isIced ? cold : hot;
+            
+            if (!isIced) {
+                const sizeTag = itemDiv.querySelector('[data-type="size"] .active');
+                if (sizeTag && sizeTag.innerText.includes('Big')) {
+                    const itemObj = menuData.flatMap(c=>c.items)[id-1];
+                    price = itemObj.bigHot;
+                }
+            }
+            
+            const eggChecked = document.getElementById(`egg-${id}`)?.checked || false;
+            if (eggChecked) price += 1.40;
+            
+            document.getElementById(`price-${id}`).innerText = `RM ${price.toFixed(2)}`;
+        }
+
+        function updatePriceWithEgg(id, base) {
+            calculateCurrentPrice(id, base, 0);
+        }
+
+        function changeQty(id, delta) {
+            const qtyDiv = document.getElementById(`qty-${id}`);
+            let currentQty = parseInt(qtyDiv.innerText);
+            currentQty += delta;
+            if (currentQty < 1) currentQty = 1;
+            qtyDiv.innerText = currentQty;
+        }
+
+        function addToCart(name, id, isFood, isWater) {
+            const itemDiv = document.getElementById(`item-${id}`);
+            const singlePrice = parseFloat(itemDiv.querySelector('.price-tag').innerText.replace('RM ', ''));
+            const qty = parseInt(document.getElementById(`qty-${id}`).innerText);
+            
+            const temp = (!isFood && !isWater) ? itemDiv.querySelector('[data-type="temp"] .active').innerText : 'N/A';
+            const sugar = itemDiv.querySelector('[data-type="sugar"] .active')?.innerText || 'N/A';
+            const prep = itemDiv.querySelector('[data-type="prep"] .active')?.innerText || 'N/A';
+            
+            let size = 'N/A';
+            if (temp === 'Hot') {
+                const sizeRow = document.getElementById(`size-row-${id}`);
+                if (sizeRow && sizeRow.style.display !== 'none') {
+                    size = itemDiv.querySelector('[data-type="size"] .active')?.innerText.includes('Big') ? 'Big' : 'Normal';
+                }
+            }
+
+            const activeSpreads = itemDiv.querySelectorAll('[data-type="spread"] .active');
+            let spreadList = [];
+            activeSpreads.forEach(s => spreadList.push(s.innerText));
+            const spread = spreadList.length > 0 ? spreadList.join(' + ') : 'N/A';
+
+            const egg = document.getElementById(`egg-${id}`)?.checked || false;
+            const remarks = itemDiv.querySelector('.remarks-input').value;
+
+            const totalPrice = singlePrice * qty;
+
+            cart.push({ name, price: totalPrice, singlePrice, qty, temp, size, sugar, prep, spread, egg, remarks });
+            
+            document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
+            document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+            
+            alert(`Added: ${qty}x ${name.toUpperCase()}`);
+            document.getElementById(`qty-${id}`).innerText = '1';
+            itemDiv.querySelector('.remarks-input').value = '';
+        }
+
+        function showOrderSummary() {
+            if (cart.length === 0) { alert("Your cart is empty!"); return; }
+            let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+            
+            let contentHTML = `<div style="text-align:center; font-weight:800; color:#bf360c; font-size:16px; margin-bottom:15px; background:#fbe9e7; padding:5px; border-radius:5px;">📍 TABLE: ${currentTable}</div>`;
+            
+            cart.forEach(item => {
+                contentHTML += `
+                    <div class="modal-item">
+                        <span>${item.qty}x ${item.name.toUpperCase()}</span>
+                        <span>RM ${item.price.toFixed(2)}</span>
+                    </div>
+                `;
+                let details = [];
+                if (item.temp !== 'N/A') {
+                    let tempStr = item.temp;
+                    if (item.size !== 'N/A' && item.size !== 'Normal') tempStr += ` (${item.size})`;
+                    details.push(`${tempStr} / ${item.sugar}`);
+                }
+                if (item.prep !== 'N/A') details.push(`Type: ${item.prep}`);
+                if (item.spread !== 'N/A') details.push(`Flavour: ${item.spread}`);
+                if (item.egg) details.push(`+ Add 1 egg`);
+                if (item.remarks.trim()) details.push(`Note: ${item.remarks}`);
+                
+                if (details.length > 0) {
+                    contentHTML += `<div class="modal-sub">- ${details.join(' | ')}</div>`;
+                }
+            });
+
+            document.getElementById('modal-content').innerHTML = contentHTML;
+            document.getElementById('modal-total-price').innerText = total;
+            document.getElementById('order-modal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
+
+        function confirmOrder() {
+            closeModal();
+            alert("Order Confirmed! 🎉\n\n订单已确认！饮料/食物送达时请付款。\nPlease make payment when your drinks/food arrive.");
+            cart = [];
+            document.getElementById('cart-count').innerText = '0';
+            document.getElementById('cart-total').innerText = '0.00';
+        }
+
+        window.onload = () => { checkTable(); renderMenu(); };
+    </script>
 </body>
 </html>
