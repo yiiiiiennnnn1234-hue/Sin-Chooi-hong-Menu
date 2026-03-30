@@ -41,6 +41,7 @@
         .tags { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag { background: #F5F5F5; border: 1px solid #DDD; padding: 5px 12px; border-radius: 14px; cursor: pointer; font-size: 12px; }
         .tag.active { background: var(--primary-color); color: white; border-color: var(--primary-color); font-weight: bold;}
+        .default-hint { font-size: 11px; color: #777; font-style: italic; margin-left: 70px; margin-top: -8px; }
         .addon-row { margin-top: 5px; padding-top: 10px; border-top: 1px dashed #DDD; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; }
         
         .qty-row { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; padding-top: 10px; border-top: 1px solid #EEE; }
@@ -107,37 +108,36 @@
     </div>
 
     <script>
-        // 🌟 按照 PDF Sheet1-3 录入的精准价格
         const menuData = [
             { id: "cat1", name: "☕ Classic Kopi & Teh", items: [
                 { name: "barli", hot: 2.0, cold: 2.0, bigHot: 2.0, noSugarHot: 2.0 }, 
                 { name: "teh o", hot: 1.8, cold: 2.0, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
-                { name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true }, // 禁止 No Sugar，但保留 Normal / Less Sugar
+                { name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
                 { name: "teh c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
                 { name: "kopi o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 }, 
-                { name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true }, // 禁止 No Sugar
+                { name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
                 { name: "kopi c", hot: 2.2, cold: 2.4, bigHot: 2.6 }, 
                 { name: "cham o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
-                { name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true }, // 禁止 No Sugar
+                { name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
                 { name: "cham c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
-                { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.2, noNoSugar: true }, // 禁止 No Sugar
-                { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 3.8, noNoSugar: true }, // 禁止 No Sugar
+                { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.2, noNoSugar: true },
+                { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 3.8, noNoSugar: true },
                 { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugarHot: 2.8, noSugarCold: 3.0 }, 
                 { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.8, noSugarHot: 2.6, noSugarCold: 2.8 },
-                { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0, noNoSugar: true }, // 禁止 No Sugar
+                { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0, noNoSugar: true },
                 { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0, noSugarHot: 3.2, noSugarCold: 3.4 },
                 { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0, noSugarHot: 3.6, noSugarCold: 3.8 }, 
-                { name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true }, // 禁止 No Sugar
-                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true }, // 禁止 No Sugar
-                { name: "nestum", hot: 2.8, cold: 3.0, noNoSugar: true }, // 禁止 No Sugar
+                { name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true },
+                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true },
+                { name: "nestum", hot: 2.8, cold: 3.0, noNoSugar: true },
                 { name: "limau", hot: 1.6, cold: 1.6 }, 
                 { name: "sirap", hot: 1.4, cold: 1.4 },
                 { name: "sirap bandung", hot: 2.0, cold: 2.2 }, 
                 { name: "oren bancuh", hot: 2.0, cold: 2.0 },
-                { name: "papo (八宝)", hot: 1.8, cold: 1.8, noNoSugar: true }, // 禁止 No Sugar
+                { name: "papo (八宝)", hot: 1.8, cold: 1.8, noNoSugar: true },
                 { name: "asam", hot: 1.8, cold: 1.8 },
-                { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8, noNoSugar: true }, // 禁止 No Sugar
-                { name: "jus cinta (932)", hot: 2.0, cold: 2.0, noNoSugar: true }, // 禁止 No Sugar
+                { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8, noNoSugar: true },
+                { name: "jus cinta (932)", hot: 2.0, cold: 2.0, noNoSugar: true },
                 { name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true }, 
                 { name: "air ais (冰水)", hot: 0.5, cold: 0.5, isWater: true }
             ]},
@@ -253,14 +253,12 @@
                     </div>`;
                 }
                 
-                // 糖分选项调整
                 html += `
                 <div class="option-row"><span class="option-label">Sugar:</span>
                     <div class="tags" id="modal-sugar-tags">
                         <div class="tag active" onclick="selectModalSugar(this, 'Normal')">Normal</div>
-                        <div class="tag" onclick="selectModalSugar(this, 'Less Sugar')">Less Sugar</div>`; // 👈 字眼改成了 "Less Sugar"
+                        <div class="tag" onclick="selectModalSugar(this, 'Less Sugar')">Less Sugar</div>`;
                 
-                // 只有在没被禁止的情况下，才显示 No Sugar
                 if (!item.noNoSugar) {
                     html += `<div class="tag" id="tag-no-sugar" onclick="selectModalSugar(this, 'No Sugar')">No Sugar</div>`;
                 }
@@ -278,15 +276,17 @@
                 </div>`;
             }
 
+            // 🌟 核心修改点：为面包默认勾选 Kaya 和 Butter
             if (item.hasRotiSpread) {
                 html += `
                 <div class="option-row"><span class="option-label">Flavour:</span>
                     <div class="tags" id="modal-spread-tags">
                         <div class="tag active" onclick="selectModalMultiTag(this)">Kaya</div>
-                        <div class="tag" onclick="selectModalMultiTag(this)">Butter</div>
+                        <div class="tag active" onclick="selectModalMultiTag(this)">Butter</div>
                         <div class="tag" onclick="selectModalMultiTag(this)">Peanut</div>
                     </div>
-                </div>`;
+                </div>
+                <div class="default-hint">* Default: Kaya + Butter if not modified</div>`; // 👈 增加口味下方的文字提示
             }
 
             if (item.hasEggAddon) {
@@ -368,7 +368,6 @@
             
             let basePrice = isIced ? currentModalItem.cold : currentModalItem.hot;
             
-            // 🛑 处理无糖特殊变价
             if (sugarType === 'No Sugar') {
                 if (isIced && currentModalItem.noSugarCold !== undefined) {
                     basePrice = currentModalItem.noSugarCold;
@@ -377,7 +376,6 @@
                 }
             }
 
-            // 处理热饮大杯
             if (!isIced) {
                 const largeChecked = document.getElementById('modal-large-check')?.checked || false;
                 if (largeChecked && currentModalItem.bigHot) {
@@ -471,7 +469,6 @@
 
         function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
-        // 🌟 打印小票的字眼也会同步呈现 "Less Sugar" 或 "No Sugar"
         function generateEnglishReceipt() {
             let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
             
