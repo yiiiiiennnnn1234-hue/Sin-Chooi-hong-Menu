@@ -48,8 +48,13 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; }
         .modal-box { background: white; width: 85%; max-width: 400px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; }
         .modal-title { font-size: 18px; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .modal-item { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; font-weight: bold;}
-        .modal-sub { font-size: 12px; color: #777; padding-left: 10px; margin-bottom: 8px; margin-top: -5px;}
+        
+        /* 🆕 优化了弹窗里每一项的布局，加入了删除按钮 */
+        .modal-item { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 8px; font-weight: bold; }
+        .modal-item-info { display: flex; align-items: center; gap: 8px; flex: 1; }
+        .delete-btn { background: none; border: none; color: #e53935; font-size: 16px; cursor: pointer; padding: 0 5px; font-weight: bold; }
+        
+        .modal-sub { font-size: 12px; color: #777; padding-left: 28px; margin-bottom: 8px; margin-top: -5px;}
         .modal-total { font-size: 18px; font-weight: 800; color: var(--accent-color); display: flex; justify-content: space-between; border-top: 1px dashed #ddd; padding-top: 10px; margin-top: 10px; }
         .modal-footer { margin-top: 20px; display: flex; gap: 10px; }
         .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
@@ -90,7 +95,6 @@
     </div>
 
     <script>
-        // 🌟 严格按照 PDF 补全了大杯价格 (bigHot)
         const menuData = [
             { id: "cat1", name: "☕ Classic Kopi & Teh", items: [
                 { name: "barli", hot: 2.0, cold: 2.0 }, 
@@ -122,7 +126,7 @@
                 { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8 }, 
                 { name: "jus cinta (932)", hot: 2.0, cold: 2.0 },
                 { name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true }, 
-                { name: "air ais (冰水)", hot: 0.5, cold: 0.5, isWater: true }
+                { name: "air ais (冰水)", hot: 0.7, cold: 0.5, isWater: true }
             ]},
             { id: "cat2", name: "🌟 Specialties & Packaged", items: [
                 { name: "white coffee", hot: 2.8, cold: 3.0, noSugar: true }, 
@@ -205,7 +209,7 @@
                                 </div>
                             </div>` : ''}
 
-                            ${/* 🆕 大杯选项：如果是热饮且有大杯数据时，初始状态显示 */ item.bigHot ? `
+                            ${item.bigHot ? `
                             <div class="addon-row" id="large-row-${itemCounter}">
                                 <span>Upgrade to Large (+RM ${(item.bigHot - item.hot).toFixed(2)})</span>
                                 <input type="checkbox" id="large-${itemCounter}" onchange="calculateCurrentPrice(${itemCounter}, ${item.hot}, ${item.cold})">
@@ -278,7 +282,6 @@
             if (activeTags.length > 2) { activeTags[0].classList.remove('active'); }
         }
 
-        // 🆕 切换冷热时，控制大杯选项显示/隐藏
         function selectTempTag(element, id, hot, cold) {
             selectTag(element);
             const isIced = element.innerText === 'Iced';
@@ -286,28 +289,25 @@
             
             if (largeRow) {
                 if (isIced) {
-                    largeRow.style.display = 'none'; // 冰饮没有大杯，隐藏
+                    largeRow.style.display = 'none';
                     const largeCheck = document.getElementById(`large-${id}`);
-                    if (largeCheck) largeCheck.checked = false; // 隐藏时取消勾选
+                    if (largeCheck) largeCheck.checked = false;
                 } else {
-                    largeRow.style.display = 'flex'; // 热饮显示大杯
+                    largeRow.style.display = 'flex';
                 }
             }
             calculateCurrentPrice(id, hot, cold);
         }
 
-        // 🆕 统一算价：不管是切冰热、点大杯、加生熟蛋，都调这个
         function calculateCurrentPrice(id, hot, cold) {
             const itemDiv = document.getElementById(`item-${id}`);
             const isIced = itemDiv.querySelector('[data-type="temp"] .active')?.innerText === 'Iced';
             
             let price = isIced ? cold : hot;
             
-            // 如果是热饮且勾选了大杯，算大杯价格
             if (!isIced) {
                 const largeChecked = document.getElementById(`large-${id}`)?.checked || false;
                 if (largeChecked) {
-                    // 从菜单数据里找这个饮料的大杯价格
                     const itemObj = menuData.flatMap(c => c.items)[id-1];
                     if (itemObj && itemObj.bigHot) {
                         price = itemObj.bigHot;
@@ -315,7 +315,6 @@
                 }
             }
             
-            // 处理生熟蛋加价
             const eggChecked = document.getElementById(`egg-${id}`)?.checked || false;
             if (eggChecked) price += 1.40;
             
@@ -330,6 +329,7 @@
             qtyDiv.innerText = currentQty;
         }
 
+        // 🆕 购物车里的每一项加了一个唯一的 cartId，方便定向删除
         function addToCart(name, id, isFood, isWater) {
             const itemDiv = document.getElementById(`item-${id}`);
             const singlePrice = parseFloat(itemDiv.querySelector('.price-tag').innerText.replace('RM ', ''));
@@ -344,18 +344,16 @@
             const spread = spreadList.length > 0 ? spreadList.join(' + ') : 'N/A';
 
             const egg = document.getElementById(`egg-${id}`)?.checked || false;
-            
-            // 🆕 记录是否大杯
             const isLarge = document.getElementById(`large-${id}`)?.checked || false;
-            
             const remarks = itemDiv.querySelector('.remarks-input').value;
 
             const totalPrice = singlePrice * qty;
 
-            cart.push({ name, price: totalPrice, singlePrice, qty, temp, sugar, prep, spread, egg, isLarge, remarks });
+            const cartId = Date.now() + Math.random(); // 随机生成唯一 ID
+
+            cart.push({ cartId, name, price: totalPrice, singlePrice, qty, temp, sugar, prep, spread, egg, isLarge, remarks });
             
-            document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
-            document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+            updateCartBar();
             
             alert(`Added: ${qty}x ${name.toUpperCase()}`);
             
@@ -367,11 +365,28 @@
             const eggCheck = document.getElementById(`egg-${id}`);
             if (eggCheck) eggCheck.checked = false;
             
-            // 重置价格为初始热饮价格
             const itemObj = menuData.flatMap(c => c.items)[id-1];
             document.getElementById(`price-${id}`).innerText = `RM ${itemObj.hot.toFixed(2)}`;
             const largeRow = document.getElementById(`large-row-${id}`);
-            if (largeRow) largeRow.style.display = 'flex'; // 默认切回热饮所以显示
+            if (largeRow) largeRow.style.display = 'flex';
+        }
+
+        // 🆕 抽离成单独的函数，方便多次调用刷新
+        function updateCartBar() {
+            document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
+            document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+        }
+
+        // 🆕 核心新增：点击小叉叉删除购物车里的项目
+        function deleteCartItem(cartId) {
+            cart = cart.filter(item => item.cartId !== cartId); // 过滤掉被删的项
+            updateCartBar(); // 刷新底部黑框数字
+            
+            if (cart.length === 0) {
+                closeModal(); // 如果全删完了，直接关掉弹窗
+            } else {
+                showOrderSummary(); // 否则刷新一下弹窗里的列表和总价
+            }
         }
 
         function showOrderSummary() {
@@ -381,13 +396,16 @@
             let contentHTML = `<div style="text-align:center; font-weight:800; color:#bf360c; font-size:16px; margin-bottom:15px; background:#fbe9e7; padding:5px; border-radius:5px;">📍 TABLE: ${currentTable}</div>`;
             
             cart.forEach(item => {
-                // 如果是大杯，名字旁边加上（Large）标记
                 let displayName = item.name.toUpperCase();
                 if (item.isLarge) displayName += " (LARGE)";
 
+                // 🆕 每一项前面都加了一个带 X 的红色按钮
                 contentHTML += `
                     <div class="modal-item">
-                        <span>${item.qty}x ${displayName}</span>
+                        <div class="modal-item-info">
+                            <button class="delete-btn" onclick="deleteCartItem(${item.cartId})">❌</button>
+                            <span>${item.qty}x ${displayName}</span>
+                        </div>
                         <span>RM ${item.price.toFixed(2)}</span>
                     </div>
                 `;
