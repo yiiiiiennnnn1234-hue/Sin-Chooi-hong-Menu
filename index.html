@@ -125,11 +125,12 @@
                 { name: "kopi o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 }, 
                 { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8, noNoSugar: true },
                 { name: "limau", hot: 1.6, cold: 1.6 }, 
-                { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugarHot: 2.8, noSugarCold: 3.0, noSugarbigHot: 3.80 }, 
+                { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugarHot: 2.8, noSugarCold: 3.0, noSugarBigHot: 3.8 }, 
                 { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 3.8, noNoSugar: true },
                 { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0, noNoSugar: true },
                 { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0, noSugarHot: 3.2, noSugarCold: 3.4 },
                 { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.8, noSugarHot: 2.6, noSugarCold: 2.8 },
+                { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0, noSugarHot: 3.6, noSugarCold: 3.8 }, 
                 { name: "nestum", hot: 2.8, cold: 3.0, noNoSugar: true },
                 { name: "oren bancuh", hot: 2.0, cold: 2.0 },
                 { name: "papo (八宝)", hot: 1.8, cold: 1.8, noNoSugar: true },
@@ -144,14 +145,13 @@
                 { name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true },
                 { name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true }, 
                 { name: "3 rasa (milo+kopi+nescafe)", hot: 4.5, cold: 4.5 }, 
-                { name: "miko (ho ka sai)", hot: 3.8, cold: 4.0, bigHot: 4.0 },
-                { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0, noSugarHot: 3.6, noSugarCold: 3.8 }, 
-                { name: "thai green tea", hot: 4.0, cold: 4.0 },
-                { name: "tutu (milo+kopi+nestum)", hot: 4.5, cold: 4.5 },
-                { name: "radix", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-                { name: "tongkat ali", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
                 { name: "cappocino", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
                 { name: "larat", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true }, 
+                { name: "miko (ho ka sai)", hot: 4.0, cold: 4.0 },
+                { name: "radix", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
+                { name: "thai green tea", hot: 4.0, cold: 4.0 },
+                { name: "tongkat ali", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
+                { name: "tutu (milo+kopi+nestum)", hot: 4.5, cold: 4.5 },
                 { name: "white coffee", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true }
             ]},
             { id: "cat3", name: "🍞 Toast & Eggs", items: [
@@ -248,7 +248,7 @@
                 if (item.bigHot) {
                     html += `
                     <div class="addon-row" id="modal-large-row">
-                        <span>Upgrade to Large (+RM ${(item.bigHot - item.hot).toFixed(2)})</span>
+                        <span id="modal-large-text">Upgrade to Large (+RM ${(item.bigHot - item.hot).toFixed(2)})</span>
                         <input type="checkbox" id="modal-large-check" onchange="updateModalPrice()">
                     </div>`;
                 }
@@ -364,9 +364,11 @@
             
             const isIced = document.querySelector('#modal-temp-tags .active')?.innerText === 'Iced';
             const sugarType = document.querySelector('#modal-sugar-tags .active')?.innerText || 'Normal';
+            const largeChecked = document.getElementById('modal-large-check')?.checked || false;
             
             let basePrice = isIced ? currentModalItem.cold : currentModalItem.hot;
             
+            // 1. 处理无糖的基础价格
             if (sugarType === 'No Sugar') {
                 if (isIced && currentModalItem.noSugarCold !== undefined) {
                     basePrice = currentModalItem.noSugarCold;
@@ -375,13 +377,28 @@
                 }
             }
 
-            if (!isIced) {
-                const largeChecked = document.getElementById('modal-large-check')?.checked || false;
-                if (largeChecked && currentModalItem.bigHot) {
+            // 2. 动态修改“升级大杯”的差价提示字眼
+            const largeTextSpan = document.getElementById('modal-large-text');
+            if (largeTextSpan) {
+                if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
+                    let diff = currentModalItem.noSugarBigHot - basePrice;
+                    largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
+                } else if (currentModalItem.bigHot) {
+                    let diff = currentModalItem.bigHot - (isIced ? currentModalItem.cold : currentModalItem.hot);
+                    largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
+                }
+            }
+
+            // 3. 特殊处理【热大杯】的情况
+            if (!isIced && largeChecked) {
+                if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
+                    basePrice = currentModalItem.noSugarBigHot;
+                } else if (currentModalItem.bigHot) {
                     basePrice = currentModalItem.bigHot;
                 }
             }
             
+            // 4. 计算加蛋的价格
             const eggChecked = document.getElementById('modal-egg-check')?.checked || false;
             if (eggChecked) basePrice += 1.40;
             
