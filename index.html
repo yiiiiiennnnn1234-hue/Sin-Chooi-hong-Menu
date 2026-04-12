@@ -1,501 +1,566 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sin Chooi Hong Kopitiam - QR Order</title>
-    <style>
-        :root { --primary-color: #5D4037; --bg-color: #FAF6F0; --card-bg: #FFFFFF; --text-color: #3E2723; --accent-color: #BF360C; --border-color: #F0EAE1; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding-bottom: 90px; }
-        header { background-color: var(--card-bg); padding: 15px 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
-        header h1 { margin: 0; font-size: 20px; text-transform: uppercase; color: var(--primary-color); letter-spacing: 1.5px; font-weight: 800; }
-        header .subtitle { margin: 4px 0 0; font-size: 11px; color: #795548; font-style: italic; }
-        
-        .table-banner { background-color: #EFEBE9; text-align: center; padding: 10px; font-weight: bold; font-size: 14px; color: var(--primary-color); border-bottom: 1px solid #D7CCC8; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .table-select { padding: 4px; font-size: 14px; font-weight: bold; color: var(--primary-color); border: 1px solid #BCAAA4; border-radius: 6px; background: white; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sin Chooi Hong Kopitiam - QR Order</title>
+<style>
+:root { --primary-color: #5D4037; --bg-color: #FAF6F0; --card-bg: #FFFFFF; --text-color: #3E2723; --accent-color: #BF360C; --border-color: #F0EAE1; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding-bottom: 90px; }
+header { background-color: var(--card-bg); padding: 15px 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
+header h1 { margin: 0; font-size: 20px; text-transform: uppercase; color: var(--primary-color); letter-spacing: 1.5px; font-weight: 800; }
+header .subtitle { margin: 4px 0 0; font-size: 11px; color: #795548; font-style: italic; }
 
-        .category-nav { position: sticky; top: 0; background: white; z-index: 50; display: flex; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .category-nav::-webkit-scrollbar { display: none; } 
-        .nav-item { padding: 12px 20px; font-size: 14px; font-weight: bold; color: #777; cursor: pointer; }
-        .nav-item.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
+.table-banner { background-color: #EFEBE9; text-align: center; padding: 10px; font-weight: bold; font-size: 14px; color: var(--primary-color); border-bottom: 1px solid #D7CCC8; display: flex; justify-content: center; align-items: center; gap: 10px; }
+.table-select { padding: 4px; font-size: 14px; font-weight: bold; color: var(--primary-color); border: 1px solid #BCAAA4; border-radius: 6px; background: white; }
 
-        .main-container { padding: 10px 15px; }
-        .category-section { margin-bottom: 25px; scroll-margin-top: 50px; }
-        .category-title { font-size: 16px; font-weight: 800; color: var(--primary-color); margin-bottom: 10px; border-left: 4px solid var(--primary-color); padding-left: 8px; }
-        
-        .menu-item { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; }
-        .item-left { display: flex; flex-direction: column; gap: 4px; }
-        .item-name { text-transform: uppercase; font-size: 14px; font-weight: bold; color: #333; }
-        .item-price { color: var(--accent-color); font-size: 14px; font-weight: 700; }
-        
-        .add-trigger-btn { background-color: #2E7D32; color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.category-nav { position: sticky; top: 0; background: white; z-index: 50; display: flex; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+.category-nav::-webkit-scrollbar { display: none; } 
+.nav-item { padding: 12px 20px; font-size: 14px; font-weight: bold; color: #777; cursor: pointer; }
+.nav-item.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; }
-        .modal-box { background: white; width: 85%; max-width: 380px; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 85vh; overflow-y: auto; }
-        .modal-title { font-size: 16px; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        
-        .options-group { font-size: 13px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
-        .option-row { display: flex; align-items: center; gap: 10px; }
-        .option-label { font-weight: bold; min-width: 60px; color: #6D4C41; }
-        .tags { display: flex; gap: 8px; flex-wrap: wrap; }
-        .tag { background: #F5F5F5; border: 1px solid #DDD; padding: 5px 12px; border-radius: 14px; cursor: pointer; font-size: 12px; }
-        .tag.active { background: var(--primary-color); color: white; border-color: var(--primary-color); font-weight: bold;}
-        .default-hint { font-size: 11px; color: #777; font-style: italic; margin-left: 70px; margin-top: -8px; }
-        .addon-row { margin-top: 5px; padding-top: 10px; border-top: 1px dashed #DDD; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; }
-        
-        .qty-row { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; padding-top: 10px; border-top: 1px solid #EEE; }
-        .qty-label { font-size: 14px; font-weight: bold; color: var(--primary-color); }
-        .qty-controls { display: flex; align-items: center; gap: 12px; }
-        .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--primary-color); background: white; color: var(--primary-color); font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .qty-val { font-size: 16px; font-weight: bold; width: 20px; text-align: center; }
+.main-container { padding: 10px 15px; }
 
-        .remarks-input { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #CCC; border-radius: 6px; margin-top: 10px; font-size: 13px; height: 34px; }
-        .confirm-add-btn { background-color: #2E7D32; color: white; border: none; width: 100%; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; }
-        
-        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(51, 51, 51, 0.95); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-        .submit-btn { background: #FF9800; color: #fff; border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+.category-section { margin-bottom: 25px; scroll-margin-top: 50px; }
+.category-title { font-size: 16px; font-weight: 800; color: var(--primary-color); margin-bottom: 10px; border-left: 4px solid var(--primary-color); padding-left: 8px; }
 
-        .modal-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 8px; font-weight: bold; }
-        .modal-item-info { display: flex; align-items: center; gap: 8px; flex: 1; }
-        .delete-btn { background: none; border: none; color: #e53935; font-size: 16px; cursor: pointer; padding: 0 5px; font-weight: bold; }
-        .modal-sub { font-size: 11px; color: #777; padding-left: 28px; margin-bottom: 8px; margin-top: -3px;}
-        .modal-total { font-size: 16px; font-weight: 800; color: var(--accent-color); display: flex; justify-content: space-between; border-top: 1px dashed #ddd; padding-top: 10px; margin-top: 10px; }
-        .modal-footer { margin-top: 15px; display: flex; gap: 10px; }
-        .modal-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
-        .btn-cancel { background: #ddd; color: #333; }
-        .btn-confirm { background: #2E7D32; color: white; }
-    </style>
+.menu-item { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; }
+.item-left { display: flex; flex-direction: column; gap: 4px; }
+.item-name { text-transform: uppercase; font-size: 14px; font-weight: bold; color: #333; }
+.item-price { color: var(--accent-color); font-size: 14px; font-weight: 700; }
+
+.add-trigger-btn { background-color: #2E7D32; color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; }
+.modal-box { background: white; width: 85%; max-width: 380px; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 85vh; overflow-y: auto; }
+.modal-title { font-size: 16px; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+.options-group { font-size: 13px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
+.option-row { display: flex; align-items: center; gap: 10px; }
+.option-label { font-weight: bold; min-width: 60px; color: #6D4C41; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.tag { background: #F5F5F5; border: 1px solid #DDD; padding: 5px 12px; border-radius: 14px; cursor: pointer; font-size: 12px; }
+.tag.active { background: var(--primary-color); color: white; border-color: var(--primary-color); font-weight: bold;}
+.default-hint { font-size: 11px; color: #777; font-style: italic; margin-left: 70px; margin-top: -8px; }
+.addon-row { margin-top: 5px; padding-top: 10px; border-top: 1px dashed #DDD; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; }
+
+.qty-row { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; padding-top: 10px; border-top: 1px solid #EEE; }
+.qty-label { font-size: 14px; font-weight: bold; color: var(--primary-color); }
+.qty-controls { display: flex; align-items: center; gap: 12px; }
+.qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--primary-color); background: white; color: var(--primary-color); font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.qty-val { font-size: 16px; font-weight: bold; width: 20px; text-align: center; }
+
+.remarks-input { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #CCC; border-radius: 6px; margin-top: 10px; font-size: 13px; height: 34px; }
+.confirm-add-btn { background-color: #2E7D32; color: white; border: none; width: 100%; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; }
+
+.cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(51, 51, 51, 0.95); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.submit-btn { background: #FF9800; color: #fff; border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+
+.modal-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 8px; font-weight: bold; }
+.modal-item-info { display: flex; align-items: center; gap: 8px; flex: 1; }
+.delete-btn { background: none; border: none; color: #e53935; font-size: 16px; cursor: pointer; padding: 0 5px; font-weight: bold; }
+.modal-sub { font-size: 11px; color: #777; padding-left: 28px; margin-bottom: 8px; margin-top: -3px;}
+.modal-total { font-size: 16px; font-weight: 800; color: var(--accent-color); display: flex; justify-content: space-between; border-top: 1px dashed #ddd; padding-top: 10px; margin-top: 10px; }
+.modal-footer { margin-top: 15px; display: flex; gap: 10px; }
+.modal-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
+.btn-cancel { background: #ddd; color: #333; }
+.btn-confirm { background: #2E7D32; color: white; }
+</style>
 </head>
 <body>
-    <header>
-        <h1>Sin Chooi Hong Kopitiam</h1>
-        <div class="subtitle">Since 1971</div>
-    </header>
+<header>
+<h1>Sin Chooi Hong Kopitiam</h1>
+<div class="subtitle">Since 1971</div>
+</header>
 
-    <div class="table-banner" id="table-display">Loading Table...</div>
-    <div class="category-nav" id="category-nav"></div>
-    <div class="main-container" id="menu-container"></div>
-    
-    <div class="cart-bar">
-        <div style="font-size: 13px;">Items: <span id="cart-count">0</span> | Total: <b>RM <span id="cart-total">0.00</span></b></div>
-        <button class="submit-btn" onclick="showOrderSummary()">Place Order</button>
-    </div>
+<div class="table-banner" id="table-display">Loading Table...</div>
+<div class="category-nav" id="category-nav"></div>
+<div class="main-container" id="menu-container"></div>
 
-    <div class="modal-overlay" id="option-modal">
-        <div class="modal-box">
-            <div class="modal-title" id="opt-modal-title">Select Options</div>
-            <div class="options-group" id="opt-modal-content"></div>
-            <textarea class="remarks-input" id="opt-remarks" placeholder="Remarks (e.g., Kaw)"></textarea>
-            <button class="confirm-add-btn" id="opt-confirm-btn">Add to Order</button>
-            <button class="modal-btn btn-cancel" style="width:100%; margin-top:8px;" onclick="closeOptionModal()">Cancel</button>
-        </div>
-    </div>
+<div class="cart-bar">
+<div style="font-size: 13px;">Items: <span id="cart-count">0</span> | Total: <b>RM <span id="cart-total">0.00</span></b></div>
+<button class="submit-btn" onclick="showOrderSummary()">Place Order</button>
+</div>
 
-    <div class="modal-overlay" id="order-modal">
-        <div class="modal-box">
-            <div class="modal-title">Order Summary 🧾</div>
-            <div id="modal-content"></div>
-            <div class="modal-total">
-                <span>Total Amount:</span>
-                <span>RM <span id="modal-total-price">0.00</span></span>
-            </div>
-            <div class="modal-footer">
-                <button class="modal-btn btn-cancel" onclick="closeModal()">Back</button>
-                <button class="modal-btn btn-confirm" onclick="confirmOrder()">Confirm</button>
-            </div>
-        </div>
-    </div>
+<div class="modal-overlay" id="option-modal">
+<div class="modal-box">
+<div class="modal-title" id="opt-modal-title">Select Options</div>
+<div class="options-group" id="opt-modal-content"></div>
+<textarea class="remarks-input" id="opt-remarks" placeholder="Remarks (e.g., Kaw)"></textarea>
+<button class="confirm-add-btn" id="opt-confirm-btn">Add to Order</button>
+<button class="modal-btn btn-cancel" style="width:100%; margin-top:8px;" onclick="closeOptionModal()">Cancel</button>
+</div>
+</div>
 
-    <script>
-        const menuData = [
-            { id: "cat1", name: "☕ Classic Kopi & Teh", items: [
-                { name: "air kosong ais (冰水)", hot: 0.5, cold: 0.5, isWater: true },
-                { name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true }, 
-                { name: "asam", hot: 1.8, cold: 1.8 },
-                { name: "barli", hot: 2.0, cold: 2.0, noSugarHot: 2.0 },
-                { name: "cappocino", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-                { name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
-                { name: "cham c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
-                { name: "cham o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
-                { name: "jus cinta (932)", hot: 2.0, cold: 2.0, noNoSugar: true },
-                { name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
-                { name: "kopi c", hot: 2.2, cold: 2.4, bigHot: 2.6 }, 
-                { name: "kopi o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
-                { name: "larat", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-                { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8, noNoSugar: true },
-                { name: "limau", hot: 1.6, cold: 1.6 }, 
-                { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugarHot: 2.8, noSugarCold: 3.0, noSugarBigHot: 3.8 }, 
-                { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 3.8, noNoSugar: true },
-                { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0, noNoSugar: true },
-                { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0, noSugarHot: 3.2, noSugarCold: 3.4 },
-                { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.8, noSugarHot: 2.6, noSugarCold: 2.8 },
-                { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0, noSugarHot: 3.6, noSugarCold: 3.8 }, 
-                { name: "nestum", hot: 2.8, cold: 3.0, noNoSugar: true },
-                { name: "oren bancuh", hot: 2.0, cold: 2.0 },
-                { name: "papo (八宝)", hot: 1.8, cold: 1.8, noNoSugar: true },
-                { name: "sirap", hot: 1.4, cold: 1.4 },
-                { name: "sirap bandung", hot: 2.0, cold: 2.2 }, 
-                { name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
-                { name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
-                { name: "teh c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
-                { name: "teh o", hot: 1.8, cold: 2.0, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
-                { name: "tongkat ali", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-                { name: "radix", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-                { name: "white coffee", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true }
-            ]},
-            { id: "cat2", name: "🌟 Specialties", items: [ 
-                { name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true },
-                { name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true },
-                { name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true },
-                { name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true }, 
-                { name: "3 rasa (milo+kopi+nescafe)", hot: 4.5, cold: 4.5 },
-                { name: "kopi special", hot: 2.4, cold: 2.6, bigHot: 2.8, noNoSugar: true },
-                { name: "miko (ho ka sai)", hot: 4.0, cold: 4.0 },
-                { name: "thai green tea", hot: 4.0, cold: 4.0 },
-                { name: "tutu (milo+kopi+nestum)", hot: 4.5, cold: 4.5 }
-            ]},
-            { id: "cat3", name: "🥤 Canned & Packaged", items: [
-                // --- 100 Plus 系列 ---
-                { name: "100 Plus (Can)", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "100 Plus (Bottle)", hot: 2.60, cold: 2.60, isCanned: true },
-                // --- F&N 系列 (RM 2.40) ---
-                { name: "F&N Strawberry", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "F&N Ice Cream Soda", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "F&N Orange", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "F&N Anggur", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "F&N Sarsi", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "F&N Ice Lemon Tea (Bottle)", hot: 2.60, cold: 2.60, isCanned: true },
-                // --- 其他汽水 ---
-                { name: "Coca-Cola", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "Sprite", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "Fanta Grape", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "est Cola (Brown Sugar)", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "A&W Root Beer", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "Kickapoo", hot: 2.40, cold: 2.40, isCanned: true },
-                // --- 茶与果汁 ---
-                { name: "Oyoshi Green Tea (Bottle)", hot: 2.60, cold: 2.60, isCanned: true },
-                { name: "Oyoshi Grape (Can)", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "Oyoshi Limau Madu (Can)", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "Sunkist Orange (Bottle)", hot: 3.00, cold: 3.00, isCanned: true },
-                // --- Yeo's 系列 ---
-                { name: "Yeo's Chrysanthemum (Can)", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "Yeo's Chrysanthemum (Bottle)", hot: 2.60, cold: 2.60, isCanned: true },
-                { name: "Yeo's Chrysanthemum (Small Box)", hot: 1.80, cold: 1.80, isCanned: true },
-                { name: "Yeo's Soy Milk (Can)", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "Yeo's Cincau (Can)", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "Yeo's Lychee (Can)", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "Yeo's Passion Fruit Tea (Can)", hot: 2.40, cold: 2.40, isCanned: true },
-                { name: "Yeo's Justea (Can)", hot: 2.60, cold: 2.60, isCanned: true },
-                { name: "Yeo's Yogurt Original (Box)", hot: 2.20, cold: 2.20, isCanned: true },
-                { name: "Yeo's Yogurt Anggur (Box)", hot: 2.20, cold: 2.20, isCanned: true },
-                // --- 牛奶与咖啡 ---
-                { name: "Milo (Box)", hot: 2.20, cold: 2.20, isCanned: true },
-                { name: "Goodday Full Cream Milk (Box)", hot: 2.20, cold: 2.20, isCanned: true },
-                { name: "Goodday Chocolate Milk (Box)", hot: 2.20, cold: 2.20, isCanned: true },
-                { name: "Wonda Kopi Tarik (Can)", hot: 3.00, cold: 3.00, isCanned: true },
-                // --- 水 ---
-                { name: "Mineral Water (Small)", hot: 1.20, cold: 1.20, isCanned: true },
-                { name: "Mineral Water (Large)", hot: 2.20, cold: 2.20, isCanned: true }
-            ]},
-            { id: "cat4", name: "🍞 Toast & Eggs", items: [
-                { name: "Roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true, remarksPlaceholder: "Choose 1 to 2 jams" },
-                { name: "half boiled egg (2 biji)", hot: 2.8, cold: 2.8, isFood: true, hasEggAddon: true },
-                { name: "roti goyang", hot: 4.8, cold: 4.8, isFood: true }
-            ]}
-        ];
+<div class="modal-overlay" id="order-modal">
+<div class="modal-box">
+<div class="modal-title">Order Summary 🧾</div>
+<div id="modal-content"></div>
+<div class="modal-total">
+<span>Total Amount:</span>
+<span>RM <span id="modal-total-price">0.00</span></span>
+</div>
+<div class="modal-footer">
+<button class="modal-btn btn-cancel" onclick="closeModal()">Back</button>
+<button class="modal-btn btn-confirm" onclick="confirmOrder()">Confirm</button>
+</div>
+</div>
+</div>
 
-        let cart = [];
-        let currentTable = "Not Specified";
-        const allTables = ["A1","A2","A3","B1","B2","B3","C1","C2","C3","C4","C5","C6","A","B","C","D","E","F","L1","L2","Tepi"];
+<script>
+const menuData = [
+{ id: "cat1", name: "☕ Classic Kopi & Teh", items: [
+{ name: "air kosong ais (冰水)", hot: 0.5, cold: 0.5, isWater: true },
+{ name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true }, 
+{ name: "asam", hot: 1.8, cold: 1.8 },
+{ name: "barli", hot: 2.0, cold: 2.0, noSugarHot: 2.0 },
+{ name: "cappocino", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
+{ name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
+{ name: "cham c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
+{ name: "cham o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
+{ name: "jus cinta (932)", hot: 2.0, cold: 2.0, noNoSugar: true },
+{ name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
+{ name: "kopi c", hot: 2.2, cold: 2.4, bigHot: 2.6 }, 
+{ name: "kopi o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
+{ name: "larat", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
+{ name: "leng teh (凉茶)", hot: 1.8, cold: 1.8, noNoSugar: true },
+{ name: "limau", hot: 1.6, cold: 1.6 }, 
+{ name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugarHot: 2.8, noSugarCold: 3.0, noSugarBigHot: 3.8 }, 
+{ name: "milo o", hot: 2.8, cold: 3.0, bigHot: 3.8, noNoSugar: true },
+{ name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0, noNoSugar: true },
+{ name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0, noSugarHot: 3.2, noSugarCold: 3.4 },
+{ name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.8, noSugarHot: 2.6, noSugarCold: 2.8 },
+{ name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.0, noSugarHot: 3.6, noSugarCold: 3.8 }, 
+{ name: "nestum", hot: 2.8, cold: 3.0, noNoSugar: true },
+{ name: "oren bancuh", hot: 2.0, cold: 2.0 },
+{ name: "papo (八宝)", hot: 1.8, cold: 1.8, noNoSugar: true },
+{ name: "sirap", hot: 1.4, cold: 1.4 },
+{ name: "sirap bandung", hot: 2.0, cold: 2.2 }, 
+{ name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
+{ name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
+{ name: "teh c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
+{ name: "teh o", hot: 1.8, cold: 2.0, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
+{ name: "tongkat ali", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
+{ name: "radix", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
+{ name: "white coffee", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true }
+]},
+{ id: "cat2", name: "🌟 Specialties", items: [ 
+{ name: "3 layer kopi", hot: 3.3, cold: 3.5, noNoSugar: true },
+{ name: "3 layer teh", hot: 3.3, cold: 3.5, noNoSugar: true },
+{ name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true },
+{ name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true }, 
+{ name: "3 rasa (milo+kopi+nescafe)", hot: 4.5, cold: 4.5 },
+{ name: "kopi special", hot: 2.4, cold: 2.6, bigHot: 2.8, noNoSugar: true },
+{ name: "miko (ho ka sai)", hot: 4.0, cold: 4.0 },
+{ name: "thai green tea", hot: 4.0, cold: 4.0 },
+{ name: "tutu (milo+kopi+nestum)", hot: 4.5, cold: 4.5 }
+]},
+{ id: "cat3", name: "🍞 Toast & Eggs", items: [
+{ name: "Roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true, remarksPlaceholder: "Choose 1 to 2 jams" },
+{ name: "half boiled egg (2 biji)", hot: 2.8, cold: 2.8, isFood: true, hasEggAddon: true },
+{ name: "roti goyang", hot: 4.8, cold: 4.8, isFood: true }
+]}
+];
 
-        function checkTable() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const table = urlParams.get('table');
-            const displayDiv = document.getElementById('table-display');
-            if (table) {
-                currentTable = table;
-                displayDiv.innerText = `Table: ${table}`;
-                displayDiv.style.backgroundColor = '#C8E6C9';
-            } else {
-                let selectHTML = `<span>Select Table:</span><select class="table-select" onchange="currentTable=this.value">`;
-                selectHTML += `<option value="Not Specified">Choose...</option>`;
-                allTables.forEach(t => { selectHTML += `<option value="${t}">${t}</option>`; });
-                selectHTML += `</select>`;
-                displayDiv.innerHTML = selectHTML;
-                displayDiv.style.backgroundColor = '#EFEBE9';
-            }
-        }
+let cart = [];
+let currentTable = "Not Specified";
+const allTables = ["A1","A2","A3","B1","B2","B3","C1","C2","C3","C4","C5","C6","A","B","C","D","E","F","L1","L2","Tepi"];
 
-        function renderMenu() {
-            const navContainer = document.getElementById('category-nav');
-            const menuContainer = document.getElementById('menu-container');
+function checkTable() {
+const urlParams = new URLSearchParams(window.location.search);
+const table = urlParams.get('table');
+const displayDiv = document.getElementById('table-display');
+if (table) {
+currentTable = table;
+displayDiv.innerText = `Table: ${table}`;
+displayDiv.style.backgroundColor = '#C8E6C9';
+} else {
+let selectHTML = `<span>Select Table:</span><select class="table-select" onchange="currentTable=this.value">`;
+selectHTML += `<option value="Not Specified">Choose...</option>`;
+allTables.forEach(t => { selectHTML += `<option value="${t}">${t}</option>`; });
+selectHTML += `</select>`;
+displayDiv.innerHTML = selectHTML;
+displayDiv.style.backgroundColor = '#EFEBE9';
+}
+}
 
-            menuData.forEach((cat, index) => {
-                const navItem = document.createElement('div');
-                navItem.className = `nav-item ${index === 0 ? 'active' : ''}`;
-                navItem.innerText = cat.name.split(' ')[1] || cat.name;
-                navItem.onclick = () => scrollToCategory(cat.id, navItem);
-                navContainer.appendChild(navItem);
+function renderMenu() {
+const navContainer = document.getElementById('category-nav');
+const menuContainer = document.getElementById('menu-container');
 
-                const section = document.createElement('div');
-                section.className = 'category-section';
-                section.id = cat.id;
-                
-                const title = document.createElement('div');
-                title.className = 'category-title';
-                title.innerText = cat.name;
-                section.appendChild(title);
+menuData.forEach((cat, index) => {
+const navItem = document.createElement('div');
+navItem.className = `nav-item ${index === 0 ? 'active' : ''}`;
+navItem.innerText = cat.name.split(' ')[1] || cat.name;
+navItem.onclick = () => scrollToCategory(cat.id, navItem);
+navContainer.appendChild(navItem);
 
-                cat.items.forEach(item => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'menu-item';
-                    itemDiv.innerHTML = `
-                        <div class="item-left">
-                            <span class="item-name">${item.name}</span>
-                            <span class="item-price">RM ${item.hot.toFixed(2)}</span>
-                        </div>
-                        <button class="add-trigger-btn" onclick='openOptionModal(${JSON.stringify(item)})'>+</button>
-                    `;
-                    section.appendChild(itemDiv);
-                });
-                menuContainer.appendChild(section);
-            });
-        }
+const section = document.createElement('div');
+section.className = 'category-section';
+section.id = cat.id;
 
-        function scrollToCategory(id, element) {
-            const documentElement = document.getElementById(id);
-            documentElement.scrollIntoView({ behavior: 'smooth' });
-            const navItems = document.getElementsByClassName('nav-item');
-            for (let item of navItems) item.classList.remove('active');
-            element.classList.add('active');
-        }
+const title = document.createElement('div');
+title.className = 'category-title';
+title.innerText = cat.name;
+section.appendChild(title);
 
-        let currentModalItem = null;
+cat.items.forEach(item => {
+const itemDiv = document.createElement('div');
+itemDiv.className = 'menu-item';
+itemDiv.innerHTML = `
+                       <div class="item-left">
+                           <span class="item-name">${item.name}</span>
+                           <span class="item-price">RM ${item.hot.toFixed(2)}</span>
+                       </div>
+                       <button class="add-trigger-btn" onclick='openOptionModal(${JSON.stringify(item)})'>+</button>
+                   `;
+section.appendChild(itemDiv);
+});
+menuContainer.appendChild(section);
+});
+}
 
-        function openOptionModal(item) {
-            currentModalItem = item;
-            document.getElementById('opt-modal-title').innerText = item.name.toUpperCase();
-            const isFood = item.isFood || false;
-            const isWater = item.isWater || false;
-            const isCanned = item.isCanned || false;
-            let html = '';
+function scrollToCategory(id, element) {
+const documentElement = document.getElementById(id);
+documentElement.scrollIntoView({ behavior: 'smooth' });
+const navItems = document.getElementsByClassName('nav-item');
+for (let item of navItems) item.classList.remove('active');
+element.classList.add('active');
+}
 
-            if (!isFood && !isWater) {
-                html += `
-                <div class="option-row"><span class="option-label">Temp:</span>
-                    <div class="tags" id="modal-temp-tags">
-                        <div class="tag active" onclick="selectModalTemp(this, 'hot')">Hot</div>
-                        <div class="tag" onclick="selectModalTemp(this, 'cold')">Iced</div>
-                    </div>
-                </div>`;
-                if (item.bigHot) {
-                    html += `
-                    <div class="addon-row" id="modal-large-row">
-                        <span id="modal-large-text">Upgrade to Large (+RM ${(item.bigHot - item.hot).toFixed(2)})</span>
-                        <input type="checkbox" id="modal-large-check" onchange="updateModalPrice()">
-                    </div>`;
-                }
-                html += `
-                <div class="option-row"><span class="option-label">Sugar:</span>
-                    <div class="tags" id="modal-sugar-tags">
-                        <div class="tag active" onclick="selectModalSugar(this, 'Normal')">Normal</div>
-                        <div class="tag" onclick="selectModalSugar(this, 'Less Sugar')">Less Sugar</div>`;
-                if (!item.noNoSugar) { html += `<div class="tag" id="tag-no-sugar" onclick="selectModalSugar(this, 'No Sugar')">No Sugar</div>`; }
-                html += `</div></div>`;
-            }
+let currentModalItem = null;
 
-            if (isCanned) {
-                html += `<div class="addon-row" style="margin-bottom: 15px;"><span>+ Add Cup of Ice (加冰杯) (+RM 0.20)</span><input type="checkbox" id="modal-ice-check" onchange="updateModalPrice()"></div>`;
-            }
-            
-            if (item.hasRotiPrep) {
-                html += `<div class="option-row"><span class="option-label">Method:</span><div class="tags" id="modal-prep-tags"><div class="tag active" onclick="selectModalTag(this)">Toast (烤)</div><div class="tag" onclick="selectModalTag(this)">Steam (蒸)</div></div></div>`;
-            }
+function openOptionModal(item) {
+currentModalItem = item;
+document.getElementById('opt-modal-title').innerText = item.name.toUpperCase();
+const isFood = item.isFood || false;
+const isWater = item.isWater || false;
+let html = '';
 
-            if (item.hasRotiSpread) {
-                html += `<div class="option-row"><span class="option-label">Flavour:</span><div class="tags" id="modal-spread-tags"><div class="tag active" onclick="selectModalMultiTag(this)">Kaya</div><div class="tag active" onclick="selectModalMultiTag(this)">Butter</div><div class="tag" onclick="selectModalMultiTag(this)">Peanut</div><div class="tag" onclick="selectModalMultiTag(this)">Sugar</div></div></div><div class="default-hint">* Default: Kaya + Butter if not modified</div>`;
-            }
+if (!isFood && !isWater) {
+html += `
+               <div class="option-row"><span class="option-label">Temp:</span>
+                   <div class="tags" id="modal-temp-tags">
+                       <div class="tag active" onclick="selectModalTemp(this, 'hot')">Hot</div>
+                       <div class="tag" onclick="selectModalTemp(this, 'cold')">Iced</div>
+                   </div>
+               </div>`;
 
-            if (item.hasEggAddon) {
-                html += `<div class="addon-row"><span>+ Add 1 egg (RM 1.40)</span><input type="checkbox" id="modal-egg-check" onchange="updateModalPrice()"></div>`;
-            }
+if (item.bigHot) {
+html += `
+                   <div class="addon-row" id="modal-large-row">
+                       <span id="modal-large-text">Upgrade to Large (+RM ${(item.bigHot - item.hot).toFixed(2)})</span>
+                       <input type="checkbox" id="modal-large-check" onchange="updateModalPrice()">
+                   </div>`;
+}
 
-            html += `<div class="qty-row"><div class="qty-label">Quantity:</div><div class="qty-controls"><button class="qty-btn" onclick="changeModalQty(-1)">-</button><div class="qty-val" id="modal-qty-val">1</div><button class="qty-btn" onclick="changeModalQty(1)">+</button></div></div>`;
+html += `
+               <div class="option-row"><span class="option-label">Sugar:</span>
+                   <div class="tags" id="modal-sugar-tags">
+                       <div class="tag active" onclick="selectModalSugar(this, 'Normal')">Normal</div>
+                       <div class="tag" onclick="selectModalSugar(this, 'Less Sugar')">Less Sugar</div>`;
 
-            document.getElementById('opt-modal-content').innerHTML = html;
-            document.getElementById('opt-remarks').value = '';
-            document.getElementById('opt-remarks').placeholder = item.remarksPlaceholder || 'Remarks (e.g., Kaw)';
-            updateModalPrice();
-            document.getElementById('option-modal').style.display = 'flex';
-        }
+if (!item.noNoSugar) {
+html += `<div class="tag" id="tag-no-sugar" onclick="selectModalSugar(this, 'No Sugar')">No Sugar</div>`;
+}
 
-        function closeOptionModal() { document.getElementById('option-modal').style.display = 'none'; }
-        
-        function selectModalTag(element) {
-            const tags = element.parentElement.getElementsByClassName('tag');
-            for (let t of tags) t.classList.remove('active');
-            element.classList.add('active');
-        }
+html += `</div></div>`;
+}
 
-        function selectModalMultiTag(element) {
-            const tags = element.parentElement.getElementsByClassName('tag');
-            if (element.classList.contains('active')) {
-                let activeCount = 0;
-                for (let t of tags) { if (t.classList.contains('active')) activeCount++; }
-                if (activeCount > 1) { element.classList.remove('active'); return; }
-            }
-            element.classList.add('active');
-            let activeTags = [];
-            for (let t of tags) { if (t.classList.contains('active')) activeTags.push(t); }
-            if (activeTags.length > 2) { activeTags[0].classList.remove('active'); }
-        }
+if (item.hasRotiPrep) {
+html += `
+               <div class="option-row"><span class="option-label">Method:</span>
+                   <div class="tags" id="modal-prep-tags">
+                       <div class="tag active" onclick="selectModalTag(this)">Toast (烤)</div>
+                       <div class="tag" onclick="selectModalTag(this)">Steam (蒸)</div>
+                   </div>
+               </div>`;
+}
 
-        function selectModalTemp(element, type) {
-            selectModalTag(element);
-            const largeRow = document.getElementById('modal-large-row');
-            if (largeRow) {
-                if (type === 'cold') {
-                    largeRow.style.display = 'none';
-                    const largeCheck = document.getElementById('modal-large-check');
-                    if (largeCheck) largeCheck.checked = false;
-                } else { largeRow.style.display = 'flex'; }
-            }
-            updateModalPrice();
-        }
+if (item.hasRotiSpread) {
+html += `
+               <div class="option-row"><span class="option-label">Flavour:</span>
+                   <div class="tags" id="modal-spread-tags">
+                       <div class="tag active" onclick="selectModalMultiTag(this)">Kaya</div>
+                       <div class="tag active" onclick="selectModalMultiTag(this)">Butter</div>
+                       <div class="tag" onclick="selectModalMultiTag(this)">Peanut</div>
+                        <div class="tag" onclick="selectModalMultiTag(this)">Sugar</div>
+                   </div>
+               </div>
+               <div class="default-hint">* Default: Kaya + Butter if not modified</div>`;
+}
 
-        function selectModalSugar(element, type) { selectModalTag(element); updateModalPrice(); }
+if (item.hasEggAddon) {
+html += `<div class="addon-row"><span>+ Add 1 egg (RM 1.40)</span><input type="checkbox" id="modal-egg-check" onchange="updateModalPrice()"></div>`;
+}
 
-        function changeModalQty(delta) {
-            const qtyDiv = document.getElementById('modal-qty-val');
-            let currentQty = parseInt(qtyDiv.innerText);
-            currentQty += delta;
-            if (currentQty < 1) currentQty = 1;
-            qtyDiv.innerText = currentQty;
-            updateModalPrice();
-        }
+html += `
+           <div class="qty-row">
+               <div class="qty-label">Quantity:</div>
+               <div class="qty-controls">
+                   <button class="qty-btn" onclick="changeModalQty(-1)">-</button>
+                   <div class="qty-val" id="modal-qty-val">1</div>
+                   <button class="qty-btn" onclick="changeModalQty(1)">+</button>
+               </div>
+           </div>`;
 
-        function updateModalPrice() {
-            if (!currentModalItem) return;
-            const isIced = document.querySelector('#modal-temp-tags .active')?.innerText === 'Iced';
-            const sugarType = document.querySelector('#modal-sugar-tags .active')?.innerText || 'Normal';
-            const largeChecked = document.getElementById('modal-large-check')?.checked || false;
-            const iceCupChecked = document.getElementById('modal-ice-check')?.checked || false;
-            
-            let basePrice = isIced ? currentModalItem.cold : currentModalItem.hot;
-            if (sugarType === 'No Sugar') {
-                if (isIced && currentModalItem.noSugarCold !== undefined) basePrice = currentModalItem.noSugarCold;
-                else if (!isIced && currentModalItem.noSugarHot !== undefined) basePrice = currentModalItem.noSugarHot;
-            }
+document.getElementById('opt-modal-content').innerHTML = html;
+document.getElementById('opt-remarks').value = '';
+document.getElementById('opt-remarks').placeholder = item.remarksPlaceholder || 'Remarks (e.g., Kaw)';
 
-            if (!isIced && largeChecked) {
-                if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) basePrice = currentModalItem.noSugarBigHot;
-                else if (currentModalItem.bigHot) basePrice = currentModalItem.bigHot;
-            }
-            
-            if (document.getElementById('modal-egg-check')?.checked) basePrice += 1.40;
-            if (iceCupChecked) basePrice += 0.20;
-            
-            const qty = parseInt(document.getElementById('modal-qty-val').innerText);
-            document.getElementById('opt-confirm-btn').innerText = `Add to Order - RM ${(basePrice * qty).toFixed(2)}`;
-            document.getElementById('opt-confirm-btn').onclick = () => executeAddToCart(currentModalItem, basePrice);
-        }
+updateModalPrice();
+document.getElementById('option-modal').style.display = 'flex';
+}
 
-        function executeAddToCart(item, singlePrice) {
-            const qty = parseInt(document.getElementById('modal-qty-val').innerText);
-            const temp = document.querySelector('#modal-temp-tags .active')?.innerText || 'N/A';
-            const sugar = document.querySelector('#modal-sugar-tags .active')?.innerText || 'N/A';
-            const prep = document.querySelector('#modal-prep-tags .active')?.innerText || 'N/A';
-            const activeSpreads = document.querySelectorAll('#modal-spread-tags .active');
-            let spreadList = [];
-            activeSpreads.forEach(s => spreadList.push(s.innerText));
-            const spread = spreadList.length > 0 ? spreadList.join(' + ') : 'N/A';
+function closeOptionModal() { document.getElementById('option-modal').style.display = 'none'; }
+function selectModalTag(element) {
+const tags = element.parentElement.getElementsByClassName('tag');
+for (let t of tags) t.classList.remove('active');
+element.classList.add('active');
+}
 
-            const egg = document.getElementById('modal-egg-check')?.checked || false;
-            const isLarge = document.getElementById('modal-large-check')?.checked || false;
-            const addIceCup = document.getElementById('modal-ice-check')?.checked || false;
-            const remarks = document.getElementById('opt-remarks').value.trim();
+function selectModalMultiTag(element) {
+const tags = element.parentElement.getElementsByClassName('tag');
+if (element.classList.contains('active')) {
+let activeCount = 0;
+for (let t of tags) { if (t.classList.contains('active')) activeCount++; }
+if (activeCount > 1) { element.classList.remove('active'); return; }
+}
+element.classList.add('active');
+let activeTags = [];
+for (let t of tags) { if (t.classList.contains('active')) activeTags.push(t); }
+if (activeTags.length > 2) { activeTags[0].classList.remove('active'); }
+}
 
-            cart.push({ cartId: Date.now() + Math.random(), name: item.name, price: singlePrice * qty, singlePrice, qty, temp, sugar, prep, spread, egg, isLarge, addIceCup, remarks });
-            
-            updateCartBar();
-            closeOptionModal();
-        }
+function selectModalTemp(element, type) {
+selectModalTag(element);
+const largeRow = document.getElementById('modal-large-row');
+if (largeRow) {
+if (type === 'cold') {
+largeRow.style.display = 'none';
+const largeCheck = document.getElementById('modal-large-check');
+if (largeCheck) largeCheck.checked = false;
+} else {
+largeRow.style.display = 'flex';
+}
+}
+updateModalPrice();
+}
 
-        function updateCartBar() {
-            document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
-            document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
-        }
+function selectModalSugar(element, type) {
+selectModalTag(element);
+updateModalPrice();
+}
 
-        function deleteCartItem(cartId) {
-            cart = cart.filter(item => item.cartId !== cartId);
-            updateCartBar();
-            if (cart.length === 0) closeModal(); else showOrderSummary();
-        }
+function changeModalQty(delta) {
+const qtyDiv = document.getElementById('modal-qty-val');
+let currentQty = parseInt(qtyDiv.innerText);
+currentQty += delta;
+if (currentQty < 1) currentQty = 1;
+qtyDiv.innerText = currentQty;
+updateModalPrice();
+}
 
-        function showOrderSummary() {
-            if (cart.length === 0) { alert("Your cart is empty!"); return; }
-            let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
-            let contentHTML = `<div style="text-align:center; font-weight:800; color:#bf360c; font-size:14px; margin-bottom:15px; background:#fbe9e7; padding:5px; border-radius:5px;">📍 TABLE: ${currentTable}</div>`;
-            cart.forEach(item => {
-                let displayName = item.name.toUpperCase() + (item.isLarge ? " (LARGE)" : "");
-                contentHTML += `<div class="modal-item"><div class="modal-item-info"><button class="delete-btn" onclick="deleteCartItem(${item.cartId})">❌</button><span>${item.qty}x ${displayName}</span></div><span>RM ${item.price.toFixed(2)}</span></div>`;
-                let details = [];
-                if (item.temp !== 'N/A') details.push(`${item.temp} / ${item.sugar}`);
-                if (item.prep !== 'N/A') details.push(`Type: ${item.prep}`);
-                if (item.spread !== 'N/A') details.push(`Flavour: ${item.spread}`);
-                if (item.egg) details.push(`+ Add 1 egg`);
-                if (item.addIceCup) details.push(`+ Cup of Ice`);
-                if (item.remarks) details.push(`Note: ${item.remarks}`);
-                if (details.length > 0) contentHTML += `<div class="modal-sub">- ${details.join(' | ')}</div>`;
-            });
-            document.getElementById('modal-content').innerHTML = contentHTML;
-            document.getElementById('modal-total-price').innerText = total;
-            document.getElementById('order-modal').style.display = 'flex';
-        }
+function updateModalPrice() {
+if (!currentModalItem) return;
 
-        function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
+const isIced = document.querySelector('#modal-temp-tags .active')?.innerText === 'Iced';
+const sugarType = document.querySelector('#modal-sugar-tags .active')?.innerText || 'Normal';
+const largeChecked = document.getElementById('modal-large-check')?.checked || false;
 
-        // --- 核心确认订单发送逻辑 ---
-        function confirmOrder() {
-            if (currentTable === "Not Specified") {
-                alert("Please select your Table Number first!");
-                closeModal();
-                window.scrollTo(0,0);
-                return;
-            }
+let basePrice = isIced ? currentModalItem.cold : currentModalItem.hot;
 
-            const orderData = {
-                table: currentTable,
-                total: document.getElementById('modal-total-price').innerText,
-                items: cart
-            };
+// 1. 处理无糖的基础价格
+if (sugarType === 'No Sugar') {
+if (isIced && currentModalItem.noSugarCold !== undefined) {
+basePrice = currentModalItem.noSugarCold;
+} else if (!isIced && currentModalItem.noSugarHot !== undefined) {
+basePrice = currentModalItem.noSugarHot;
+}
+}
 
-            // 发送到打印机/后端 API
-            fetch('YOUR_PRINTER_API_URL', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData)
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Printer error');
-                
-                // 下单成功后的反馈逻辑
-                alert("Order Confirmed & Sent to Kitchen! 🎉\n\n订单已发送到后厨！饮料/食物送达时请付款。\nPlease make payment when your drinks/food arrive.");
-                
-                // 清空数据
-                cart = [];
-                document.getElementById('cart-count').innerText = '0';
-                document.getElementById('cart-total').innerText = '0.00';
-                
-                closeModal();
-            })
-            .catch(error => {
-                alert("Failed to send to kitchen printer! Please inform counter staff directly.\n发送到厨房打印机失败，请直接去柜台通知员工点单！");
-                console.error('Error sending to printer:', error);
-            });
-        }
+// 2. 动态修改“升级大杯”的差价提示字眼
+const largeTextSpan = document.getElementById('modal-large-text');
+if (largeTextSpan) {
+if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
+let diff = currentModalItem.noSugarBigHot - basePrice;
+largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
+} else if (currentModalItem.bigHot) {
+let diff = currentModalItem.bigHot - (isIced ? currentModalItem.cold : currentModalItem.hot);
+largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
+}
+}
 
-        window.onload = () => { checkTable(); renderMenu(); };
-    </script>
+// 3. 特殊处理【热大杯】的情况
+if (!isIced && largeChecked) {
+if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
+basePrice = currentModalItem.noSugarBigHot;
+} else if (currentModalItem.bigHot) {
+basePrice = currentModalItem.bigHot;
+}
+}
+
+// 4. 计算加蛋的价格
+const eggChecked = document.getElementById('modal-egg-check')?.checked || false;
+if (eggChecked) basePrice += 1.40;
+
+const qty = parseInt(document.getElementById('modal-qty-val').innerText);
+const total = basePrice * qty;
+
+document.getElementById('opt-confirm-btn').innerText = `Add to Order - RM ${total.toFixed(2)}`;
+document.getElementById('opt-confirm-btn').onclick = () => {
+executeAddToCart(currentModalItem, basePrice);
+};
+}
+
+function executeAddToCart(item, singlePrice) {
+const qty = parseInt(document.getElementById('modal-qty-val').innerText);
+const temp = document.querySelector('#modal-temp-tags .active')?.innerText || 'N/A';
+const sugar = document.querySelector('#modal-sugar-tags .active')?.innerText || 'N/A';
+const prep = document.querySelector('#modal-prep-tags .active')?.innerText || 'N/A';
+
+const activeSpreads = document.querySelectorAll('#modal-spread-tags .active');
+let spreadList = [];
+activeSpreads.forEach(s => spreadList.push(s.innerText));
+const spread = spreadList.length > 0 ? spreadList.join(' + ') : 'N/A';
+
+const egg = document.getElementById('modal-egg-check')?.checked || false;
+const isLarge = document.getElementById('modal-large-check')?.checked || false;
+const remarks = document.getElementById('opt-remarks').value.trim();
+
+const existingItem = cart.find(c => 
+c.name === item.name &&
+c.temp === temp &&
+c.sugar === sugar &&
+c.prep === prep &&
+c.spread === spread &&
+c.egg === egg &&
+c.isLarge === isLarge &&
+c.remarks === remarks
+);
+
+if (existingItem) {
+existingItem.qty += qty;
+existingItem.price = existingItem.singlePrice * existingItem.qty;
+} else {
+const cartId = Date.now() + Math.random();
+cart.push({ cartId, name: item.name, price: singlePrice * qty, singlePrice, qty, temp, sugar, prep, spread, egg, isLarge, remarks });
+}
+
+updateCartBar();
+alert(`Added: ${qty}x ${item.name.toUpperCase()}`);
+closeOptionModal();
+}
+
+function updateCartBar() {
+document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
+document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+}
+
+function deleteCartItem(cartId) {
+cart = cart.filter(item => item.cartId !== cartId);
+updateCartBar();
+if (cart.length === 0) { closeModal(); } else { showOrderSummary(); }
+}
+
+function showOrderSummary() {
+if (cart.length === 0) { alert("Your cart is empty!"); return; }
+let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+
+let contentHTML = `<div style="text-align:center; font-weight:800; color:#bf360c; font-size:14px; margin-bottom:15px; background:#fbe9e7; padding:5px; border-radius:5px;">📍 TABLE: ${currentTable}</div>`;
+
+cart.forEach(item => {
+let displayName = item.name.toUpperCase();
+if (item.isLarge) displayName += " (LARGE)";
+
+contentHTML += `
+                   <div class="modal-item">
+                       <div class="modal-item-info">
+                           <button class="delete-btn" onclick="deleteCartItem(${item.cartId})">❌</button>
+                           <span>${item.qty}x ${displayName}</span>
+                       </div>
+                       <span>RM ${item.price.toFixed(2)}</span>
+                   </div>
+               `;
+let details = [];
+if (item.temp !== 'N/A') details.push(`${item.temp} / ${item.sugar}`);
+if (item.prep !== 'N/A') details.push(`Type: ${item.prep}`);
+if (item.spread !== 'N/A') details.push(`Flavour: ${item.spread}`);
+if (item.egg) details.push(`+ Add 1 egg`);
+if (item.remarks.trim()) details.push(`Note: ${item.remarks}`);
+
+if (details.length > 0) {
+contentHTML += `<div class="modal-sub">- ${details.join(' | ')}</div>`;
+}
+});
+
+document.getElementById('modal-content').innerHTML = contentHTML;
+document.getElementById('modal-total-price').innerText = total;
+document.getElementById('order-modal').style.display = 'flex';
+}
+
+function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
+
+function generateEnglishReceipt() {
+let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+
+let receipt = "";
+receipt += "================================\n";
+receipt += "     SIN CHOOI HONG KOPI      \n";
+receipt += `TABLE: ${currentTable} \n`;
+receipt += "================================\n\n";
+
+cart.forEach(item => {
+let displayName = item.name.toUpperCase();
+if (item.isLarge) displayName += " (LARGE)";
+
+let shortName = displayName.length > 16 ? displayName.substring(0, 16) : displayName;
+receipt += `${item.qty}x ${shortName.padEnd(16)} RM ${item.price.toFixed(2)}\n`;
+
+if (item.temp !== 'N/A') receipt += `   - [ ${item.temp} / ${item.sugar} ]\n`;
+if (item.prep !== 'N/A') receipt += `   - [ Type: ${item.prep} ]\n`;
+if (item.spread !== 'N/A') receipt += `   - [ Flavour: ${item.spread} ]\n`;
+if (item.egg) receipt += `   - [ + Add 1 egg ]\n`;
+if (item.remarks.trim()) receipt += `   - [ Note: ${item.remarks} ]\n`;
+receipt += "\n";
+});
+
+receipt += "--------------------------------\n";
+receipt += `TOTAL AMOUNT:        RM ${total}\n`;
+receipt += "--------------------------------\n";
+receipt += "Please pay when food arrives.\n";
+receipt += "================================\n";
+
+return receipt;
+}
+
+function confirmOrder() {
+if (cart.length === 0) { alert("Your cart is empty!"); return; }
+
+const receiptContent = generateEnglishReceipt();
+closeModal();
+
+fetch('https://你买的打印机品牌的云端API地址', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({
+"printer_sn": "你打印机底部的机身SN码", 
+"content": receiptContent
+})
+})
+.then(response => {
+alert("Order Confirmed & Sent to Kitchen! 🎉\n\n订单已发送到后厨！饮料/食物送达时请付款。\nPlease make payment when your drinks/food arrive.");
+cart = [];
+document.getElementById('cart-count').innerText = '0';
+document.getElementById('cart-total').innerText = '0.00';
+})
+.catch(error => {
+alert("Failed to send to kitchen printer! Please inform counter staff directly.\n发送到厨房打印机失败，请直接去柜台通知员工点单！");
+console.error('Error sending to printer:', error);
+});
+}
+
+window.onload = () => { checkTable(); renderMenu(); };
+</script>
 </body>
 </html>
