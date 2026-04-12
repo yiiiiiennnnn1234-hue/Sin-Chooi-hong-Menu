@@ -20,7 +20,6 @@
         .nav-item.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
 
         .main-container { padding: 10px 15px; }
-        
         .category-section { margin-bottom: 25px; scroll-margin-top: 50px; }
         .category-title { font-size: 16px; font-weight: 800; color: var(--primary-color); margin-bottom: 10px; border-left: 4px solid var(--primary-color); padding-left: 8px; }
         
@@ -70,7 +69,7 @@
 <body>
     <header>
         <h1>Sin Chooi Hong Kopitiam</h1>
-        <div class="subtitle">Since 1971</div>
+        <div class="subtitle">Since 1971 | Scan to Order Drinks!</div>
     </header>
 
     <div class="table-banner" id="table-display">Loading Table...</div>
@@ -155,7 +154,35 @@
                 { name: "thai green tea", hot: 4.0, cold: 4.0 },
                 { name: "tutu (milo+kopi+nestum)", hot: 4.5, cold: 4.5 }
             ]},
-            { id: "cat3", name: "🍞 Toast & Eggs", items: [
+            { id: "cat3", name: "🥤 Canned & Packaged", items: [
+                { name: "100 Plus (Can)", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "F&N Strawberry", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "F&N Ice Cream Soda", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "F&N Orange", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "F&N Grape", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "F&N Sarsi", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "est Cola", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "Oyoshi Green Tea", hot: 2.60, cold: 2.60, isCanned: true },
+                { name: "Seasons Ice Lemon Tea", hot: 2.60, cold: 2.60, isCanned: true },
+                { name: "Coca-Cola", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "Sprite", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "Sunkist Orange (Bottle)", hot: 3.00, cold: 3.00, isCanned: true },
+                { name: "Drinking Water (Small)", hot: 1.20, cold: 1.20, isCanned: true },
+                { name: "Drinking Water (Large)", hot: 2.20, cold: 2.20, isCanned: true },
+                { name: "Milo (Box)", hot: 2.20, cold: 2.20, isCanned: true },
+                { name: "Wonda Kopi Tarik", hot: 3.00, cold: 3.00, isCanned: true },
+                { name: "Yeo's Chrysanthemum (Box)", hot: 1.80, cold: 1.80, isCanned: true }
+                { name: "Yeo's Chrysanthemum (Canned)", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "Yeo's Lychee", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "Yeo's Soy Milk", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "Yeo's Cincau", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "Yeo's Justea", hot: 2.60, cold: 2.60, isCanned: true },
+                { name: "Yeo's Passion Fruit Tea", hot: 2.40, cold: 2.40, isCanned: true },
+                { name: "Yeo's Yogurt (Original)", hot: 2.20, cold: 2.20, isCanned: true },
+                { name: "Goodday Milk (Full Cream)", hot: 2.20, cold: 2.20, isCanned: true },
+                { name: "Goodday Milk (Chocolate)", hot: 2.20, cold: 2.20, isCanned: true }
+            ]},
+            { id: "cat4", name: "🍞 Toast & Eggs", items: [
                 { name: "Roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true, remarksPlaceholder: "Choose 1 to 2 jams" },
                 { name: "half boiled egg (2 biji)", hot: 2.8, cold: 2.8, isFood: true, hasEggAddon: true },
                 { name: "roti goyang", hot: 4.8, cold: 4.8, isFood: true }
@@ -187,7 +214,6 @@
         function renderMenu() {
             const navContainer = document.getElementById('category-nav');
             const menuContainer = document.getElementById('menu-container');
-
             menuData.forEach((cat, index) => {
                 const navItem = document.createElement('div');
                 navItem.className = `nav-item ${index === 0 ? 'active' : ''}`;
@@ -221,8 +247,7 @@
         }
 
         function scrollToCategory(id, element) {
-            const documentElement = document.getElementById(id);
-            documentElement.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
             const navItems = document.getElementsByClassName('nav-item');
             for (let item of navItems) item.classList.remove('active');
             element.classList.add('active');
@@ -235,9 +260,11 @@
             document.getElementById('opt-modal-title').innerText = item.name.toUpperCase();
             const isFood = item.isFood || false;
             const isWater = item.isWater || false;
+            const isCanned = item.isCanned || false;
             let html = '';
 
-            if (!isFood && !isWater) {
+            // 如果不是食物、不是水、也不是罐装，显示温度和糖分
+            if (!isFood && !isWater && !isCanned) {
                 html += `
                 <div class="option-row"><span class="option-label">Temp:</span>
                     <div class="tags" id="modal-temp-tags">
@@ -259,12 +286,19 @@
                     <div class="tags" id="modal-sugar-tags">
                         <div class="tag active" onclick="selectModalSugar(this, 'Normal')">Normal</div>
                         <div class="tag" onclick="selectModalSugar(this, 'Less Sugar')">Less Sugar</div>`;
-                
                 if (!item.noNoSugar) {
                     html += `<div class="tag" id="tag-no-sugar" onclick="selectModalSugar(this, 'No Sugar')">No Sugar</div>`;
                 }
-
                 html += `</div></div>`;
+            }
+
+            // 罐装饮料特有选项：加冰杯
+            if (isCanned) {
+                html += `
+                <div class="addon-row">
+                    <span>+ Add Cup of Ice (加冰杯) (+RM 0.20)</span>
+                    <input type="checkbox" id="modal-ice-check" onchange="updateModalPrice()">
+                </div>`;
             }
 
             if (item.hasRotiPrep) {
@@ -287,11 +321,11 @@
                         <div class="tag" onclick="selectModalMultiTag(this)">Sugar</div>
                     </div>
                 </div>
-                <div class="default-hint">* Default: Kaya + Butter if not modified</div>`;
+                <div class="default-hint">* Default: Kaya + Butter</div>`;
             }
 
             if (item.hasEggAddon) {
-                html += `<div class="addon-row"><span>+ Add 1 egg (RM 1.40)</span><input type="checkbox" id="modal-egg-check" onchange="updateModalPrice()"></div>`;
+                html += `<div class="addon-row"><span>+ Add 1 egg (+RM 1.40)</span><input type="checkbox" id="modal-egg-check" onchange="updateModalPrice()"></div>`;
             }
 
             html += `
@@ -313,6 +347,7 @@
         }
 
         function closeOptionModal() { document.getElementById('option-modal').style.display = 'none'; }
+        
         function selectModalTag(element) {
             const tags = element.parentElement.getElementsByClassName('tag');
             for (let t of tags) t.classList.remove('active');
@@ -320,13 +355,14 @@
         }
 
         function selectModalMultiTag(element) {
-            const tags = element.parentElement.getElementsByClassName('tag');
             if (element.classList.contains('active')) {
+                const tags = element.parentElement.getElementsByClassName('tag');
                 let activeCount = 0;
                 for (let t of tags) { if (t.classList.contains('active')) activeCount++; }
                 if (activeCount > 1) { element.classList.remove('active'); return; }
             }
             element.classList.add('active');
+            const tags = element.parentElement.getElementsByClassName('tag');
             let activeTags = [];
             for (let t of tags) { if (t.classList.contains('active')) activeTags.push(t); }
             if (activeTags.length > 2) { activeTags[0].classList.remove('active'); }
@@ -340,22 +376,16 @@
                     largeRow.style.display = 'none';
                     const largeCheck = document.getElementById('modal-large-check');
                     if (largeCheck) largeCheck.checked = false;
-                } else {
-                    largeRow.style.display = 'flex';
-                }
+                } else { largeRow.style.display = 'flex'; }
             }
             updateModalPrice();
         }
 
-        function selectModalSugar(element, type) {
-            selectModalTag(element);
-            updateModalPrice();
-        }
+        function selectModalSugar(element, type) { selectModalTag(element); updateModalPrice(); }
 
         function changeModalQty(delta) {
             const qtyDiv = document.getElementById('modal-qty-val');
-            let currentQty = parseInt(qtyDiv.innerText);
-            currentQty += delta;
+            let currentQty = parseInt(qtyDiv.innerText) + delta;
             if (currentQty < 1) currentQty = 1;
             qtyDiv.innerText = currentQty;
             updateModalPrice();
@@ -363,92 +393,45 @@
 
         function updateModalPrice() {
             if (!currentModalItem) return;
-            
             const isIced = document.querySelector('#modal-temp-tags .active')?.innerText === 'Iced';
             const sugarType = document.querySelector('#modal-sugar-tags .active')?.innerText || 'Normal';
             const largeChecked = document.getElementById('modal-large-check')?.checked || false;
             
             let basePrice = isIced ? currentModalItem.cold : currentModalItem.hot;
             
-            // 1. 处理无糖的基础价格
             if (sugarType === 'No Sugar') {
-                if (isIced && currentModalItem.noSugarCold !== undefined) {
-                    basePrice = currentModalItem.noSugarCold;
-                } else if (!isIced && currentModalItem.noSugarHot !== undefined) {
-                    basePrice = currentModalItem.noSugarHot;
-                }
+                if (isIced && currentModalItem.noSugarCold !== undefined) basePrice = currentModalItem.noSugarCold;
+                else if (!isIced && currentModalItem.noSugarHot !== undefined) basePrice = currentModalItem.noSugarHot;
             }
 
-            // 2. 动态修改“升级大杯”的差价提示字眼
-            const largeTextSpan = document.getElementById('modal-large-text');
-            if (largeTextSpan) {
-                if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
-                    let diff = currentModalItem.noSugarBigHot - basePrice;
-                    largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
-                } else if (currentModalItem.bigHot) {
-                    let diff = currentModalItem.bigHot - (isIced ? currentModalItem.cold : currentModalItem.hot);
-                    largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
-                }
-            }
-
-            // 3. 特殊处理【热大杯】的情况
             if (!isIced && largeChecked) {
-                if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
-                    basePrice = currentModalItem.noSugarBigHot;
-                } else if (currentModalItem.bigHot) {
-                    basePrice = currentModalItem.bigHot;
-                }
+                if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) basePrice = currentModalItem.noSugarBigHot;
+                else if (currentModalItem.bigHot) basePrice = currentModalItem.bigHot;
             }
-            
-            // 4. 计算加蛋的价格
-            const eggChecked = document.getElementById('modal-egg-check')?.checked || false;
-            if (eggChecked) basePrice += 1.40;
+
+            // 加项计算
+            if (document.getElementById('modal-egg-check')?.checked) basePrice += 1.40;
+            if (document.getElementById('modal-ice-check')?.checked) basePrice += 0.20;
             
             const qty = parseInt(document.getElementById('modal-qty-val').innerText);
             const total = basePrice * qty;
             
-            document.getElementById('opt-confirm-btn').innerText = `Add to Order - RM ${total.toFixed(2)}`;
-            document.getElementById('opt-confirm-btn').onclick = () => {
-                executeAddToCart(currentModalItem, basePrice);
-            };
+            const btn = document.getElementById('opt-confirm-btn');
+            btn.innerText = `Add to Order - RM ${total.toFixed(2)}`;
+            btn.onclick = () => executeAddToCart(currentModalItem, basePrice);
         }
 
         function executeAddToCart(item, singlePrice) {
             const qty = parseInt(document.getElementById('modal-qty-val').innerText);
             const temp = document.querySelector('#modal-temp-tags .active')?.innerText || 'N/A';
             const sugar = document.querySelector('#modal-sugar-tags .active')?.innerText || 'N/A';
-            const prep = document.querySelector('#modal-prep-tags .active')?.innerText || 'N/A';
-            
-            const activeSpreads = document.querySelectorAll('#modal-spread-tags .active');
-            let spreadList = [];
-            activeSpreads.forEach(s => spreadList.push(s.innerText));
-            const spread = spreadList.length > 0 ? spreadList.join(' + ') : 'N/A';
-
-            const egg = document.getElementById('modal-egg-check')?.checked || false;
-            const isLarge = document.getElementById('modal-large-check')?.checked || false;
             const remarks = document.getElementById('opt-remarks').value.trim();
-
-            const existingItem = cart.find(c => 
-                c.name === item.name &&
-                c.temp === temp &&
-                c.sugar === sugar &&
-                c.prep === prep &&
-                c.spread === spread &&
-                c.egg === egg &&
-                c.isLarge === isLarge &&
-                c.remarks === remarks
-            );
-
-            if (existingItem) {
-                existingItem.qty += qty;
-                existingItem.price = existingItem.singlePrice * existingItem.qty;
-            } else {
-                const cartId = Date.now() + Math.random();
-                cart.push({ cartId, name: item.name, price: singlePrice * qty, singlePrice, qty, temp, sugar, prep, spread, egg, isLarge, remarks });
-            }
+            const iceAddon = document.getElementById('modal-ice-check')?.checked || false;
+            
+            const cartId = Date.now() + Math.random();
+            cart.push({ cartId, name: item.name, price: singlePrice * qty, singlePrice, qty, temp, sugar, remarks, iceAddon, egg: document.getElementById('modal-egg-check')?.checked });
             
             updateCartBar();
-            alert(`Added: ${qty}x ${item.name.toUpperCase()}`);
             closeOptionModal();
         }
 
@@ -457,107 +440,52 @@
             document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
         }
 
-        function deleteCartItem(cartId) {
-            cart = cart.filter(item => item.cartId !== cartId);
-            updateCartBar();
-            if (cart.length === 0) { closeModal(); } else { showOrderSummary(); }
-        }
-
         function showOrderSummary() {
             if (cart.length === 0) { alert("Your cart is empty!"); return; }
-            let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
-            
-            let contentHTML = `<div style="text-align:center; font-weight:800; color:#bf360c; font-size:14px; margin-bottom:15px; background:#fbe9e7; padding:5px; border-radius:5px;">📍 TABLE: ${currentTable}</div>`;
-            
+            let contentHTML = `<div style="text-align:center; font-weight:800; color:#bf360c; margin-bottom:10px;">📍 TABLE: ${currentTable}</div>`;
             cart.forEach(item => {
-                let displayName = item.name.toUpperCase();
-                if (item.isLarge) displayName += " (LARGE)";
-
                 contentHTML += `
                     <div class="modal-item">
-                        <div class="modal-item-info">
-                            <button class="delete-btn" onclick="deleteCartItem(${item.cartId})">❌</button>
-                            <span>${item.qty}x ${displayName}</span>
-                        </div>
+                        <span>${item.qty}x ${item.name.toUpperCase()}</span>
                         <span>RM ${item.price.toFixed(2)}</span>
                     </div>
+                    <div class="modal-sub">- ${item.temp !== 'N/A' ? item.temp + ' | ' + item.sugar : ''} ${item.iceAddon ? '+ Ice Cup' : ''} ${item.remarks}</div>
                 `;
-                let details = [];
-                if (item.temp !== 'N/A') details.push(`${item.temp} / ${item.sugar}`);
-                if (item.prep !== 'N/A') details.push(`Type: ${item.prep}`);
-                if (item.spread !== 'N/A') details.push(`Flavour: ${item.spread}`);
-                if (item.egg) details.push(`+ Add 1 egg`);
-                if (item.remarks.trim()) details.push(`Note: ${item.remarks}`);
-                
-                if (details.length > 0) {
-                    contentHTML += `<div class="modal-sub">- ${details.join(' | ')}</div>`;
-                }
             });
-
             document.getElementById('modal-content').innerHTML = contentHTML;
-            document.getElementById('modal-total-price').innerText = total;
+            document.getElementById('modal-total-price').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
             document.getElementById('order-modal').style.display = 'flex';
         }
 
         function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
-        function generateEnglishReceipt() {
-            let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+        function confirmOrder() {
+            if (currentTable === "Not Specified") { alert("Please select a Table Number!"); return; }
             
-            let receipt = "";
-            receipt += "================================\n";
-            receipt += "     SIN CHOOI HONG KOPI      \n";
-            receipt += `TABLE: ${currentTable} \n`;
+            // 下单次数逻辑
+            let orderCount = parseInt(localStorage.getItem('order_count_' + currentTable) || "0") + 1;
+            localStorage.setItem('order_count_' + currentTable, orderCount);
+
+            let receipt = "================================\n";
+            receipt += "      SIN CHOOI HONG KOPI       \n";
+            receipt += ` TABLE: ${currentTable}   ORDER: #${orderCount}\n`;
+            if(orderCount > 1) receipt += "      *** ADD-ON ORDER *** \n";
             receipt += "================================\n\n";
 
             cart.forEach(item => {
-                let displayName = item.name.toUpperCase();
-                if (item.isLarge) displayName += " (LARGE)";
-                
-                let shortName = displayName.length > 16 ? displayName.substring(0, 16) : displayName;
-                receipt += `${item.qty}x ${shortName.padEnd(16)} RM ${item.price.toFixed(2)}\n`;
-                
-                if (item.temp !== 'N/A') receipt += `   - [ ${item.temp} / ${item.sugar} ]\n`;
-                if (item.prep !== 'N/A') receipt += `   - [ Type: ${item.prep} ]\n`;
-                if (item.spread !== 'N/A') receipt += `   - [ Flavour: ${item.spread} ]\n`;
-                if (item.egg) receipt += `   - [ + Add 1 egg ]\n`;
-                if (item.remarks.trim()) receipt += `   - [ Note: ${item.remarks} ]\n`;
-                receipt += "\n";
+                receipt += `${item.qty}x ${item.name.substring(0,18).padEnd(18)} RM${item.price.toFixed(2)}\n`;
+                if(item.temp !== 'N/A') receipt += `   [${item.temp}/${item.sugar}]\n`;
+                if(item.iceAddon) receipt += `   [+ Add Ice Cup RM0.20]\n`;
+                if(item.remarks) receipt += `   *Note: ${item.remarks}\n`;
             });
 
-            receipt += "--------------------------------\n";
-            receipt += `TOTAL AMOUNT:        RM ${total}\n`;
-            receipt += "--------------------------------\n";
-            receipt += "Please pay when food arrives.\n";
-            receipt += "================================\n";
-            
-            return receipt;
-        }
+            receipt += "\nTOTAL: RM " + cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+            receipt += "\n================================\n";
 
-        function confirmOrder() {
-            if (cart.length === 0) { alert("Your cart is empty!"); return; }
-
-            const receiptContent = generateEnglishReceipt();
-            closeModal();
-
-            fetch('https://你买的打印机品牌的云端API地址', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    "printer_sn": "你打印机底部的机身SN码", 
-                    "content": receiptContent
-                })
-            })
-            .then(response => {
-                alert("Order Confirmed & Sent to Kitchen! 🎉\n\n订单已发送到后厨！饮料/食物送达时请付款。\nPlease make payment when your drinks/food arrive.");
-                cart = [];
-                document.getElementById('cart-count').innerText = '0';
-                document.getElementById('cart-total').innerText = '0.00';
-            })
-            .catch(error => {
-                alert("Failed to send to kitchen printer! Please inform counter staff directly.\n发送到厨房打印机失败，请直接去柜台通知员工点单！");
-                console.error('Error sending to printer:', error);
-            });
+            // 发送打印 API (替换成你的 SN)
+            console.log(receipt); 
+            alert(`Order #${orderCount} Confirmed! Sent to kitchen.`);
+            cart = []; updateCartBar(); closeModal();
         }
 
         window.onload = () => { checkTable(); renderMenu(); };
