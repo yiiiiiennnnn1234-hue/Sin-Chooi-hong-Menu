@@ -502,38 +502,37 @@ document.getElementById('order-modal').style.display = 'flex';
 function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
 function generateEnglishReceipt() {
-let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+    let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+    let receipt = "";
+    receipt += "================================" + "\n";
+    receipt += "     SIN CHOOI HONG KOPI      " + "\n";
+    receipt += "TABLE: " + currentTable + " \n";
+    receipt += "================================" + "\n\n";
 
-let receipt = "";
-receipt += "================================\n";
-receipt += "     SIN CHOOI HONG KOPI      \n";
-receipt += `TABLE: ${currentTable} \n`;
-receipt += "================================\n\n";
+    cart.forEach(item => {
+        let displayName = item.name.toUpperCase();
+        if (item.isLarge) displayName += " (LARGE)";
+        let shortName = displayName.length > 16 ? displayName.substring(0, 16) : displayName;
+        receipt += item.qty + "x " + shortName.padEnd(16) + " RM " + item.price.toFixed(2) + "\n";
 
-cart.forEach(item => {
-let displayName = item.name.toUpperCase();
-if (item.isLarge) displayName += " (LARGE)";
+        if (item.temp !== 'N/A') receipt += "   - [ " + item.temp + " / " + item.sugar + " ]\n";
+        if (item.prep !== 'N/A') receipt += "   - [ Type: " + item.prep + " ]\n";
+        if (item.spread !== 'N/A') receipt += "   - [ Flavour: " + item.spread + " ]\n";
+        if (item.egg) receipt += "   - [ + Add 1 egg ]\n";
+        if (item.remarks && item.remarks.trim()) receipt += "   - [ Note: " + item.remarks + " ]\n";
+        receipt += "\n";
+    });
 
-let shortName = displayName.length > 16 ? displayName.substring(0, 16) : displayName;
-receipt += `${item.qty}x ${shortName.padEnd(16)} RM ${item.price.toFixed(2)}\n`;
+    receipt += "--------------------------------" + "\n";
+    receipt += "TOTAL AMOUNT:         RM " + total + "\n";
+    receipt += "--------------------------------" + "\n";
+    receipt += "Please pay when food arrives." + "\n";
+    receipt += "================================" + "\n";
 
-if (item.temp !== 'N/A') receipt += `   - [ ${item.temp} / ${item.sugar} ]\n`;
-if (item.prep !== 'N/A') receipt += `   - [ Type: ${item.prep} ]\n`;
-if (item.spread !== 'N/A') receipt += `   - [ Flavour: ${item.spread} ]\n`;
-if (item.egg) receipt += `   - [ + Add 1 egg ]\n`;
-if (item.remarks.trim()) receipt += `   - [ Note: ${item.remarks} ]\n`;
-receipt += "\n";
-});
-
-receipt += "--------------------------------\n";
-receipt += `TOTAL AMOUNT:        RM ${total}\n`;
-receipt += "--------------------------------\n";
-receipt += "Please pay when food arrives.\n";
-receipt += "================================\n";
-
-return receipt;
+    return receipt;
 }
 
+// --- 飞鹅云打印确认下单逻辑 ---
 function confirmOrder() {
     if (cart.length === 0) {
         alert("Your cart is empty!");
@@ -541,19 +540,24 @@ function confirmOrder() {
     }
 
     // --- 飞鹅云打印机资料配置 ---
-    const USER = "yiiiiiennnnn1234@gmail.com"; // *** 必须填写这个才能打印 ***
+    const USER = "yiiiiiennnnn1234@gmail.com"; 
     const UKEY = "EMbGuM7h";
     const SN = "924751396";
     const API_URL = "https://api.feieyun.com/Api/Open/";
-    const STIME = Math.floor(Date.now() / 1000); // 当前时间戳
+    const STIME = Math.floor(Date.now() / 1000); 
     
-    // 生成飞鹅要求的安全签名: sha1(user + ukey + stime)
+    // 检查加密库是否加载成功
+    if (typeof sha1 === 'undefined') {
+        alert("Crypto library missing! Please check your internet connection.");
+        return;
+    }
+
+    // 生成安全签名
     const SIG = sha1(USER + UKEY + STIME); 
 
     const receiptContent = generateEnglishReceipt();
     closeModal();
 
-    // 飞鹅标准 API 参数格式
     const params = new URLSearchParams();
     params.append("user", USER);
     params.append("stime", STIME);
@@ -561,7 +565,7 @@ function confirmOrder() {
     params.append("apiname", "Open_printMsg");
     params.append("sn", SN);
     params.append("content", receiptContent);
-    params.append("times", "1"); // 打印次数
+    params.append("times", "1");
 
     fetch(API_URL, {
         method: 'POST',
@@ -571,23 +575,24 @@ function confirmOrder() {
     .then(response => response.json())
     .then(data => {
         if (data.msg === "ok") {
-            alert("Order Confirmed & Sent to Kitchen! 🎉\n\n订单已发送到后厨！饮料/食物送达时请付款。\nPlease make payment when your drinks/food arrive.");
+            alert("Order Confirmed & Sent to Kitchen! 🎉\n\n订单已发送到后厨！饮料/食物送达时请付款。");
             cart = [];
-            document.getElementById('cart-count').innerText = '0';
-            document.getElementById('cart-total').innerText = '0.00';
+            // 更新 UI
+            if(document.getElementById('cart-count')) document.getElementById('cart-count').innerText = '0';
+            if(document.getElementById('cart-total')) document.getElementById('cart-total').innerText = '0.00';
         } else {
-            // 提示飞鹅云返回的错误信息，如“签名错误”或“打印机离线”
-            alert("Printer Error: " + data.msg + "\nPlease inform counter staff.");
+            alert("Printer Error: " + data.msg);
         }
     })
     .catch(error => {
-        alert("Failed to send to kitchen printer! Please inform counter staff directly.\n发送到厨房打印机失败，请直接去柜台通知员工点单！");
-        console.error('Error sending to printer:', error);
+        alert("Failed to send! Please go to counter.");
+        console.error('Error:', error);
     });
 }
 
 function closeModal() {
-    document.getElementById('order-modal').style.display = 'none';
+    const modal = document.getElementById('order-modal');
+    if (modal) modal.style.display = 'none';
 }
 
 // 页面加载初始化
@@ -596,5 +601,8 @@ window.onload = () => {
     if (typeof renderMenu === "function") renderMenu(); 
 };
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha1/0.6.0/sha1.min.js"></script>
+
 </body>
 </html>
