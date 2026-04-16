@@ -535,32 +535,66 @@ return receipt;
 }
 
 function confirmOrder() {
-if (cart.length === 0) { alert("Your cart is empty!"); return; }
+    if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
 
-const receiptContent = generateEnglishReceipt();
-closeModal();
+    // --- 飞鹅云打印机资料配置 ---
+    const USER = "yiiiiiennnnn1234@gmail.com"; // *** 必须填写这个才能打印 ***
+    const UKEY = "EMbGuM7h";
+    const SN = "924751396";
+    const API_URL = "https://api.feieyun.com/Api/Open/";
+    const STIME = Math.floor(Date.now() / 1000); // 当前时间戳
+    
+    // 生成飞鹅要求的安全签名: sha1(user + ukey + stime)
+    const SIG = sha1(USER + UKEY + STIME); 
 
-fetch('https://你买的打印机品牌的云端API地址', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({
-"printer_sn": "你打印机底部的机身SN码", 
-"content": receiptContent
-})
-})
-.then(response => {
-alert("Order Confirmed & Sent to Kitchen! 🎉\n\n订单已发送到后厨！饮料/食物送达时请付款。\nPlease make payment when your drinks/food arrive.");
-cart = [];
-document.getElementById('cart-count').innerText = '0';
-document.getElementById('cart-total').innerText = '0.00';
-})
-.catch(error => {
-alert("Failed to send to kitchen printer! Please inform counter staff directly.\n发送到厨房打印机失败，请直接去柜台通知员工点单！");
-console.error('Error sending to printer:', error);
-});
+    const receiptContent = generateEnglishReceipt();
+    closeModal();
+
+    // 飞鹅标准 API 参数格式
+    const params = new URLSearchParams();
+    params.append("user", USER);
+    params.append("stime", STIME);
+    params.append("sig", SIG);
+    params.append("apiname", "Open_printMsg");
+    params.append("sn", SN);
+    params.append("content", receiptContent);
+    params.append("times", "1"); // 打印次数
+
+    fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.msg === "ok") {
+            alert("Order Confirmed & Sent to Kitchen! 🎉\n\n订单已发送到后厨！饮料/食物送达时请付款。\nPlease make payment when your drinks/food arrive.");
+            cart = [];
+            document.getElementById('cart-count').innerText = '0';
+            document.getElementById('cart-total').innerText = '0.00';
+        } else {
+            // 提示飞鹅云返回的错误信息，如“签名错误”或“打印机离线”
+            alert("Printer Error: " + data.msg + "\nPlease inform counter staff.");
+        }
+    })
+    .catch(error => {
+        alert("Failed to send to kitchen printer! Please inform counter staff directly.\n发送到厨房打印机失败，请直接去柜台通知员工点单！");
+        console.error('Error sending to printer:', error);
+    });
 }
 
-window.onload = () => { checkTable(); renderMenu(); };
+function closeModal() {
+    document.getElementById('order-modal').style.display = 'none';
+}
+
+// 页面加载初始化
+window.onload = () => { 
+    if (typeof checkTable === "function") checkTable(); 
+    if (typeof renderMenu === "function") renderMenu(); 
+};
 </script>
 </body>
 </html>
