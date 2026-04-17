@@ -523,7 +523,7 @@ function generateEnglishReceipt() {
         if (item.temp !== 'N/A') details.push(item.temp + "/" + item.sugar);
         if (item.prep !== 'N/A') details.push(item.prep);
         if (item.spread !== 'N/A') details.push(item.spread);
-        if (item.egg) details.push("+Egg");
+        if (item.egg) details.push("<B>ADD 1 EGG</B>");
         if (item.remarks && item.remarks.trim()) details.push("Note: " + item.remarks);
 
         if (details.length > 0) {
