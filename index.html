@@ -504,30 +504,45 @@ function closeModal() { document.getElementById('order-modal').style.display = '
 function generateEnglishReceipt() {
     let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
     let receipt = "";
-    receipt += "================================" + "\n";
-    receipt += "     SIN CHOOI HONG KOPI      " + "\n";
-    receipt += "TABLE: " + currentTable + " \n";
-    receipt += "================================" + "\n\n";
 
+    // 1. 巨大醒目的桌号 (居中放大)
+    receipt += "<CB>TABLE: " + currentTable + "</CB>\n";
+    receipt += "--------------------------------\n";
+
+    // 2. 订单内容
     cart.forEach(item => {
         let displayName = item.name.toUpperCase();
-        if (item.isLarge) displayName += " (LARGE)";
-        let shortName = displayName.length > 16 ? displayName.substring(0, 16) : displayName;
-        receipt += item.qty + "x " + shortName.padEnd(16) + " RM " + item.price.toFixed(2) + "\n";
+        if (item.isLarge) displayName += " (L)";
 
-        if (item.temp !== 'N/A') receipt += "   - [ " + item.temp + " / " + item.sugar + " ]\n";
-        if (item.prep !== 'N/A') receipt += "   - [ Type: " + item.prep + " ]\n";
-        if (item.spread !== 'N/A') receipt += "   - [ Flavour: " + item.spread + " ]\n";
-        if (item.egg) receipt += "   - [ + Add 1 egg ]\n";
-        if (item.remarks && item.remarks.trim()) receipt += "   - [ Note: " + item.remarks + " ]\n";
-        receipt += "\n";
+        // <B> 标签让这一行字体变大，方便后厨看清
+        // 格式：数量 x 菜品名称
+        receipt += "<B>" + item.qty + "x " + displayName + "</B>\n";
+
+        // 规格说明（保持正常大小，避免太乱）
+        let details = [];
+        if (item.temp !== 'N/A') details.push(item.temp + "/" + item.sugar);
+        if (item.prep !== 'N/A') details.push(item.prep);
+        if (item.spread !== 'N/A') details.push(item.spread);
+        if (item.egg) details.push("+Egg");
+        if (item.remarks && item.remarks.trim()) details.push("Note: " + item.remarks);
+
+        if (details.length > 0) {
+            receipt += "   " + details.join(" | ") + "\n";
+        }
+        
+        // 价格（如果只是给后厨看，价格可以放小）
+        receipt += "   Price: RM " + item.price.toFixed(2) + "\n";
+        receipt += "\n"; // 每个菜品后面空一行，更易读
     });
 
-    receipt += "--------------------------------" + "\n";
-    receipt += "TOTAL AMOUNT:         RM " + total + "\n";
-    receipt += "--------------------------------" + "\n";
-    receipt += "Please pay when food arrives." + "\n";
-    receipt += "================================" + "\n";
+    // 3. 底部总结
+    receipt += "--------------------------------\n";
+    receipt += "TOTAL ITEMS: " + cart.reduce((sum, i) => sum + i.qty, 0) + "\n";
+    receipt += "<L>TOTAL: RM " + total + "</L>\n"; // 总价高度加倍
+    receipt += "--------------------------------\n";
+    
+    // 自动切纸指令（有些机型需要多几个回车）
+    receipt += "\n\n\n"; 
 
     return receipt;
 }
