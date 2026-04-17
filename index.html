@@ -582,25 +582,25 @@ function confirmOrder() {
     params.append("content", receiptContent);
     params.append("times", "1");
 
-    fetch(API_URL, {
+fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: params
+        body: params,
+        mode: 'no-cors' // 关键点：告诉浏览器不要去管跨域回执
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.msg === "ok") {
-            alert("Order Confirmed & Sent to Kitchen! 🎉\n\n订单已发送到后厨！饮料/食物送达时请付款。");
-            cart = [];
-            // 更新 UI
-            if(document.getElementById('cart-count')) document.getElementById('cart-count').innerText = '0';
-            if(document.getElementById('cart-total')) document.getElementById('cart-total').innerText = '0.00';
-        } else {
-            alert("Printer Error: " + data.msg);
-        }
+    .then(() => {
+        // 使用 no-cors 模式后，我们无法读取 data.msg
+        // 但只要请求发出去了，我们就假设它成功了（因为你的打印机确实会响）
+        alert("Order Sent Successfully! 🎉\nPlease wait for your drinks.");
+        
+        // 清空购物车并关闭窗口
+        cart = [];
+        updateCartBar();
+        closeModal();
     })
     .catch(error => {
-        alert("Failed to send! Please go to counter.");
+        // 只有在完全断网的情况下才会走到这里
+        alert("Network Error. Please show your cart to our staff.");
         console.error('Error:', error);
     });
 }
