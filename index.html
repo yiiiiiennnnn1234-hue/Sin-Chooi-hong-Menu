@@ -81,7 +81,17 @@ header .subtitle { margin: 4px 0 0; font-size: 11px; color: #795548; font-style:
 <div style="font-size: 13px;">Items: <span id="cart-count">0</span> | Total: <b>RM <span id="cart-total">0.00</span></b></div>
 <button class="submit-btn" onclick="showOrderSummary()">Place Order</button>
 </div>
+/* 让整行菜单看起来可以点击 */
+.menu-item {
+    cursor: pointer;
+    transition: background-color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+}
 
+/* 点击整行时的颜色反馈 */
+.menu-item:active {
+    background-color: #F0EAE1;
+}
 <div class="modal-overlay" id="option-modal">
 <div class="modal-box">
 <div class="modal-title" id="opt-modal-title">Select Options</div>
@@ -205,18 +215,21 @@ const title = document.createElement('div');
 title.className = 'category-title';
 title.innerText = cat.name;
 section.appendChild(title);
-
 cat.items.forEach(item => {
-const itemDiv = document.createElement('div');
-itemDiv.className = 'menu-item';
-itemDiv.innerHTML = `
-                       <div class="item-left">
-                           <span class="item-name">${item.name}</span>
-                           <span class="item-price">RM ${item.hot.toFixed(2)}</span>
-                       </div>
-                       <button class="add-trigger-btn" onclick='openOptionModal(${JSON.stringify(item)})'>+</button>
-                   `;
-section.appendChild(itemDiv);
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'menu-item';
+    
+    // 关键修改：将 onclick 绑定到整个 itemDiv 上
+    itemDiv.onclick = () => openOptionModal(item); 
+    
+    itemDiv.innerHTML = `
+        <div class="item-left">
+            <span class="item-name">${item.name}</span>
+            <span class="item-price">RM ${item.hot.toFixed(2)}</span>
+        </div>
+        <button class="add-trigger-btn">+</button>
+    `;
+    section.appendChild(itemDiv);
 });
 menuContainer.appendChild(section);
 });
