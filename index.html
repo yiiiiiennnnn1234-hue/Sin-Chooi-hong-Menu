@@ -506,11 +506,12 @@ document.getElementById('order-modal').style.display = 'flex';
 
 function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
+// --- 找到这个函数进行替换 ---
 function generateEnglishReceipt() {
     let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
     let receipt = "";
 
-    // 1. 巨大醒目的桌号 (居中放大)
+    // 1. 桌号 (居中放大)
     receipt += "<CB>TABLE: " + currentTable + "</CB>\n";
     receipt += "--------------------------------\n";
 
@@ -519,34 +520,43 @@ function generateEnglishReceipt() {
         let displayName = item.name.toUpperCase();
         if (item.isLarge) displayName += " (L)";
 
-        // <B> 标签让这一行字体变大，方便后厨看清
-        // 格式：数量 x 菜品名称
+        // 数量和名称加粗放大
         receipt += "<B>" + item.qty + "x " + displayName + "</B>\n";
 
-        // 规格说明（保持正常大小，避免太乱）
+        // --- 核心修改部分：放大规格说明 ---
         let details = [];
-        if (item.temp !== 'N/A') details.push(item.temp + "/" + item.sugar);
-        if (item.prep !== 'N/A') details.push(item.prep);
-        if (item.spread !== 'N/A') details.push(item.spread);
-        if (item.egg) details.push("<B>ADD 1 EGG</B>");
-        if (item.remarks && item.remarks.trim()) details.push("Note: " + item.remarks);
-
-        if (details.length > 0) {
-            receipt += "   " + details.join(" | ") + "\n";
+        
+        // 放大：Temp 和 Sugar (例如：HOT / NO SUGAR)
+        if (item.temp !== 'N/A') {
+            details.push("<B>" + item.temp.toUpperCase() + " / " + item.sugar.toUpperCase() + "</B>");
         }
         
-        // 价格（如果只是给后厨看，价格可以放小）
+        // 放大：面包做法和抹酱 (例如：STEAM / KAYA)
+        if (item.prep !== 'N/A') details.push("<B>" + item.prep.toUpperCase() + "</B>");
+        if (item.spread !== 'N/A') details.push("<B>" + item.spread.toUpperCase() + "</B>");
+        
+        // 放大：加蛋
+        if (item.egg) details.push("<B>ADD 1 EGG</B>");
+        
+        // 备注（保持普通大小，避免太长占空间）
+        if (item.remarks && item.remarks.trim()) {
+            details.push("Note: " + item.remarks);
+        }
+
+        if (details.length > 0) {
+            // 每个规格换行显示，并且由于加了 <B>，它们都会变大
+            receipt += details.join("\n") + "\n";
+        }
+        
         receipt += "   Price: RM " + item.price.toFixed(2) + "\n";
-        receipt += "\n"; // 每个菜品后面空一行，更易读
+        receipt += "--------------------------------\n"; // 每个菜品加个虚线，后厨看得更清
     });
 
     // 3. 底部总结
-    receipt += "--------------------------------\n";
     receipt += "TOTAL ITEMS: " + cart.reduce((sum, i) => sum + i.qty, 0) + "\n";
-    receipt += "<L>TOTAL: RM " + total + "</L>\n"; // 总价高度加倍
+    receipt += "<L>TOTAL: RM " + total + "</L>\n"; 
     receipt += "--------------------------------\n";
     
-    // 自动切纸指令（有些机型需要多几个回车）
     receipt += "\n\n\n"; 
 
     return receipt;
