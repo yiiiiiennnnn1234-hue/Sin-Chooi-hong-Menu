@@ -367,64 +367,43 @@ updateModalPrice();
 }
 
 function updateModalPrice() {
-if (!currentModalItem) return;
+    if (!currentModalItem) return;
 
-const isIced = document.querySelector('#modal-temp-tags .active')?.innerText === 'Iced';
-const sugarType = document.querySelector('#modal-sugar-tags .active')?.innerText || 'Normal';
-const largeChecked = document.getElementById('modal-large-check')?.checked || false;
+    const isIced = document.querySelector('#modal-temp-tags .active')?.innerText === 'Iced';
+    const sugarType = document.querySelector('#modal-sugar-tags .active')?.innerText || 'Normal';
+    const largeChecked = document.getElementById('modal-large-check')?.checked || false;
 
-let basePrice = isIced ? currentModalItem.cold : currentModalItem.hot;
+    let basePrice = isIced ? currentModalItem.cold : currentModalItem.hot;
 
-// 1. 处理无糖的基础价格
-if (sugarType === 'No Sugar') {
-if (isIced && currentModalItem.noSugarCold !== undefined) {
-basePrice = currentModalItem.noSugarCold;
-} else if (!isIced && currentModalItem.noSugarHot !== undefined) {
-basePrice = currentModalItem.noSugarHot;
-}
-}
-
-// 2. 订单内容
-cart.forEach(item => {
-    let displayName = item.name.toUpperCase();
-    if (item.isLarge) displayName += " (L)";
-
-    // 菜名：数量 x 名称 (巨大)
-    receipt += "<B>" + item.qty + "x " + displayName + "</B>\n";
-
-    // 规格说明：每一项都用 <B> 放大，并且换行显示
-    if (item.temp !== 'N/A' || item.sugar !== 'N/A') {
-        receipt += "<B>   => " + item.temp + " / " + item.sugar + "</B>\n";
-    }
-    
-    if (item.prep !== 'N/A') {
-        receipt += "<B>   => " + item.prep + "</B>\n";
-    }
-    
-    if (item.spread !== 'N/A') {
-        receipt += "<B>   => " + item.spread + "</B>\n";
-    }
-    
-    if (item.egg) {
-        receipt += "<B>   => ADD 1 EGG</B>\n";
+    // 1. 处理无糖价格
+    if (sugarType === 'No Sugar') {
+        if (isIced && currentModalItem.noSugarCold !== undefined) {
+            basePrice = currentModalItem.noSugarCold;
+        } else if (!isIced && currentModalItem.noSugarHot !== undefined) {
+            basePrice = currentModalItem.noSugarHot;
+        }
     }
 
-    if (item.remarks && item.remarks.trim()) {
-        receipt += "<B>   Note: " + item.remarks + "</B>\n";
+    // 2. 处理热大杯价格
+    if (!isIced && largeChecked) {
+        if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
+            basePrice = currentModalItem.noSugarBigHot;
+        } else if (currentModalItem.bigHot) {
+            basePrice = currentModalItem.bigHot;
+        }
     }
-    
-    // 价格（保持小字，不干扰后厨）
-    receipt += "   Price: RM " + item.price.toFixed(2) + "\n";
-    receipt += "\n"; // 每个菜品之间留空行
-});
 
-// 3. 特殊处理【热大杯】的情况
-if (!isIced && largeChecked) {
-if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
-basePrice = currentModalItem.noSugarBigHot;
-} else if (currentModalItem.bigHot) {
-basePrice = currentModalItem.bigHot;
-}
+    // 3. 处理加蛋价格
+    const eggChecked = document.getElementById('modal-egg-check')?.checked || false;
+    if (eggChecked) basePrice += 1.40;
+
+    const qty = parseInt(document.getElementById('modal-qty-val').innerText);
+    const total = basePrice * qty;
+
+    document.getElementById('opt-confirm-btn').innerText = `Add to Order - RM ${total.toFixed(2)}`;
+    document.getElementById('opt-confirm-btn').onclick = () => {
+        executeAddToCart(currentModalItem, basePrice);
+    };
 }
 
 // 4. 计算加蛋的价格
@@ -532,48 +511,45 @@ function generateEnglishReceipt() {
     let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
     let receipt = "";
 
-    // 1. 巨大醒目的桌号 (居中放大)
     receipt += "<CB>TABLE: " + currentTable + "</CB>\n";
     receipt += "--------------------------------\n";
 
-    // 2. 订单内容
+    // 订单内容循环
     cart.forEach(item => {
         let displayName = item.name.toUpperCase();
         if (item.isLarge) displayName += " (L)";
 
-        // <B> 标签让这一行字体变大，方便后厨看清
-        // 格式：数量 x 菜品名称
+        // 菜名加粗放大
         receipt += "<B>" + item.qty + "x " + displayName + "</B>\n";
 
-        // 规格说明（保持正常大小，避免太乱）
-        let details = [];
-        if (item.temp !== 'N/A') details.push(item.temp + "/" + item.sugar);
-        if (item.prep !== 'N/A') details.push(item.prep);
-        if (item.spread !== 'N/A') details.push(item.spread);
-        if (item.egg) details.push("<B>ADD 1 EGG</B>");
-        if (item.remarks && item.remarks.trim()) details.push("Note: " + item.remarks);
-
-        if (details.length > 0) {
-            receipt += "   " + details.join(" | ") + "\n";
+        // 重点：放大所有规格文字，每一项换行显示
+        if (item.temp !== 'N/A' || item.sugar !== 'N/A') {
+            receipt += "<B>   => " + item.temp + " / " + item.sugar + "</B>\n";
         }
-        
-        // 价格（如果只是给后厨看，价格可以放小）
+        if (item.prep !== 'N/A') {
+            receipt += "<B>   => " + item.prep + "</B>\n";
+        }
+        if (item.spread !== 'N/A') {
+            receipt += "<B>   => " + item.spread + "</B>\n";
+        }
+        if (item.egg) {
+            receipt += "<B>   => ADD 1 EGG</B>\n";
+        }
+        if (item.remarks && item.remarks.trim()) {
+            receipt += "<B>   Note: " + item.remarks + "</B>\n";
+        }
+
         receipt += "   Price: RM " + item.price.toFixed(2) + "\n";
-        receipt += "\n"; // 每个菜品后面空一行，更易读
+        receipt += "\n"; 
     });
 
-    // 3. 底部总结
     receipt += "--------------------------------\n";
     receipt += "TOTAL ITEMS: " + cart.reduce((sum, i) => sum + i.qty, 0) + "\n";
-    receipt += "<L>TOTAL: RM " + total + "</L>\n"; // 总价高度加倍
-    receipt += "--------------------------------\n";
-    
-    // 自动切纸指令（有些机型需要多几个回车）
-    receipt += "\n\n\n"; 
+    receipt += "<L>TOTAL: RM " + total + "</L>\n";
+    receipt += "--------------------------------\n\n\n";
 
     return receipt;
 }
-
 // --- 飞鹅云打印确认下单逻辑 ---
 function confirmOrder() {
     if (cart.length === 0) {
