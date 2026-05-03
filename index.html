@@ -384,17 +384,39 @@ basePrice = currentModalItem.noSugarHot;
 }
 }
 
-// 2. 动态修改“升级大杯”的差价提示字眼
-const largeTextSpan = document.getElementById('modal-large-text');
-if (largeTextSpan) {
-if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
-let diff = currentModalItem.noSugarBigHot - basePrice;
-largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
-} else if (currentModalItem.bigHot) {
-let diff = currentModalItem.bigHot - (isIced ? currentModalItem.cold : currentModalItem.hot);
-largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
-}
-}
+// 2. 订单内容
+cart.forEach(item => {
+    let displayName = item.name.toUpperCase();
+    if (item.isLarge) displayName += " (L)";
+
+    // 菜名：数量 x 名称 (巨大)
+    receipt += "<B>" + item.qty + "x " + displayName + "</B>\n";
+
+    // 规格说明：每一项都用 <B> 放大，并且换行显示
+    if (item.temp !== 'N/A' || item.sugar !== 'N/A') {
+        receipt += "<B>   => " + item.temp + " / " + item.sugar + "</B>\n";
+    }
+    
+    if (item.prep !== 'N/A') {
+        receipt += "<B>   => " + item.prep + "</B>\n";
+    }
+    
+    if (item.spread !== 'N/A') {
+        receipt += "<B>   => " + item.spread + "</B>\n";
+    }
+    
+    if (item.egg) {
+        receipt += "<B>   => ADD 1 EGG</B>\n";
+    }
+
+    if (item.remarks && item.remarks.trim()) {
+        receipt += "<B>   Note: " + item.remarks + "</B>\n";
+    }
+    
+    // 价格（保持小字，不干扰后厨）
+    receipt += "   Price: RM " + item.price.toFixed(2) + "\n";
+    receipt += "\n"; // 每个菜品之间留空行
+});
 
 // 3. 特殊处理【热大杯】的情况
 if (!isIced && largeChecked) {
