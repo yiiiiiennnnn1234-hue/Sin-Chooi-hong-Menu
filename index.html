@@ -7,55 +7,71 @@
 <style>
 :root { --primary-color: #5D4037; --bg-color: #FAF6F0; --card-bg: #FFFFFF; --text-color: #3E2723; --accent-color: #BF360C; --border-color: #F0EAE1; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding-bottom: 90px; }
-header { background-color: var(--card-bg); padding: 15px 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
-header h1 { margin: 0; font-size: 20px; text-transform: uppercase; color: var(--primary-color); letter-spacing: 1.5px; font-weight: 800; }
-header .subtitle { margin: 4px 0 0; font-size: 11px; color: #795548; font-style: italic; }
+header { background-color: var(--card-bg); padding: 12px 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
+header h1 { margin: 0; font-size: 18px; text-transform: uppercase; color: var(--primary-color); letter-spacing: 1.5px; font-weight: 800; }
+header .subtitle { margin: 2px 0 0; font-size: 11px; color: #795548; font-style: italic; }
 
-.table-banner { background-color: #EFEBE9; text-align: center; padding: 10px; font-weight: bold; font-size: 14px; color: var(--primary-color); border-bottom: 1px solid #D7CCC8; display: flex; justify-content: center; align-items: center; gap: 10px; }
-.table-select { padding: 4px; font-size: 14px; font-weight: bold; color: var(--primary-color); border: 1px solid #BCAAA4; border-radius: 6px; background: white; }
+.table-banner { background-color: #EFEBE9; text-align: center; padding: 8px; font-weight: bold; font-size: 13px; color: var(--primary-color); border-bottom: 1px solid #D7CCC8; display: flex; justify-content: center; align-items: center; gap: 8px; }
+.table-select { padding: 4px; font-size: 13px; font-weight: bold; color: var(--primary-color); border: 1px solid #BCAAA4; border-radius: 6px; background: white; }
 
-.category-nav { position: sticky; top: 0; background: white; z-index: 50; display: flex; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+/* 🔍 搜索框样式 */
+.search-container { padding: 10px 15px; background: #fff; position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
+.search-input { width: 100%; box-sizing: border-box; padding: 10px 15px; border-radius: 20px; border: 1px solid #D7CCC8; background: #FAF6F0; font-size: 14px; outline: none; }
+.search-input:focus { border-color: var(--primary-color); background: #fff; }
+
+/* 🏷️ 分类与二级筛选 */
+.category-nav { position: sticky; top: 57px; background: white; z-index: 50; display: flex; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-color); }
 .category-nav::-webkit-scrollbar { display: none; } 
-.nav-item { padding: 12px 20px; font-size: 14px; font-weight: bold; color: #777; cursor: pointer; }
+.nav-item { padding: 10px 16px; font-size: 13px; font-weight: bold; color: #777; cursor: pointer; flex-shrink: 0; }
 .nav-item.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
 
+.sub-filter-nav { padding: 8px 15px; display: flex; gap: 8px; overflow-x: auto; background: var(--bg-color); }
+.sub-filter-nav::-webkit-scrollbar { display: none; }
+.sub-chip { background: #EFEBE9; color: #5D4037; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; cursor: pointer; flex-shrink: 0; border: 1px solid #D7CCC8; }
+.sub-chip.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+
 .main-container { padding: 10px 15px; }
+.category-section { margin-bottom: 25px; scroll-margin-top: 110px; }
+.category-title { font-size: 15px; font-weight: 800; color: var(--primary-color); margin-bottom: 10px; border-left: 4px solid var(--primary-color); padding-left: 8px; }
 
-.category-section { margin-bottom: 25px; scroll-margin-top: 50px; }
-.category-title { font-size: 16px; font-weight: 800; color: var(--primary-color); margin-bottom: 10px; border-left: 4px solid var(--primary-color); padding-left: 8px; }
+/* 双排网格 */
+.menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.menu-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+.card-title { font-size: 13px; font-weight: bold; color: #333; text-transform: uppercase; line-height: 1.3; margin-bottom: 6px; }
+.card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+.card-price { color: var(--accent-color); font-size: 13px; font-weight: 800; }
+.add-trigger-btn { background-color: #2E7D32; color: white; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-.menu-item { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; }
-.item-left { display: flex; flex-direction: column; gap: 4px; }
-.item-name { text-transform: uppercase; font-size: 14px; font-weight: bold; color: #333; }
-.item-price { color: var(--accent-color); font-size: 14px; font-weight: 700; }
+/* ❄️/🔥 醒目冷热选择器 */
+.temp-selector-container { margin-bottom: 15px; }
+.temp-selector-label { font-size: 12px; font-weight: bold; color: #6D4C41; margin-bottom: 6px; text-transform: uppercase; display: block; }
+.temp-toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.temp-btn { padding: 12px 8px; border-radius: 10px; border: 2px solid #DDD; background: #F9F9F9; text-align: center; font-weight: 800; font-size: 14px; cursor: pointer; color: #666; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+.temp-btn.hot.active { background: #FFF3E0; border-color: #E65100; color: #E65100; box-shadow: 0 2px 6px rgba(230,81,0,0.15); }
+.temp-btn.cold.active { background: #E1F5FE; border-color: #0288D1; color: #0288D1; box-shadow: 0 2px 6px rgba(2,136,209,0.15); }
 
-.add-trigger-btn { background-color: #2E7D32; color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
+/* 弹窗与常规样式 */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; }
 .modal-box { background: white; width: 85%; max-width: 380px; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 85vh; overflow-y: auto; }
 .modal-title { font-size: 16px; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-
 .options-group { font-size: 13px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
 .option-row { display: flex; align-items: center; gap: 10px; }
 .option-label { font-weight: bold; min-width: 60px; color: #6D4C41; }
 .tags { display: flex; gap: 8px; flex-wrap: wrap; }
-.tag { background: #F5F5F5; border: 1px solid #DDD; padding: 5px 12px; border-radius: 14px; cursor: pointer; font-size: 12px; }
+.tag { background: #F5F5F5; border: 1px solid #DDD; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-size: 12px; }
 .tag.active { background: var(--primary-color); color: white; border-color: var(--primary-color); font-weight: bold;}
 .default-hint { font-size: 11px; color: #777; font-style: italic; margin-left: 70px; margin-top: -8px; }
 .addon-row { margin-top: 5px; padding-top: 10px; border-top: 1px dashed #DDD; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; }
-
 .qty-row { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; padding-top: 10px; border-top: 1px solid #EEE; }
 .qty-label { font-size: 14px; font-weight: bold; color: var(--primary-color); }
 .qty-controls { display: flex; align-items: center; gap: 12px; }
 .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--primary-color); background: white; color: var(--primary-color); font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .qty-val { font-size: 16px; font-weight: bold; width: 20px; text-align: center; }
-
 .remarks-input { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #CCC; border-radius: 6px; margin-top: 10px; font-size: 13px; height: 34px; }
 .confirm-add-btn { background-color: #2E7D32; color: white; border: none; width: 100%; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; }
 
 .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(51, 51, 51, 0.95); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
 .submit-btn { background: #FF9800; color: #fff; border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; }
-
 .modal-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 8px; font-weight: bold; }
 .modal-item-info { display: flex; align-items: center; gap: 8px; flex: 1; }
 .delete-btn { background: none; border: none; color: #e53935; font-size: 16px; cursor: pointer; padding: 0 5px; font-weight: bold; }
@@ -68,112 +84,131 @@ header .subtitle { margin: 4px 0 0; font-size: 11px; color: #795548; font-style:
 </style>
 </head>
 <body>
+
 <header>
-<h1>Sin Chooi Hong Kopitiam</h1>
-<div class="subtitle">Since 1971</div>
+  <h1>Sin Chooi Hong Kopitiam</h1>
+  <div class="subtitle">Since 1971</div>
 </header>
 
 <div class="table-banner" id="table-display">Loading Table...</div>
+
+<!-- 🔍 1. 顶部搜索框 -->
+<div class="search-container">
+  <input type="text" class="search-input" id="search-bar" placeholder="🔍 搜索饮料或食物 (例如: Kopi, Milo, 冰水)..." oninput="filterMenu()">
+</div>
+
 <div class="category-nav" id="category-nav"></div>
+
+<!-- 🏷️ 2. 二级分类筛选 -->
+<div class="sub-filter-nav" id="sub-filter-container">
+  <div class="sub-chip active" onclick="filterSubCategory('all', this)">全部 All</div>
+  <div class="sub-chip" onclick="filterSubCategory('coffee-tea', this)">☕ 咖啡与茶</div>
+  <div class="sub-chip" onclick="filterSubCategory('herbal-juice', this)">🧃 凉茶果汁</div>
+  <div class="sub-chip" onclick="filterSubCategory('water', this)">💧 冰水/矿泉水</div>
+  <div class="sub-chip" onclick="filterSubCategory('instant', this)">📦 三合一/特调</div>
+</div>
+
 <div class="main-container" id="menu-container"></div>
 
 <div class="cart-bar">
-<div style="font-size: 13px;">Items: <span id="cart-count">0</span> | Total: <b>RM <span id="cart-total">0.00</span></b></div>
-<button class="submit-btn" onclick="showOrderSummary()">Place Order</button>
+  <div style="font-size: 13px;">Items: <span id="cart-count">0</span> | Total: <b>RM <span id="cart-total">0.00</span></b></div>
+  <button class="submit-btn" onclick="showOrderSummary()">Place Order</button>
 </div>
 
+<!-- 弹窗部分 -->
 <div class="modal-overlay" id="option-modal">
-<div class="modal-box">
-<div class="modal-title" id="opt-modal-title">Select Options</div>
-<div class="options-group" id="opt-modal-content"></div>
-<textarea class="remarks-input" id="opt-remarks" placeholder="Remarks (e.g., Kaw)"></textarea>
-<button class="confirm-add-btn" id="opt-confirm-btn">Add to Order</button>
-<button class="modal-btn btn-cancel" style="width:100%; margin-top:8px;" onclick="closeOptionModal()">Cancel</button>
-</div>
+  <div class="modal-box">
+    <div class="modal-title" id="opt-modal-title">Select Options</div>
+    <div class="options-group" id="opt-modal-content"></div>
+    <textarea class="remarks-input" id="opt-remarks" placeholder="Remarks (e.g., Kaw)"></textarea>
+    <button class="confirm-add-btn" id="opt-confirm-btn">Add to Order</button>
+    <button class="modal-btn btn-cancel" style="width:100%; margin-top:8px;" onclick="closeOptionModal()">Cancel</button>
+  </div>
 </div>
 
 <div class="modal-overlay" id="order-modal">
-<div class="modal-box">
-<div class="modal-title">Order Summary 🧾</div>
-<div id="modal-content"></div>
-<div class="modal-total">
-<span>Total Amount:</span>
-<span>RM <span id="modal-total-price">0.00</span></span>
-</div>
-<div class="modal-footer">
-<button class="modal-btn btn-cancel" onclick="closeModal()">Back</button>
-<button class="modal-btn btn-confirm" onclick="confirmOrder()">Confirm</button>
-</div>
-</div>
+  <div class="modal-box">
+    <div class="modal-title">Order Summary 🧾</div>
+    <div id="modal-content"></div>
+    <div class="modal-total">
+      <span>Total Amount:</span>
+      <span>RM <span id="modal-total-price">0.00</span></span>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn btn-cancel" onclick="closeModal()">Back</button>
+      <button class="modal-btn btn-confirm" onclick="confirmOrder()">Confirm</button>
+    </div>
+  </div>
 </div>
 
 <script>
+// 所有图片路径均已配置为 assets/images/ 路径
 const menuData = [
 { id: "cat1", name: "🌟 Specialties", items: [ 
-{ name: "Nanyang Tiramisu (南洋提拉米苏) [Fri-Sun Only / 仅限五六日]  ", hot: 9.90, cold: 9.90, isFood: true, remarksPlaceholder: "Remarks", image: "https://www.image2url.com/r2/default/images/1780310520079-7350ebba-6e6b-4877-ae2a-62c168e341cb.jpg" },
-{ name: "3 layer kopi", hot: 3.5, cold: 3.5, noNoSugar: true, image: "https://www.image2url.com/r2/default/images/1782812921945-c9ad488a-301a-4803-b5f9-88ccf70ce0b9.jpg" },
-{ name: "3 layer teh", hot: 3.5, cold: 3.5, noNoSugar: true, image: "https://www.image2url.com/r2/default/images/1782099851444-c913c4f8-c9a2-4ddb-aa90-6e434d3bfb49.jpg" },
-{ name: "3 layer green tea", hot: 4.5, cold: 4.5, noNoSugar: true, image: "https://www.image2url.com/r2/default/images/1781150299185-45511854-b57d-4fae-9d92-1da37e9f4d30.jpg" },
-{ name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true, image: "https://www.image2url.com/r2/default/images/1780385337532-330c588d-1869-4726-a82b-45805e6d92f2.jpg" },
-{ name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true, image: "https://www.image2url.com/r2/default/images/1780384390313-a25d1ad1-458e-429e-a540-ae06e4f5a84d.jpg" }, 
-{ name: "3 rasa (milo+kopi+nescafe)", hot: 4.5, cold: 4.5, image: "https://www.image2url.com/r2/default/images/1780314638865-d7e0e993-f4b2-4fd6-beed-53df07d95433.jpg" },
-{ name: "kopi special", hot: 2.6, cold: 2.6, bigHot: 3.0, noNoSugar: true, image: "https://www.image2url.com/r2/default/images/1780384127757-4151f0da-45d3-4afe-b6e1-ef3b173d38d5.jpg" },
-{ name: "kopi peanut", hot: 4.5, cold: 4.5, noNoSugar: true, image: "https://www.image2url.com/r2/default/images/1780314627525-67422ded-f86b-418d-94a8-b1776250a614.jpg" },
-{ name: "hor ka sai (milo+kopi)", hot: 4.0, cold: 4.0, image: "https://www.image2url.com/r2/default/files/1783917867794-630a11a8-6c72-4b45-bc49-5e322bd7905f.jpg" },
-{ name: "sai ka hor (milo+teh)", hot: 4.0, cold: 4.0, image: "https://www.image2url.com/r2/default/images/1782351267243-d47e47b4-c591-4fef-88a0-66de058254d5.jpg" },
-{ name: "milo dinosaur", hot: 4.0, cold: 4.0, noNoSugar: true, image: "https://www.image2url.com/r2/default/images/1782101758181-b0e81daa-e17f-4c4d-82a7-db1265b07ed5.jpg" },
-{ name: "thai green tea", hot: 4.5, cold: 4.5, image: "https://www.image2url.com/r2/default/images/1780314619654-d9bd7a32-1233-4ced-a532-b56cef072ece.jpg" },
-{ name: "tutu (milo+kopi+nestum)", hot: 4.5, cold: 4.5, image: "https://www.image2url.com/r2/default/images/1780314644142-85b4a5f9-d78d-4cba-9d6b-fe7bee3783a2.jpg" }
+  { name: "Nanyang Tiramisu (南洋提拉米苏) [Fri-Sun Only]", hot: 9.90, cold: 9.90, isFood: true, image: "assets/images/tiramisu.jpg" },
+  { name: "3 layer kopi", hot: 3.5, cold: 3.5, noNoSugar: true, tag: "coffee-tea", image: "assets/images/3-layer-kopi.jpg" },
+  { name: "3 layer teh", hot: 3.5, cold: 3.5, noNoSugar: true, tag: "coffee-tea", image: "assets/images/3-layer-teh.jpg" },
+  { name: "3 layer green tea", hot: 4.5, cold: 4.5, noNoSugar: true, tag: "coffee-tea", image: "assets/images/3-layer-green-tea.jpg" },
+  { name: "3 layer lava", hot: 4.5, cold: 4.5, noNoSugar: true, tag: "coffee-tea", image: "assets/images/3-layer-lava.jpg" },
+  { name: "3 layar pandan", hot: 3.5, cold: 3.5, noNoSugar: true, tag: "coffee-tea", image: "assets/images/3-layer-pandan.jpg" }, 
+  { name: "3 rasa (milo+kopi+nescafe)", hot: 4.5, cold: 4.5, tag: "coffee-tea", image: "assets/images/3-rasa.jpg" },
+  { name: "kopi special", hot: 2.6, cold: 2.6, bigHot: 3.0, noNoSugar: true, tag: "coffee-tea", image: "assets/images/kopi-special.jpg" },
+  { name: "kopi peanut", hot: 4.5, cold: 4.5, noNoSugar: true, tag: "coffee-tea", image: "assets/images/kopi-peanut.jpg" },
+  { name: "hor ka sai (milo+kopi)", hot: 4.0, cold: 4.0, tag: "coffee-tea", image: "assets/images/hor-ka-sai.jpg" },
+  { name: "sai ka hor (milo+teh)", hot: 4.0, cold: 4.0, tag: "coffee-tea", image: "assets/images/sai-ka-hor.jpg" },
+  { name: "milo dinosaur", hot: 4.0, cold: 4.0, noNoSugar: true, tag: "instant", image: "assets/images/milo-dinosaur.jpg" },
+  { name: "thai green tea", hot: 4.5, cold: 4.5, tag: "coffee-tea", image: "assets/images/thai-green-tea.jpg" },
+  { name: "tutu (milo+kopi+nestum)", hot: 4.5, cold: 4.5, tag: "instant", image: "assets/images/tutu.jpg" }
 ]},
 { id: "cat2", name: "☕ Classic Kopi & Teh", items: [
-{ name: "air kosong ais (冰水)", hot: 0.5, cold: 0.5, isWater: true },
-{ name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true },
-{ name: "almond", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugarHot: 2.8, noSugarCold: 3.0 },
-{ name: "alicafe", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-{ name: "asam", hot: 1.8, cold: 1.8 },
-{ name: "apcel", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-{ name: "barli", hot: 2.0, cold: 2.0, noSugarHot: 2.0 },
-{ name: "barli limau", hot: 2.2, cold: 2.2, noSugarHot: 2.2 },
-{ name: "cappocino", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-{ name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
-{ name: "cham c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
-{ name: "cham o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
-{ name: "jus cinta (932)", hot: 2.0, cold: 2.0, noNoSugar: true },
-{ name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
-{ name: "kopi c", hot: 2.2, cold: 2.4, bigHot: 2.6 }, 
-{ name: "kopi o", hot: 1.8, cold: 2.0, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
-{ name: "larat", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-{ name: "leng teh (凉茶)", hot: 1.8, cold: 1.8, noNoSugar: true },
-{ name: "limau", hot: 1.6, cold: 1.6 },
-{ name: "mata kucing", hot: 2.0, cold: 2.0, noNoSugar: true },
-{ name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugarHot: 2.8, noSugarCold: 3.0, noSugarBigHot: 3.8 }, 
-{ name: "milo o", hot: 2.8, cold: 3.0, bigHot: 3.8, noNoSugar: true },
-{ name: "mineral water big (大矿泉水)", hot: 2.20, cold: 2.20, isWater: true },
-{ name: "mineral water small (小矿泉水)", hot: 1.2, cold: 1.2, isWater: true },
-{ name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0, noNoSugar: true },
-{ name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0, noSugarHot: 3.2, noSugarCold: 3.4 },
-{ name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.8, noSugarHot: 2.8, noSugarCold: 3.0, noSugarBigHot: 3.8 },
-{ name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.6, noSugarHot: 3.6, noSugarCold: 4.0, noSugarBigHot: 4.4 }, 
-{ name: "nestum", hot: 2.8, cold: 3.0, noNoSugar: true },
-{ name: "oren bancuh", hot: 2.0, cold: 2.0 },
-{ name: "papo (八宝)", hot: 1.8, cold: 1.8, noNoSugar: true },
-{ name: "sirap", hot: 1.4, cold: 1.4 },
-{ name: "sirap bandung", hot: 2.0, cold: 2.2 },
-{ name: "sirap limau", hot: 1.6, cold: 1.6, noSugarHot: 1.6 },
-{ name: "susu", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
-{ name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true },
-{ name: "teh c", hot: 2.2, cold: 2.4, bigHot: 2.6 },
-{ name: "teh o", hot: 1.8, cold: 2.0, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8 },
-{ name: "teh o limau", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugarHot: 2.0, noNoSugarCold: 2.2 },
-{ name: "tongkat ali", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-{ name: "radix", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-{ name: "green coffee (绿咖啡）", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true },
-{ name: "white coffee", hot: 2.8, cold: 3.0, bigHot: 3.2, noNoSugar: true }
+  { name: "air kosong ais (冰水)", hot: 0.5, cold: 0.5, isWater: true, tag: "water" },
+  { name: "air suam (温水)", hot: 0.5, cold: 0.5, isWater: true, tag: "water" },
+  { name: "mineral water big (大矿泉水)", hot: 2.20, cold: 2.20, isWater: true, tag: "water" },
+  { name: "mineral water small (小矿泉水)", hot: 1.2, cold: 1.2, isWater: true, tag: "water" },
+  { name: "kopi", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true, tag: "coffee-tea" },
+  { name: "kopi c", hot: 2.2, cold: 2.4, bigHot: 2.6, tag: "coffee-tea" }, 
+  { name: "kopi o", hot: 1.8, cold: 2.0, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8, tag: "coffee-tea" },
+  { name: "teh", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true, tag: "coffee-tea" },
+  { name: "teh c", hot: 2.2, cold: 2.4, bigHot: 2.6, tag: "coffee-tea" },
+  { name: "teh o", hot: 1.8, cold: 2.0, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8, tag: "coffee-tea" },
+  { name: "cham", hot: 2.0, cold: 2.2, bigHot: 2.4, noNoSugar: true, tag: "coffee-tea" },
+  { name: "cham c", hot: 2.2, cold: 2.4, bigHot: 2.6, tag: "coffee-tea" },
+  { name: "cham o", hot: 1.8, cold: 2.2, bigHot: 2.2, noSugarHot: 1.6, noSugarCold: 1.8, tag: "coffee-tea" },
+  { name: "milo", hot: 3.0, cold: 3.2, bigHot: 4.0, noSugarHot: 2.8, noSugarCold: 3.0, tag: "instant" }, 
+  { name: "milo o", hot: 2.8, cold: 3.0, bigHot: 3.8, noNoSugar: true, tag: "instant" },
+  { name: "nescafe", hot: 3.0, cold: 3.2, bigHot: 4.0, noNoSugar: true, tag: "instant" },
+  { name: "nescafe c", hot: 3.2, cold: 3.4, bigHot: 4.0, tag: "instant" },
+  { name: "nescafe o", hot: 2.8, cold: 3.0, bigHot: 3.8, tag: "instant" },
+  { name: "neslo", hot: 3.8, cold: 4.0, bigHot: 4.6, tag: "instant" }, 
+  { name: "barli", hot: 2.0, cold: 2.0, tag: "herbal-juice" },
+  { name: "barli limau", hot: 2.2, cold: 2.2, tag: "herbal-juice" },
+  { name: "limau", hot: 1.6, cold: 1.6, tag: "herbal-juice" },
+  { name: "teh o limau", hot: 2.0, cold: 2.2, bigHot: 2.4, tag: "coffee-tea" },
+  { name: "leng teh (凉茶)", hot: 1.8, cold: 1.8, noNoSugar: true, tag: "herbal-juice" },
+  { name: "papo (八宝)", hot: 1.8, cold: 1.8, noNoSugar: true, tag: "herbal-juice" },
+  { name: "asam", hot: 1.8, cold: 1.8, tag: "herbal-juice" },
+  { name: "jus cinta (932)", hot: 2.0, cold: 2.0, tag: "herbal-juice" },
+  { name: "mata kucing", hot: 2.0, cold: 2.0, tag: "herbal-juice" },
+  { name: "oren bancuh", hot: 2.0, cold: 2.0, tag: "herbal-juice" },
+  { name: "sirap", hot: 1.4, cold: 1.4, tag: "herbal-juice" },
+  { name: "sirap bandung", hot: 2.0, cold: 2.2, tag: "herbal-juice" },
+  { name: "sirap limau", hot: 1.6, cold: 1.6, tag: "herbal-juice" },
+  { name: "almond", hot: 3.0, cold: 3.2, tag: "instant" },
+  { name: "alicafe", hot: 2.8, cold: 3.0, tag: "instant" },
+  { name: "apcel", hot: 2.8, cold: 3.0, tag: "instant" },
+  { name: "cappocino", hot: 2.8, cold: 3.0, tag: "instant" },
+  { name: "larat", hot: 2.8, cold: 3.0, tag: "instant" },
+  { name: "nestum", hot: 2.8, cold: 3.0, tag: "instant" },
+  { name: "susu", hot: 2.0, cold: 2.2, tag: "instant" },
+  { name: "tongkat ali", hot: 2.8, cold: 3.0, tag: "instant" },
+  { name: "radix", hot: 2.8, cold: 3.0, tag: "instant" },
+  { name: "green coffee (绿咖啡）", hot: 2.8, cold: 3.0, tag: "instant" },
+  { name: "white coffee", hot: 2.8, cold: 3.0, tag: "instant" }
 ]},
 { id: "cat3", name: "🍞 Toast & Eggs", items: [
-{ name: "Roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true, remarksPlaceholder: "Choose 1 to 2 jams" },
-{ name: "half boiled egg (2 biji)", hot: 2.8, cold: 2.8, isFood: true, hasEggAddon: true },
-{ name: "roti goyang", hot: 4.8, cold: 4.8, isFood: true, image: "https://www.image2url.com/r2/default/images/1782099849591-cbc17bd2-c607-470c-9bf7-e436f14f0e55.jpg"  }
+  { name: "Roti", hot: 2.0, cold: 2.0, isFood: true, hasRotiPrep: true, hasRotiSpread: true },
+  { name: "half boiled egg (2 biji)", hot: 2.8, cold: 2.8, isFood: true, hasEggAddon: true },
+  { name: "roti goyang", hot: 4.8, cold: 4.8, isFood: true, image: "assets/images/roti-goyang.jpg" }
 ]}
 ];
 
@@ -182,474 +217,453 @@ let currentTable = "Not Specified";
 const allTables = ["Takeaway","A1","A2","A3","A4","B1","B2","B3","C1","C2","C3","C4","C5","C6","A","B","C","D","E","F","L1","L2","Tepi"];
 
 function checkTable() {
-const urlParams = new URLSearchParams(window.location.search);
-const table = urlParams.get('table');
-const displayDiv = document.getElementById('table-display');
-if (table) {
-currentTable = table;
-displayDiv.innerText = `Table: ${table}`;
-displayDiv.style.backgroundColor = '#C8E6C9';
-} else {
-let selectHTML = `<span>Select Table:</span><select class="table-select" onchange="currentTable=this.value">`;
-selectHTML += `<option value="Not Specified">Choose...</option>`;
-allTables.forEach(t => { selectHTML += `<option value="${t}">${t}</option>`; });
-selectHTML += `</select>`;
-displayDiv.innerHTML = selectHTML;
-displayDiv.style.backgroundColor = '#EFEBE9';
-}
+  const urlParams = new URLSearchParams(window.location.search);
+  const table = urlParams.get('table');
+  const displayDiv = document.getElementById('table-display');
+  if (table) {
+    currentTable = table;
+    displayDiv.innerText = `Table: ${table}`;
+    displayDiv.style.backgroundColor = '#C8E6C9';
+  } else {
+    let selectHTML = `<span>Select Table:</span><select class="table-select" onchange="currentTable=this.value">`;
+    selectHTML += `<option value="Not Specified">Choose...</option>`;
+    allTables.forEach(t => { selectHTML += `<option value="${t}">${t}</option>`; });
+    selectHTML += `</select>`;
+    displayDiv.innerHTML = selectHTML;
+    displayDiv.style.backgroundColor = '#EFEBE9';
+  }
 }
 
 function renderMenu() {
-const navContainer = document.getElementById('category-nav');
-const menuContainer = document.getElementById('menu-container');
+  const navContainer = document.getElementById('category-nav');
+  const menuContainer = document.getElementById('menu-container');
+  navContainer.innerHTML = '';
+  menuContainer.innerHTML = '';
 
-menuData.forEach((cat, index) => {
-const navItem = document.createElement('div');
-navItem.className = `nav-item ${index === 0 ? 'active' : ''}`;
-navItem.innerText = cat.name.split(' ')[1] || cat.name;
-navItem.onclick = () => scrollToCategory(cat.id, navItem);
-navContainer.appendChild(navItem);
+  menuData.forEach((cat, index) => {
+    const navItem = document.createElement('div');
+    navItem.className = `nav-item ${index === 0 ? 'active' : ''}`;
+    navItem.innerText = cat.name.split(' ')[1] || cat.name;
+    navItem.onclick = () => scrollToCategory(cat.id, navItem);
+    navContainer.appendChild(navItem);
 
-const section = document.createElement('div');
-section.className = 'category-section';
-section.id = cat.id;
+    const section = document.createElement('div');
+    section.className = 'category-section';
+    section.id = cat.id;
 
-const title = document.createElement('div');
-title.className = 'category-title';
-title.innerText = cat.name;
-section.appendChild(title);
-cat.items.forEach(item => {
-    const itemDiv = document.createElement('div');
-    itemDiv.className = 'menu-item';
-    
-    // 关键修改：将 onclick 绑定到整个 itemDiv 上
-    itemDiv.onclick = () => openOptionModal(item); 
-    
-    itemDiv.innerHTML = `
-        <div class="item-left">
-            <span class="item-name">${item.name}</span>
-            <span class="item-price">RM ${item.hot.toFixed(2)}</span>
+    const title = document.createElement('div');
+    title.className = 'category-title';
+    title.innerText = cat.name;
+    section.appendChild(title);
+
+    const grid = document.createElement('div');
+    grid.className = 'menu-grid';
+
+    cat.items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'menu-card';
+      card.setAttribute('data-name', item.name.toLowerCase());
+      card.setAttribute('data-tag', item.tag || 'other');
+      card.onclick = () => openOptionModal(item);
+      
+      card.innerHTML = `
+        <span class="card-title">${item.name}</span>
+        <div class="card-bottom">
+          <span class="card-price">RM ${item.hot.toFixed(2)}</span>
+          <button class="add-trigger-btn">+</button>
         </div>
-        <button class="add-trigger-btn">+</button>
-    `;
-    section.appendChild(itemDiv);
-});
-menuContainer.appendChild(section);
-});
+      `;
+      grid.appendChild(card);
+    });
+    section.appendChild(grid);
+    menuContainer.appendChild(section);
+  });
+}
+
+function filterMenu() {
+  const query = document.getElementById('search-bar').value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.menu-card');
+  cards.forEach(card => {
+    const name = card.getAttribute('data-name');
+    if (name.includes(query)) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function filterSubCategory(tag, element) {
+  const chips = document.querySelectorAll('.sub-chip');
+  chips.forEach(c => c.classList.remove('active'));
+  element.classList.add('active');
+
+  const cards = document.querySelectorAll('.menu-card');
+  cards.forEach(card => {
+    const cardTag = card.getAttribute('data-tag');
+    if (tag === 'all' || cardTag === tag) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
 }
 
 function scrollToCategory(id, element) {
-const documentElement = document.getElementById(id);
-documentElement.scrollIntoView({ behavior: 'smooth' });
-const navItems = document.getElementsByClassName('nav-item');
-for (let item of navItems) item.classList.remove('active');
-element.classList.add('active');
+  const documentElement = document.getElementById(id);
+  documentElement.scrollIntoView({ behavior: 'smooth' });
+  const navItems = document.getElementsByClassName('nav-item');
+  for (let item of navItems) item.classList.remove('active');
+  element.classList.add('active');
 }
 
 let currentModalItem = null;
 
 function openOptionModal(item) {
-currentModalItem = item;
-document.getElementById('opt-modal-title').innerText = item.name.toUpperCase();
-const isFood = item.isFood || false;
-const isWater = item.isWater || false;
-let html = '';
+  currentModalItem = item;
+  document.getElementById('opt-modal-title').innerText = item.name.toUpperCase();
+  const isFood = item.isFood || false;
+  const isWater = item.isWater || false;
+  let html = '';
 
-if (item.image) {
-html += `<img src="${item.image}" style="width: 100%; height: auto; max-height: 350px; object-fit: contain; border-radius: 12px; margin-bottom: 15px;">`;
-}
+  if (item.image) {
+    html += `<img src="${item.image}" style="width: 100%; height: auto; max-height: 200px; object-fit: contain; border-radius: 12px; margin-bottom: 15px;">`;
+  }
 
-if (!isFood && !isWater) {
-html += `
-               <div class="option-row"><span class="option-label">Temp:</span>
-                   <div class="tags" id="modal-temp-tags">
-                       <div class="tag active" onclick="selectModalTemp(this, 'hot')">Hot</div>
-                       <div class="tag" onclick="selectModalTemp(this, 'cold')">Iced</div>
-                   </div>
-               </div>`;
+  if (!isFood && !isWater) {
+    html += `
+      <div class="temp-selector-container">
+          <span class="temp-selector-label">1. 温度 Temperature:</span>
+          <div class="temp-toggle-grid">
+              <div class="temp-btn hot active" onclick="selectModalTemp(this, 'hot')">🔥 HOT (热)</div>
+              <div class="temp-btn cold" onclick="selectModalTemp(this, 'cold')">🧊 ICED (冰)</div>
+          </div>
+      </div>`;
 
-if (item.bigHot) {
-html += `
-                   <div class="addon-row" id="modal-large-row">
-                       <span id="modal-large-text">Upgrade to Large (+RM ${(item.bigHot - item.hot).toFixed(2)})</span>
-                       <input type="checkbox" id="modal-large-check" onchange="updateModalPrice()">
-                   </div>`;
-}
+    if (item.bigHot) {
+      html += `
+          <div class="addon-row" id="modal-large-row">
+              <span id="modal-large-text">Upgrade to Large (+RM ${(item.bigHot - item.hot).toFixed(2)})</span>
+              <input type="checkbox" id="modal-large-check" onchange="updateModalPrice()">
+          </div>`;
+    }
 
-html += `
-               <div class="option-row"><span class="option-label">Sugar:</span>
-                   <div class="tags" id="modal-sugar-tags">
-                       <div class="tag active" onclick="selectModalSugar(this, 'Normal Sugar')">Normal Sugar</div>
-                       <div class="tag" onclick="selectModalSugar(this, 'Less Sugar')">Less Sugar</div>`;
+    html += `
+      <div class="option-row"><span class="option-label">Sugar:</span>
+          <div class="tags" id="modal-sugar-tags">
+              <div class="tag active" onclick="selectModalSugar(this, 'Normal Sugar')">Normal Sugar</div>
+              <div class="tag" onclick="selectModalSugar(this, 'Less Sugar')">Less Sugar</div>`;
 
-if (!item.noNoSugar) {
-html += `<div class="tag" id="tag-no-sugar" onclick="selectModalSugar(this, 'No Sugar')">No Sugar</div>`;
-}
+    if (!item.noNoSugar) {
+      html += `<div class="tag" id="tag-no-sugar" onclick="selectModalSugar(this, 'No Sugar')">No Sugar</div>`;
+    }
+    html += `</div></div>`;
+  }
 
-html += `</div></div>`;
-}
+  if (item.hasRotiPrep) {
+    html += `
+      <div class="option-row"><span class="option-label">Method:</span>
+          <div class="tags" id="modal-prep-tags">
+              <div class="tag active" onclick="selectModalTag(this)">Toast (烤)</div>
+              <div class="tag" onclick="selectModalTag(this)">Steam (蒸)</div>
+          </div>
+      </div>`;
+  }
 
-if (item.hasRotiPrep) {
-html += `
-               <div class="option-row"><span class="option-label">Method:</span>
-                   <div class="tags" id="modal-prep-tags">
-                       <div class="tag active" onclick="selectModalTag(this)">Toast (烤)</div>
-                       <div class="tag" onclick="selectModalTag(this)">Steam (蒸)</div>
-                   </div>
-               </div>`;
-}
+  if (item.hasRotiSpread) {
+    html += `
+      <div class="option-row"><span class="option-label">Flavour:</span>
+          <div class="tags" id="modal-spread-tags">
+              <div class="tag active" onclick="selectModalMultiTag(this)">Kaya</div>
+              <div class="tag active" onclick="selectModalMultiTag(this)">Butter</div>
+              <div class="tag" onclick="selectModalMultiTag(this)">Peanut</div>
+              <div class="tag" onclick="selectModalMultiTag(this)">Sugar</div>
+          </div>
+      </div>
+      <div class="default-hint">* Default: Kaya + Butter if not modified</div>`;
+  }
 
-if (item.hasRotiSpread) {
-html += `
-               <div class="option-row"><span class="option-label">Flavour:</span>
-                   <div class="tags" id="modal-spread-tags">
-                       <div class="tag active" onclick="selectModalMultiTag(this)">Kaya</div>
-                       <div class="tag active" onclick="selectModalMultiTag(this)">Butter</div>
-                       <div class="tag" onclick="selectModalMultiTag(this)">Peanut</div>
-                        <div class="tag" onclick="selectModalMultiTag(this)">Sugar</div>
-                   </div>
-               </div>
-               <div class="default-hint">* Default: Kaya + Butter if not modified</div>`;
-}
+  if (item.hasEggAddon) {
+    html += `<div class="addon-row"><span>+ Add 1 egg (RM 1.40)</span><input type="checkbox" id="modal-egg-check" onchange="updateModalPrice()"></div>`;
+  }
 
-if (item.hasEggAddon) {
-html += `<div class="addon-row"><span>+ Add 1 egg (RM 1.40)</span><input type="checkbox" id="modal-egg-check" onchange="updateModalPrice()"></div>`;
-}
+  html += `
+    <div class="qty-row">
+        <div class="qty-label">Quantity:</div>
+        <div class="qty-controls">
+            <button class="qty-btn" onclick="changeModalQty(-1)">-</button>
+            <div class="qty-val" id="modal-qty-val">1</div>
+            <button class="qty-btn" onclick="changeModalQty(1)">+</button>
+        </div>
+    </div>`;
 
-html += `
-           <div class="qty-row">
-               <div class="qty-label">Quantity:</div>
-               <div class="qty-controls">
-                   <button class="qty-btn" onclick="changeModalQty(-1)">-</button>
-                   <div class="qty-val" id="modal-qty-val">1</div>
-                   <button class="qty-btn" onclick="changeModalQty(1)">+</button>
-               </div>
-           </div>`;
+  document.getElementById('opt-modal-content').innerHTML = html;
+  document.getElementById('opt-remarks').value = '';
+  document.getElementById('opt-remarks').placeholder = item.remarksPlaceholder || 'Remarks (e.g., Kaw)';
 
-document.getElementById('opt-modal-content').innerHTML = html;
-document.getElementById('opt-remarks').value = '';
-document.getElementById('opt-remarks').placeholder = item.remarksPlaceholder || 'Remarks (e.g., Kaw)';
-
-updateModalPrice();
-document.getElementById('option-modal').style.display = 'flex';
+  updateModalPrice();
+  document.getElementById('option-modal').style.display = 'flex';
 }
 
 function closeOptionModal() { document.getElementById('option-modal').style.display = 'none'; }
+
 function selectModalTag(element) {
-const tags = element.parentElement.getElementsByClassName('tag');
-for (let t of tags) t.classList.remove('active');
-element.classList.add('active');
+  const tags = element.parentElement.getElementsByClassName('tag');
+  for (let t of tags) t.classList.remove('active');
+  element.classList.add('active');
 }
 
 function selectModalMultiTag(element) {
-const tags = element.parentElement.getElementsByClassName('tag');
-if (element.classList.contains('active')) {
-let activeCount = 0;
-for (let t of tags) { if (t.classList.contains('active')) activeCount++; }
-if (activeCount > 1) { element.classList.remove('active'); return; }
-}
-element.classList.add('active');
-let activeTags = [];
-for (let t of tags) { if (t.classList.contains('active')) activeTags.push(t); }
-if (activeTags.length > 2) { activeTags[0].classList.remove('active'); }
+  const tags = element.parentElement.getElementsByClassName('tag');
+  if (element.classList.contains('active')) {
+    let activeCount = 0;
+    for (let t of tags) { if (t.classList.contains('active')) activeCount++; }
+    if (activeCount > 1) { element.classList.remove('active'); return; }
+  }
+  element.classList.add('active');
+  let activeTags = [];
+  for (let t of tags) { if (t.classList.contains('active')) activeTags.push(t); }
+  if (activeTags.length > 2) { activeTags[0].classList.remove('active'); }
 }
 
 function selectModalTemp(element, type) {
-selectModalTag(element);
-const largeRow = document.getElementById('modal-large-row');
-if (largeRow) {
-if (type === 'cold') {
-largeRow.style.display = 'none';
-const largeCheck = document.getElementById('modal-large-check');
-if (largeCheck) largeCheck.checked = false;
-} else {
-largeRow.style.display = 'flex';
-}
-}
-updateModalPrice();
+  const btns = element.parentElement.getElementsByClassName('temp-btn');
+  for (let b of btns) b.classList.remove('active');
+  element.classList.add('active');
+
+  const largeRow = document.getElementById('modal-large-row');
+  if (largeRow) {
+    if (type === 'cold') {
+      largeRow.style.display = 'none';
+      const largeCheck = document.getElementById('modal-large-check');
+      if (largeCheck) largeCheck.checked = false;
+    } else {
+      largeRow.style.display = 'flex';
+    }
+  }
+  updateModalPrice();
 }
 
 function selectModalSugar(element, type) {
-selectModalTag(element);
-updateModalPrice();
+  selectModalTag(element);
+  updateModalPrice();
 }
 
 function changeModalQty(delta) {
-const qtyDiv = document.getElementById('modal-qty-val');
-let currentQty = parseInt(qtyDiv.innerText);
-currentQty += delta;
-if (currentQty < 1) currentQty = 1;
-qtyDiv.innerText = currentQty;
-updateModalPrice();
+  const qtyDiv = document.getElementById('modal-qty-val');
+  let currentQty = parseInt(qtyDiv.innerText);
+  currentQty += delta;
+  if (currentQty < 1) currentQty = 1;
+  qtyDiv.innerText = currentQty;
+  updateModalPrice();
 }
 
 function updateModalPrice() {
-if (!currentModalItem) return;
+  if (!currentModalItem) return;
 
-const isIced = document.querySelector('#modal-temp-tags .active')?.innerText === 'Iced';
-const sugarType = document.querySelector('#modal-sugar-tags .active')?.innerText || 'Normal';
-const largeChecked = document.getElementById('modal-large-check')?.checked || false;
+  const activeTempBtn = document.querySelector('.temp-btn.active');
+  const isIced = activeTempBtn ? activeTempBtn.classList.contains('cold') : false;
+  const sugarType = document.querySelector('#modal-sugar-tags .active')?.innerText || 'Normal';
+  const largeChecked = document.getElementById('modal-large-check')?.checked || false;
 
-let basePrice = isIced ? currentModalItem.cold : currentModalItem.hot;
+  let basePrice = isIced ? currentModalItem.cold : currentModalItem.hot;
 
-// 1. 处理无糖的基础价格
-if (sugarType === 'No Sugar') {
-if (isIced && currentModalItem.noSugarCold !== undefined) {
-basePrice = currentModalItem.noSugarCold;
-} else if (!isIced && currentModalItem.noSugarHot !== undefined) {
-basePrice = currentModalItem.noSugarHot;
-}
-}
+  if (sugarType === 'No Sugar') {
+    if (isIced && currentModalItem.noSugarCold !== undefined) {
+      basePrice = currentModalItem.noSugarCold;
+    } else if (!isIced && currentModalItem.noSugarHot !== undefined) {
+      basePrice = currentModalItem.noSugarHot;
+    }
+  }
 
-// 2. 动态修改“升级大杯”的差价提示字眼
-const largeTextSpan = document.getElementById('modal-large-text');
-if (largeTextSpan) {
-if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
-let diff = currentModalItem.noSugarBigHot - basePrice;
-largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
-} else if (currentModalItem.bigHot) {
-let diff = currentModalItem.bigHot - (isIced ? currentModalItem.cold : currentModalItem.hot);
-largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
-}
-}
+  const largeTextSpan = document.getElementById('modal-large-text');
+  if (largeTextSpan) {
+    if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
+      let diff = currentModalItem.noSugarBigHot - basePrice;
+      largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
+    } else if (currentModalItem.bigHot) {
+      let diff = currentModalItem.bigHot - (isIced ? currentModalItem.cold : currentModalItem.hot);
+      largeTextSpan.innerText = `Upgrade to Large (+RM ${diff.toFixed(2)})`;
+    }
+  }
 
-// 3. 特殊处理【热大杯】的情况
-if (!isIced && largeChecked) {
-if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
-basePrice = currentModalItem.noSugarBigHot;
-} else if (currentModalItem.bigHot) {
-basePrice = currentModalItem.bigHot;
-}
-}
+  if (!isIced && largeChecked) {
+    if (sugarType === 'No Sugar' && currentModalItem.noSugarBigHot !== undefined) {
+      basePrice = currentModalItem.noSugarBigHot;
+    } else if (currentModalItem.bigHot) {
+      basePrice = currentModalItem.bigHot;
+    }
+  }
 
-// 4. 计算加蛋的价格
-const eggChecked = document.getElementById('modal-egg-check')?.checked || false;
-if (eggChecked) basePrice += 1.40;
+  const eggChecked = document.getElementById('modal-egg-check')?.checked || false;
+  if (eggChecked) basePrice += 1.40;
 
-const qty = parseInt(document.getElementById('modal-qty-val').innerText);
-const total = basePrice * qty;
+  const qty = parseInt(document.getElementById('modal-qty-val').innerText);
+  const total = basePrice * qty;
 
-document.getElementById('opt-confirm-btn').innerText = `Add to Order - RM ${total.toFixed(2)}`;
-document.getElementById('opt-confirm-btn').onclick = () => {
-executeAddToCart(currentModalItem, basePrice);
-};
+  const tempBadge = currentModalItem.isFood ? '' : (isIced ? ' (🧊 冰/ICED)' : ' (🔥 热/HOT)');
+  document.getElementById('opt-confirm-btn').innerText = `Add to Order${tempBadge} - RM ${total.toFixed(2)}`;
+  document.getElementById('opt-confirm-btn').onclick = () => {
+    executeAddToCart(currentModalItem, basePrice, isIced);
+  };
 }
 
-function executeAddToCart(item, singlePrice) {
-const qty = parseInt(document.getElementById('modal-qty-val').innerText);
-const temp = document.querySelector('#modal-temp-tags .active')?.innerText || 'N/A';
-const sugar = document.querySelector('#modal-sugar-tags .active')?.innerText || 'N/A';
-const prep = document.querySelector('#modal-prep-tags .active')?.innerText || 'N/A';
+function executeAddToCart(item, singlePrice, isIced) {
+  const qty = parseInt(document.getElementById('modal-qty-val').innerText);
+  const temp = item.isFood ? 'N/A' : (isIced ? 'Cold' : 'Hot');
+  const sugar = document.querySelector('#modal-sugar-tags .active')?.innerText || 'N/A';
+  const prep = document.querySelector('#modal-prep-tags .active')?.innerText || 'N/A';
 
-const activeSpreads = document.querySelectorAll('#modal-spread-tags .active');
-let spreadList = [];
-activeSpreads.forEach(s => spreadList.push(s.innerText));
-const spread = spreadList.length > 0 ? spreadList.join(' + ') : 'N/A';
+  const activeSpreads = document.querySelectorAll('#modal-spread-tags .active');
+  let spreadList = [];
+  activeSpreads.forEach(s => spreadList.push(s.innerText));
+  const spread = spreadList.length > 0 ? spreadList.join(' + ') : 'N/A';
 
-const egg = document.getElementById('modal-egg-check')?.checked || false;
-const isLarge = document.getElementById('modal-large-check')?.checked || false;
-const remarks = document.getElementById('opt-remarks').value.trim();
+  const egg = document.getElementById('modal-egg-check')?.checked || false;
+  const isLarge = document.getElementById('modal-large-check')?.checked || false;
+  const remarks = document.getElementById('opt-remarks').value.trim();
 
-const existingItem = cart.find(c => 
-c.name === item.name &&
-c.temp === temp &&
-c.sugar === sugar &&
-c.prep === prep &&
-c.spread === spread &&
-c.egg === egg &&
-c.isLarge === isLarge &&
-c.remarks === remarks
-);
+  const existingItem = cart.find(c => 
+    c.name === item.name &&
+    c.temp === temp &&
+    c.sugar === sugar &&
+    c.prep === prep &&
+    c.spread === spread &&
+    c.egg === egg &&
+    c.isLarge === isLarge &&
+    c.remarks === remarks
+  );
 
-if (existingItem) {
-existingItem.qty += qty;
-existingItem.price = existingItem.singlePrice * existingItem.qty;
-} else {
-const cartId = Date.now() + Math.random();
-cart.push({ cartId, name: item.name, price: singlePrice * qty, singlePrice, qty, temp, sugar, prep, spread, egg, isLarge, remarks });
-}
+  if (existingItem) {
+    existingItem.qty += qty;
+    existingItem.price = existingItem.singlePrice * existingItem.qty;
+  } else {
+    const cartId = Date.now() + Math.random();
+    cart.push({ cartId, name: item.name, price: singlePrice * qty, singlePrice, qty, temp, sugar, prep, spread, egg, isLarge, remarks });
+  }
 
-updateCartBar();
-alert(`Added: ${qty}x ${item.name.toUpperCase()}`);
-closeOptionModal();
+  updateCartBar();
+  alert(`Added: ${qty}x ${item.name.toUpperCase()} [${temp}]`);
+  closeOptionModal();
 }
 
 function updateCartBar() {
-document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
-document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+  document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
+  document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
 }
 
 function deleteCartItem(cartId) {
-cart = cart.filter(item => item.cartId !== cartId);
-updateCartBar();
-if (cart.length === 0) { closeModal(); } else { showOrderSummary(); }
+  cart = cart.filter(item => item.cartId !== cartId);
+  updateCartBar();
+  if (cart.length === 0) { closeModal(); } else { showOrderSummary(); }
 }
 
 function showOrderSummary() {
-if (cart.length === 0) { alert("Your cart is empty!"); return; }
-let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+  if (cart.length === 0) { alert("Your cart is empty!"); return; }
+  let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
 
-let contentHTML = `<div style="text-align:center; font-weight:800; color:#bf360c; font-size:14px; margin-bottom:15px; background:#fbe9e7; padding:5px; border-radius:5px;">📍 TABLE: ${currentTable}</div>`;
+  let contentHTML = `<div style="text-align:center; font-weight:800; color:#bf360c; font-size:14px; margin-bottom:15px; background:#fbe9e7; padding:5px; border-radius:5px;">📍 TABLE: ${currentTable}</div>`;
 
-cart.forEach(item => {
-let displayName = item.name.toUpperCase();
-if (item.isLarge) displayName += " (LARGE)";
+  cart.forEach(item => {
+    let displayName = item.name.toUpperCase();
+    if (item.isLarge) displayName += " (LARGE)";
 
-contentHTML += `
-                   <div class="modal-item">
-                       <div class="modal-item-info">
-                           <button class="delete-btn" onclick="deleteCartItem(${item.cartId})">❌</button>
-                           <span>${item.qty}x ${displayName}</span>
-                       </div>
-                       <span>RM ${item.price.toFixed(2)}</span>
-                   </div>
-               `;
-let details = [];
-if (item.temp !== 'N/A') details.push(`${item.temp} / ${item.sugar}`);
-if (item.prep !== 'N/A') details.push(`Type: ${item.prep}`);
-if (item.spread !== 'N/A') details.push(`Flavour: ${item.spread}`);
-if (item.egg) details.push(`+ Add 1 egg`);
-if (item.remarks.trim()) details.push(`Note: ${item.remarks}`);
+    contentHTML += `
+      <div class="modal-item">
+          <div class="modal-item-info">
+              <button class="delete-btn" onclick="deleteCartItem(${item.cartId})">❌</button>
+              <span>${item.qty}x ${displayName}</span>
+          </div>
+          <span>RM ${item.price.toFixed(2)}</span>
+      </div>`;
+    let details = [];
+    if (item.temp !== 'N/A') details.push(`${item.temp} / ${item.sugar}`);
+    if (item.prep !== 'N/A') details.push(`Type: ${item.prep}`);
+    if (item.spread !== 'N/A') details.push(`Flavour: ${item.spread}`);
+    if (item.egg) details.push(`+ Add 1 egg`);
+    if (item.remarks.trim()) details.push(`Note: ${item.remarks}`);
 
-if (details.length > 0) {
-contentHTML += `<div class="modal-sub">- ${details.join(' | ')}</div>`;
-}
-});
+    if (details.length > 0) {
+      contentHTML += `<div class="modal-sub">- ${details.join(' | ')}</div>`;
+    }
+  });
 
-document.getElementById('modal-content').innerHTML = contentHTML;
-document.getElementById('modal-total-price').innerText = total;
-document.getElementById('order-modal').style.display = 'flex';
+  document.getElementById('modal-content').innerHTML = contentHTML;
+  document.getElementById('modal-total-price').innerText = total;
+  document.getElementById('order-modal').style.display = 'flex';
 }
 
 function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
-// --- 找到这个函数进行替换 ---
 function generateEnglishReceipt() {
-    let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
-    let receipt = "";
-
-    // 1. 桌号 (居中放大)
-    receipt += "<CB>TABLE: " + currentTable + "</CB>\n";
+  let total = cart.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+  let receipt = "";
+  receipt += "<CB>TABLE: " + currentTable + "</CB>\n";
+  receipt += "--------------------------------\n";
+  cart.forEach(item => {
+    let displayName = item.name.toUpperCase();
+    if (item.isLarge) displayName += " (L)";
+    receipt += "<B>" + item.qty + "x " + displayName + "</B>\n";
+    let details = [];
+    if (item.temp !== 'N/A') details.push("<B>" + item.temp.toUpperCase() + " / " + item.sugar.toUpperCase() + "</B>");
+    if (item.prep !== 'N/A') details.push("<B>" + item.prep.toUpperCase() + "</B>");
+    if (item.spread !== 'N/A') details.push("<B>" + item.spread.toUpperCase() + "</B>");
+    if (item.egg) details.push("<B>ADD 1 EGG</B>");
+    if (item.remarks && item.remarks.trim()) details.push("Note: " + item.remarks);
+    if (details.length > 0) receipt += details.join("\n") + "\n";
+    receipt += "   Price: RM " + item.price.toFixed(2) + "\n";
     receipt += "--------------------------------\n";
-
-    // 2. 订单内容
-    cart.forEach(item => {
-        let displayName = item.name.toUpperCase();
-        if (item.isLarge) displayName += " (L)";
-
-        // 数量和名称加粗放大
-        receipt += "<B>" + item.qty + "x " + displayName + "</B>\n";
-
-        // --- 核心修改部分：放大规格说明 ---
-        let details = [];
-        
-        // 放大：Temp 和 Sugar (例如：HOT / NO SUGAR)
-        if (item.temp !== 'N/A') {
-            details.push("<B>" + item.temp.toUpperCase() + " / " + item.sugar.toUpperCase() + "</B>");
-        }
-        
-        // 放大：面包做法和抹酱 (例如：STEAM / KAYA)
-        if (item.prep !== 'N/A') details.push("<B>" + item.prep.toUpperCase() + "</B>");
-        if (item.spread !== 'N/A') details.push("<B>" + item.spread.toUpperCase() + "</B>");
-        
-        // 放大：加蛋
-        if (item.egg) details.push("<B>ADD 1 EGG</B>");
-        
-        // 备注（保持普通大小，避免太长占空间）
-        if (item.remarks && item.remarks.trim()) {
-            details.push("Note: " + item.remarks);
-        }
-
-        if (details.length > 0) {
-            // 每个规格换行显示，并且由于加了 <B>，它们都会变大
-            receipt += details.join("\n") + "\n";
-        }
-        
-        receipt += "   Price: RM " + item.price.toFixed(2) + "\n";
-        receipt += "--------------------------------\n"; // 每个菜品加个虚线，后厨看得更清
-    });
-
-    // 3. 底部总结
-    receipt += "TOTAL ITEMS: " + cart.reduce((sum, i) => sum + i.qty, 0) + "\n";
-    receipt += "<L>TOTAL: RM " + total + "</L>\n"; 
-    receipt += "--------------------------------\n";
-    
-    receipt += "\n\n\n"; 
-
-    return receipt;
+  });
+  receipt += "TOTAL ITEMS: " + cart.reduce((sum, i) => sum + i.qty, 0) + "\n";
+  receipt += "<L>TOTAL: RM " + total + "</L>\n"; 
+  receipt += "--------------------------------\n\n\n\n"; 
+  return receipt;
 }
 
-// --- 飞鹅云打印确认下单逻辑 ---
 function confirmOrder() {
-    if (cart.length === 0) {
-        alert("Your cart is empty!");
-        return;
-    }
+  if (cart.length === 0) return alert("Your cart is empty!");
+  const USER = "yiiiiiennnnn1234@gmail.com"; 
+  const UKEY = "7C7wmjPHqhzxVfKk";
+  const SN = "924751396";
+  const API_URL = "https://api.feieyun.cn/Api/Open/";
+  const STIME = Math.floor(Date.now() / 1000); 
+  if (typeof sha1 === 'undefined') return alert("Crypto library missing!");
 
-    // --- 飞鹅云打印机资料配置 ---
-    const USER = "yiiiiiennnnn1234@gmail.com"; 
-    const UKEY = "7C7wmjPHqhzxVfKk";
-    const SN = "924751396";
-    const API_URL = "https://api.feieyun.cn/Api/Open/";
-    const STIME = Math.floor(Date.now() / 1000); 
-    
-    // 检查加密库是否加载成功
-    if (typeof sha1 === 'undefined') {
-        alert("Crypto library missing! Please check your internet connection.");
-        return;
-    }
+  const SIG = sha1(USER + UKEY + STIME); 
+  const receiptContent = generateEnglishReceipt();
+  closeModal();
 
-    // 生成安全签名
-    const SIG = sha1(USER + UKEY + STIME); 
+  const params = new URLSearchParams();
+  params.append("user", USER);
+  params.append("stime", STIME);
+  params.append("sig", SIG);
+  params.append("apiname", "Open_printMsg");
+  params.append("sn", SN);
+  params.append("content", receiptContent);
+  params.append("times", "1");
 
-    const receiptContent = generateEnglishReceipt();
+  fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params,
+    mode: 'no-cors'
+  })
+  .then(() => {
+    alert("Order Sent Successfully! 🎉\nPlease wait for your drinks.");
+    cart = [];
+    updateCartBar();
     closeModal();
-
-    const params = new URLSearchParams();
-    params.append("user", USER);
-    params.append("stime", STIME);
-    params.append("sig", SIG);
-    params.append("apiname", "Open_printMsg");
-    params.append("sn", SN);
-    params.append("content", receiptContent);
-    params.append("times", "1");
-
-fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: params,
-        mode: 'no-cors' // 关键点：告诉浏览器不要去管跨域回执
-    })
-    .then(() => {
-        // 使用 no-cors 模式后，我们无法读取 data.msg
-        // 但只要请求发出去了，我们就假设它成功了（因为你的打印机确实会响）
-        alert("Order Sent Successfully! 🎉\nPlease wait for your drinks.");
-        
-        // 清空购物车并关闭窗口
-        cart = [];
-        updateCartBar();
-        closeModal();
-    })
-    .catch(error => {
-        // 只有在完全断网的情况下才会走到这里
-        alert("Network Error. Please show your cart to our staff.");
-        console.error('Error:', error);
-    });
+  })
+  .catch(error => {
+    alert("Network Error. Please show your cart to our staff.");
+  });
 }
 
-function closeModal() {
-    const modal = document.getElementById('order-modal');
-    if (modal) modal.style.display = 'none';
-}
-
-// 页面加载初始化
 window.onload = () => { 
-    if (typeof checkTable === "function") checkTable(); 
-    if (typeof renderMenu === "function") renderMenu(); 
+  if (typeof checkTable === "function") checkTable(); 
+  if (typeof renderMenu === "function") renderMenu(); 
 };
 </script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha1/0.6.0/sha1.min.js"></script>
-
 </body>
-</html> 
+</html>
