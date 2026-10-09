@@ -94,6 +94,31 @@ header .subtitle { margin: 2px 0 0; font-size: 11px; color: #795548; font-style:
   font-size: 16px !important;
 }
 
+/* 🛠️ 修复 Specialties 长菜名撑爆格子、文字卡片被截断的问题 */
+.menu-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  min-width: 0; /* 💥 关键：允许网格卡片缩小，不被长文本撑大 */
+  overflow: hidden;
+}
+
+.card-title {
+  font-size: 12px; /* 稍微缩小一点字号，避免名字占太大地方 */
+  font-weight: bold;
+  color: #333;
+  text-transform: uppercase;
+  line-height: 1.25;
+  margin-bottom: 6px;
+  word-break: break-word; /* 💥 关键：超长英文/括号自动换行，防止撑开卡片 */
+  overflow-wrap: break-word;
+}
 .menu-card:active, 
 .add-trigger-btn:active, 
 .temp-btn:active, 
