@@ -109,7 +109,18 @@ header .subtitle { margin: 2px 0 0; font-size: 11px; color: #795548; font-style:
 body {
   padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
 }
+/* 🛠️ 修复 WhatsApp/微信等内置浏览器页面被撑宽、横向偏位的问题 */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; /* 强制禁止网页左右晃动/横向溢出 */
+}
 
+/* 限制所有导航条和容器最大宽度不超过屏幕 */
+.search-container, .category-nav, .sub-filter-nav, .main-container {
+  max-width: 100vw;
+  box-sizing: border-box;
+}
 </style>
 </head>
 <body>
